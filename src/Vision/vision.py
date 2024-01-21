@@ -52,10 +52,10 @@ def main():
     cap = cv2.VideoCapture(0)
 
     # Known physical width of the torus in centimeters (example)
-    known_width = 5.0
+    known_width = 25.4
 
     # Known focal length of the camera (example, you need to calibrate this based on your camera)
-    focal_length = 1000.0
+    focal_length = 320.8
 
     while True:
         # Read a frame from the camera
