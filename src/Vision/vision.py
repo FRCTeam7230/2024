@@ -1,23 +1,25 @@
 import cv2
 import os
 
-# Function to load torus images from the "Assets" folder
 def load_torus_images(folder_path):
     torus_images = [cv2.imread(os.path.join(folder_path, img)) for img in os.listdir(folder_path)]
     return torus_images
 
-# Function for orange color detection
+# Function for orange color detection with added smoothing
 def detect_orange_torus(frame, lower_orange, upper_orange):
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv_frame, lower_orange, upper_orange)
 
+    # Apply Gaussian blur to reduce noise
+    blurred_mask = cv2.GaussianBlur(mask, (5, 5), 0)
+
     # Apply morphological operations to improve object shape
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    smoothed_mask = cv2.morphologyEx(blurred_mask, cv2.MORPH_OPEN, kernel)
+    smoothed_mask = cv2.morphologyEx(smoothed_mask, cv2.MORPH_CLOSE, kernel)
 
-    result = cv2.bitwise_and(frame, frame, mask=mask)
-    return result, mask
+    result = cv2.bitwise_and(frame, frame, mask=smoothed_mask)
+    return result, smoothed_mask
 
 # Function to draw a bounding box around the detected target
 def draw_bounding_box(frame, contours):
