@@ -15,7 +15,7 @@ def detect_orange_torus(frame, lower_orange, upper_orange):
 
 # Main function for live camera feed
 def main():
-    # Set the path to the "Assets" folder
+    # Set the path to the "Assets" folder (Made Universal)
     folder_path = "../Assets"
 
     # Example range for orange color in HSV
@@ -28,7 +28,7 @@ def main():
     # Create a window for displaying the live camera feed
     cv2.namedWindow("Live Orange Torus Detection", cv2.WINDOW_NORMAL)
 
-    # Open the camera (change 0 to the appropriate camera index if needed)
+    # Open the camera (change 0 to the appropriate camera index if needed [1 or -1 for external cameras])
     cap = cv2.VideoCapture(0)
 
     while True:
