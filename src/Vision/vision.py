@@ -16,7 +16,7 @@ def detect_orange_torus(frame, lower_orange, upper_orange):
 # Main function for live camera feed
 def main():
     # Set the path to the "Assets" folder (Made Universal)
-    folder_path = "../Assets"
+    folder_path = "./src/Assets"
 
     # Example range for orange color in HSV
     lower_orange = (0, 100, 100)
