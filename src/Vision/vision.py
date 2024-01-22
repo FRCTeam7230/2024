@@ -44,8 +44,8 @@ def main():
     folder_path = "./src/Assets"
 
     # Example range for orange color in HSV
-    lower_orange = (0, 150, 100)
-    upper_orange = (10, 255, 255)
+    lower_orange = (10, 150, 100)
+    upper_orange = (15, 255, 255)
 
     # Load torus images
     torus_images = load_torus_images(folder_path)
