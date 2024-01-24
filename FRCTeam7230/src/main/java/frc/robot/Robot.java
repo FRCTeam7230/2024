@@ -85,8 +85,12 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+//TODO:
+// Change button, axis, joystick port, and CAN IDs to the correct ones
     swDriveSubsystem.drive(driveStick.getRawAxis(1), driveStick.getRawAxis(0), driveStick.getRawAxis(2), false, false);
+    if (driveStick.getRawButton(1)){
+      swDriveSubsystem.setX();
+    }
   }
 
   @Override

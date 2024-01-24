@@ -139,4 +139,22 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  //temporary DriveTrain Constants
+  public static final class driveTrainConstants {
+    //drive related
+    public static final double deadZone = 0.2;
+    public static final double zoomFactor = 2.0;
+    public static final double slowFactor = 0.45;
+    public static final double speedFactor = 0.575;
+    public static final double turnFactor = 0.725;
+    public static final double accelY = 0.005;
+    public static final double accelX = 0.001;
+    public static final double decelY = 0.075;
+    public static final double decelX = 0.075;
+    public static final double limitX = 0.7;
+    public static final double limitY = 0.45;
+    public static final double initSpeed = 0.2;
+    public static final double dropOff = 0.4; //drop off point when speed is able to drop to 0
+  }
 }
