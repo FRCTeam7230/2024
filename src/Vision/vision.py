@@ -10,8 +10,15 @@ def detect_orange_torus(frame, lower_orange, upper_orange):
     hsv_frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     mask = cv.inRange(hsv_frame, lower_orange, upper_orange)
 
+    # Apply adaptive thresholding to the grayscale image
+    gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    _, thresholded = cv.threshold(gray_frame, 200, 255, cv.THRESH_BINARY_INV)
+
+    # Combine color-based mask and adaptive thresholding mask
+    combined_mask = cv.bitwise_and(mask, thresholded)
+
     # Apply Gaussian blur to reduce noise
-    blurred_mask = cv.GaussianBlur(mask, (5, 5), 0)
+    blurred_mask = cv.GaussianBlur(combined_mask, (5, 5), 0)
 
     # Apply morphological operations to improve object shape
     kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
@@ -33,24 +40,19 @@ def estimate_distance(apparent_width, known_width, focal_length):
     distance = (known_width * focal_length) / apparent_width
     return distance
 
-# Function to measure the longest side of the bounding box
-def measure_longest_side(contour):
-    _, _, w, h = cv.boundingRect(contour)
-    return max(w, h)
-
 # Main function for live camera feed
 def main():
     # Set the path to the "Assets" folder (Made Universal)
     folder_path = "./src/Assets"
 
     # Example range for orange color in HSV
-    lower_orange = (10, 150, 100)
+    lower_orange = (5, 170, 200)
     upper_orange = (15, 255, 255)
 
     # Load torus images
     torus_images = load_torus_images(folder_path)
 
-    # Create windows for displaying the live camera feed, color-only view, bounding box view, and combined view
+    # Create windows for displaying the live camera feed, color-only view, bounding box view, and distance view
     cv.namedWindow("Color Only View", cv.WINDOW_NORMAL)
     cv.namedWindow("Box View", cv.WINDOW_NORMAL)
     cv.namedWindow("Distance View", cv.WINDOW_NORMAL)
@@ -59,7 +61,7 @@ def main():
     cap = cv.VideoCapture(0)
 
     # Known physical width of the torus in inches (example)
-    known_width_inches = 3.81 # change to 10.0 for torus
+    known_width_inches = 10 # 10 for Note
 
     # Known focal length of the camera (example, you need to calibrate this based on your camera)
     focal_length = 320.8
@@ -92,13 +94,13 @@ def main():
 
             # Estimate distance using triangulation
             distance = estimate_distance(apparent_width, known_width_inches, focal_length)
-            distance_text = f"Distance: {distance:.2f} inches"
+            distance_text = f"Distance: {distance *2.54:.2f} inches"
 
-            # Display the combined view with red-colored bounding box and red text
-            combined_view = frame.copy()
-            cv.putText(combined_view, distance_text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            draw_bounding_box(combined_view, filtered_contours, (0, 0, 255))
-            cv.imshow("Distance View", combined_view)
+            # Display the distance and bounding box in the "Distance View" window
+            distance_view = frame.copy()
+            cv.putText(distance_view, distance_text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            distance_view_with_box = draw_bounding_box(distance_view, filtered_contours, (0, 0, 255))
+            cv.imshow("Distance View", distance_view_with_box)
 
         # Display the color-only view
         cv.imshow("Color Only View", color_only_view)
