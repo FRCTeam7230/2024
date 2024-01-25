@@ -1,33 +1,17 @@
 import cv2 as cv
-import numpy as np
 import os
 
 def load_torus_images(folder_path):
     torus_images = [cv.imread(os.path.join(folder_path, img)) for img in os.listdir(folder_path)]
     return torus_images
 
-# Function to convert RGB to HSV
-def rgb_to_hsv(rgb):
-    return cv.cvtColor(np.uint8([[rgb]]), cv.COLOR_RGB2HSV)[0][0]
-
-# Function for orange color detection with added smoothing (accepts RGB values)
-def detect_orange_torus(frame, lower_orange_rgb, upper_orange_rgb):
-    # Convert RGB values to HSV
-    lower_orange_hsv = rgb_to_hsv(lower_orange_rgb)
-    upper_orange_hsv = rgb_to_hsv(upper_orange_rgb)
-
-    hsv_frame = cv.cvtColor(frame, cv.COLOR_RGB2HSV)  # Convert frame to HSV color space
-    mask = cv.inRange(hsv_frame, lower_orange_hsv, upper_orange_hsv)
-
-    # Apply adaptive thresholding to the grayscale image
-    gray_frame = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
-    _, thresholded = cv.threshold(gray_frame, 200, 255, cv.THRESH_BINARY_INV)
-
-    # Combine color-based mask and adaptive thresholding mask
-    combined_mask = cv.bitwise_and(mask, thresholded)
+# Function for orange color detection with added smoothing
+def detect_orange_torus(frame, lower_orange, upper_orange):
+    hsv_frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    mask = cv.inRange(hsv_frame, lower_orange, upper_orange)
 
     # Apply Gaussian blur to reduce noise
-    blurred_mask = cv.GaussianBlur(combined_mask, (5, 5), 0)
+    blurred_mask = cv.GaussianBlur(mask, (5, 5), 0)
 
     # Apply morphological operations to improve object shape
     kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
@@ -49,19 +33,24 @@ def estimate_distance(apparent_width, known_width, focal_length):
     distance = (known_width * focal_length) / apparent_width
     return distance
 
+# Function to measure the longest side of the bounding box
+def measure_longest_side(contour):
+    _, _, w, h = cv.boundingRect(contour)
+    return max(w, h)
+
 # Main function for live camera feed
 def main():
     # Set the path to the "Assets" folder (Made Universal)
     folder_path = "./src/Assets"
 
-    # Example range for orange color in RGB
-    lower_orange_rgb = (255, 50, 0)  # RGB values for lower orange
-    upper_orange_rgb = (255, 200, 0)  # RGB values for upper orange
+    # Example range for orange color in HSV
+    lower_orange = (10, 150, 100)
+    upper_orange = (15, 255, 255)
 
     # Load torus images
     torus_images = load_torus_images(folder_path)
 
-    # Create windows for displaying the live camera feed, color-only view, bounding box view, and distance view
+    # Create windows for displaying the live camera feed, color-only view, bounding box view, and combined view
     cv.namedWindow("Color Only View", cv.WINDOW_NORMAL)
     cv.namedWindow("Box View", cv.WINDOW_NORMAL)
     cv.namedWindow("Distance View", cv.WINDOW_NORMAL)
@@ -70,7 +59,7 @@ def main():
     cap = cv.VideoCapture(0)
 
     # Known physical width of the torus in inches (example)
-    known_width_inches = 10  # 10 for Note
+    known_width_inches = 3.81 # change to 10.0 for torus
 
     # Known focal length of the camera (example, you need to calibrate this based on your camera)
     focal_length = 320.8
@@ -84,7 +73,7 @@ def main():
             break
 
         # Detect orange torus in the frame
-        color_only_view, mask = detect_orange_torus(frame.copy(), lower_orange_rgb, upper_orange_rgb)
+        color_only_view, mask = detect_orange_torus(frame.copy(), lower_orange, upper_orange)
 
         # Find contours of the detected orange torus
         contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -103,13 +92,13 @@ def main():
 
             # Estimate distance using triangulation
             distance = estimate_distance(apparent_width, known_width_inches, focal_length)
-            distance_text = f"Distance: {distance * 2.54:.2f} inches"
+            distance_text = f"Distance: {distance:.2f} inches"
 
-            # Display the distance and bounding box in the "Distance View" window
-            distance_view = frame.copy()
-            cv.putText(distance_view, distance_text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            distance_view_with_box = draw_bounding_box(distance_view, filtered_contours, (0, 0, 255))
-            cv.imshow("Distance View", distance_view_with_box)
+            # Display the combined view with red-colored bounding box and red text
+            combined_view = frame.copy()
+            cv.putText(combined_view, distance_text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            draw_bounding_box(combined_view, filtered_contours, (0, 0, 255))
+            cv.imshow("Distance View", combined_view)
 
         # Display the color-only view
         cv.imshow("Color Only View", color_only_view)
