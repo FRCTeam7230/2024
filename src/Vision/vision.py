@@ -59,7 +59,7 @@ def main():
     cap = cv.VideoCapture(0)
 
     # Known physical width of the torus in inches (example)
-    known_width_inches = 3.81 # change to 10.0 for torus
+    known_width_inches = 10 # change to 10.0 for torus
 
     # Known focal length of the camera (example, you need to calibrate this based on your camera)
     focal_length = 320.8
