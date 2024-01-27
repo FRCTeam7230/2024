@@ -5,9 +5,15 @@ from tkinter import *
 from PIL import Image, ImageTk
 import json
 import os
-
+import platform
 path = os.path.dirname(os.path.abspath(__file__))
-config_f = open('src/Vision/config.json')
+
+os = platform.system()
+
+if os == "Windows":
+    config_f = open(path + "//" + 'config.json')
+else:
+    config_f = open('src/Vision/config.json')
 config = json.load(config_f)
 
 class ThresholdInRange:
@@ -43,6 +49,8 @@ class ThresholdInRange:
             self.cap.release()
         # Close the Tkinter window
         self.root.destroy()
+
+        self.root.quit()
         
         
 
