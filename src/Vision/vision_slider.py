@@ -10,9 +10,14 @@ def draw_bounding_box(frame, contours, color):
         cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
     return frame
 
-def estimate_distance(apparent_width, known_width, focal_length):
-    distance = (known_width * focal_length) / apparent_width
-    return distance
+def filter_and_get_largest_contour(contours, min_area_threshold=100):
+    # Filter out small contours
+    filtered_contours = [contour for contour in contours if cv2.contourArea(contour) > min_area_threshold]
+    
+    # Get the largest contour
+    largest_contour = max(filtered_contours, key=cv2.contourArea, default=None)
+    
+    return largest_contour
 
 class ThresholdInRange:
     def __init__(self, camera_device=0):
@@ -108,7 +113,8 @@ class ThresholdInRange:
             high_v = self.slider_high_v.get()
 
             # Color Only View
-            color_only_view = cv2.cvtColor(frame_hsv, cv2.COLOR_HSV2RGB)
+            color_only_frame = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
+            color_only_view = cv2.cvtColor(color_only_frame, cv2.COLOR_GRAY2RGB)
             color_only_view = cv2.resize(color_only_view, (400, 300))
             color_only_view = Image.fromarray(color_only_view)
             color_only_view = ImageTk.PhotoImage(color_only_view)
@@ -138,16 +144,22 @@ class ThresholdInRange:
             # Box View
             thresh = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
             contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            frame_with_box = np.copy(self.mat_frame)
-            frame_with_box = draw_bounding_box(frame_with_box, contours, (0, 255, 0))
 
-            box_view = cv2.cvtColor(frame_with_box, cv2.COLOR_BGR2RGB)
-            box_view = cv2.resize(box_view, (400, 300))
-            box_view = Image.fromarray(box_view)
-            box_view = ImageTk.PhotoImage(box_view)
+            # Filter and get the largest contour
+            largest_contour = filter_and_get_largest_contour(contours, min_area_threshold=100)
 
-            self.img_box_label.configure(image=box_view)
-            self.img_box_label.image = box_view
+            # Draw bounding box only if a valid contour is found
+            if largest_contour is not None:
+                frame_with_box = np.copy(self.mat_frame)
+                frame_with_box = draw_bounding_box(frame_with_box, [largest_contour], (0, 255, 0))
+
+                box_view = cv2.cvtColor(frame_with_box, cv2.COLOR_BGR2RGB)
+                box_view = cv2.resize(box_view, (400, 300))
+                box_view = Image.fromarray(box_view)
+                box_view = ImageTk.PhotoImage(box_view)
+
+                self.img_box_label.configure(image=box_view)
+                self.img_box_label.image = box_view
 
             self.root.update()
 
