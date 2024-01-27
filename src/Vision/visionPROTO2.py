@@ -9,7 +9,7 @@ config_f = open("/Users/videsh/Documents/GitHub/FRC2024/src/Vision/config.json")
 config = json.load(config_f)
 
 class ThresholdInRange:
-    def __init__(self, camera_device=1):
+    def __init__(self, camera_device=0):
         self.MAX_VALUE_H = 180
         self.MAX_VALUE = 255
         self.WINDOW_NAME = "Slider Color Detection"
@@ -127,10 +127,19 @@ class ThresholdInRange:
 
 
     def draw_bounding_box(self, frame, contours, color):
-        for contour in contours:
-            x, y, w, h = cv2.boundingRect(contour)
-            cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
+        # Sort contours based on area in descending order
+        contours = sorted(contours, key=cv2.contourArea, reverse=True)
+
+        if contours:
+            # Get the largest contour
+            largest_contour = contours[0]
+
+            # Draw bounding box for the largest contour
+            x, y, w, h = cv2.boundingRect(largest_contour)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+
         return frame
+
 
     def capture_task(self):
         # Calibration parameters (change these based on your setup)
