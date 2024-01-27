@@ -15,7 +15,7 @@ def estimate_distance(apparent_width, known_width, focal_length):
     return distance
 
 class ThresholdInRange:
-    def __init__(self, camera_device=1):
+    def __init__(self, camera_device=0):
         self.MAX_VALUE_H = 180
         self.MAX_VALUE = 255
         self.WINDOW_NAME = "Slider Color Detection"

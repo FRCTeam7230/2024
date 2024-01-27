@@ -1,4 +1,2 @@
-cv2
 numpy
-tkinter
 pillow
