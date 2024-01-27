@@ -164,15 +164,17 @@ class ThresholdInRange:
             high_v = self.slider_high_v.get()
 
             # Color Only View
-            color_only_view = cv2.cvtColor(frame_hsv, cv2.COLOR_HSV2BGR)
+            mask = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
+            color_only_view = cv2.bitwise_and(self.mat_frame, self.mat_frame, mask=mask)
             color_only_view = cv2.cvtColor(color_only_view, cv2.COLOR_BGR2RGB)
-
             color_only_view = cv2.resize(color_only_view, (400, 300))
             color_only_view = Image.fromarray(color_only_view)
             color_only_view = ImageTk.PhotoImage(color_only_view)
 
             self.img_color_label.configure(image=color_only_view)
             self.img_color_label.image = color_only_view
+
+
 
             # Raw Footage View
             raw_view = cv2.cvtColor(self.mat_frame, cv2.COLOR_BGR2RGB)
