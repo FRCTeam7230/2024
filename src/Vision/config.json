@@ -20,12 +20,12 @@
         },
         {
             "name": "orange_note",
-            "high_hue": "180",
+            "high_hue": "85",
             "low_hue": "0",
             "high_saturation": "255",
-            "low_saturation": "124",
+            "low_saturation": "161",
             "high_value": "255",
-            "low_value": "124"
+            "low_value": "199"
         }
     ]
 

@@ -4,8 +4,10 @@ import threading
 from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button, StringVar
 from PIL import Image, ImageTk
 import json
+import os
 
-config_f = open("/Users/videsh/Documents/GitHub/FRC2024/src/Vision/config.json")
+path = os.path.dirname(os.path.abspath(__file__))
+config_f = open('src/Vision/config.json')
 config = json.load(config_f)
 
 class ThresholdInRange:
@@ -162,7 +164,9 @@ class ThresholdInRange:
             high_v = self.slider_high_v.get()
 
             # Color Only View
-            color_only_view = cv2.cvtColor(frame_hsv, cv2.COLOR_HSV2RGB)
+            color_only_view = cv2.cvtColor(frame_hsv, cv2.COLOR_HSV2BGR)
+            color_only_view = cv2.cvtColor(color_only_view, cv2.COLOR_BGR2RGB)
+
             color_only_view = cv2.resize(color_only_view, (400, 300))
             color_only_view = Image.fromarray(color_only_view)
             color_only_view = ImageTk.PhotoImage(color_only_view)
