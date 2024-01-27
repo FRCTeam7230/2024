@@ -6,15 +6,15 @@ from PIL import Image, ImageTk
 
 class ThresholdInRange:
     def __init__(self, camera_device=0):
-        self.MAX_VALUE = 255
         self.MAX_VALUE_H = 180
-        self.WINDOW_NAME = "Thresholding Operations using inRange demo"
-        self.LOW_H_NAME = "Low H"
-        self.LOW_S_NAME = "Low S"
-        self.LOW_V_NAME = "Low V"
-        self.HIGH_H_NAME = "High H"
-        self.HIGH_S_NAME = "High S"
-        self.HIGH_V_NAME = "High V"
+        self.MAX_VALUE = 255
+        self.WINDOW_NAME = "Slider Color Detection"
+        self.LOW_H_NAME = "Low Hue (H)"
+        self.LOW_S_NAME = "Low Saturation (S)"
+        self.LOW_V_NAME = "Low Value (V)"
+        self.HIGH_H_NAME = "High Hue (H)"
+        self.HIGH_S_NAME = "High Saturation (S)"
+        self.HIGH_V_NAME = "High Value (V)"
 
         self.cap = cv2.VideoCapture(camera_device)
         if not self.cap.isOpened():
@@ -75,7 +75,6 @@ class ThresholdInRange:
 
     def update_display(self, img_capture, img_thresh):
         img_capture = cv2.cvtColor(img_capture, cv2.COLOR_BGR2RGB)
-        img_thresh = cv2.cvtColor(img_thresh, cv2.COLOR_GRAY2RGB)
 
         img_capture = Image.fromarray(img_capture)
         img_thresh = Image.fromarray(img_thresh)
@@ -90,7 +89,5 @@ class ThresholdInRange:
         self.img_detection_label.image = img_thresh
 
 if __name__ == "__main__":
-    # Load the native OpenCV library
     cv2.ocl.setUseOpenCL(False)
-    # Creating and showing the application's GUI
     threshold_in_range = ThresholdInRange()
