@@ -3,6 +3,8 @@ import numpy as np
 import threading
 from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button
 from PIL import Image, ImageTk
+import configparser as config
+
 
 def draw_bounding_box(frame, contours, color):
     for contour in contours:
