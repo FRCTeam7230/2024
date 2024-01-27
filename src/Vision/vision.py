@@ -1,96 +1,115 @@
-import cv2
-import numpy as np
-import threading
-from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH
-from PIL import Image, ImageTk
+import cv2 as cv
+import os
 
-class ThresholdInRange:
-    def __init__(self, camera_device=0):
-        self.MAX_VALUE = 255
-        self.MAX_VALUE_H = 180
-        self.WINDOW_NAME = "Thresholding Operations using inRange demo"
-        self.LOW_H_NAME = "Low H"
-        self.LOW_S_NAME = "Low S"
-        self.LOW_V_NAME = "Low V"
-        self.HIGH_H_NAME = "High H"
-        self.HIGH_S_NAME = "High S"
-        self.HIGH_V_NAME = "High V"
+def load_torus_images(folder_path):
+    torus_images = [cv.imread(os.path.join(folder_path, img)) for img in os.listdir(folder_path)]
+    return torus_images
 
-        self.cap = cv2.VideoCapture(camera_device)
-        if not self.cap.isOpened():
-            print(f"Cannot open camera: {camera_device}")
-            return
+# Function for orange color detection with added smoothing
+def detect_orange_torus(frame, lower_orange, upper_orange):
+    hsv_frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    mask = cv.inRange(hsv_frame, lower_orange, upper_orange)
 
-        _, self.mat_frame = self.cap.read()
+    # Apply Gaussian blur to reduce noise
+    blurred_mask = cv.GaussianBlur(mask, (5, 5), 0)
 
-        self.root = Tk()
-        self.init_ui()
+    # Apply morphological operations to improve object shape
+    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+    smoothed_mask = cv.morphologyEx(blurred_mask, cv.MORPH_OPEN, kernel)
+    smoothed_mask = cv.morphologyEx(smoothed_mask, cv.MORPH_CLOSE, kernel)
 
-        self.capture_thread = threading.Thread(target=self.capture_task)
-        self.capture_thread.start()
+    result = cv.bitwise_and(frame, frame, mask=smoothed_mask)
+    return result, smoothed_mask
 
-        self.root.mainloop()
+# Function to draw a bounding box around the detected target
+def draw_bounding_box(frame, contours, color):
+    for contour in contours:
+        x, y, w, h = cv.boundingRect(contour)
+        cv.rectangle(frame, (x, y), (x+w, y+h), color, 2)
+    return frame
 
-    def init_ui(self):
-        self.root.title(self.WINDOW_NAME)
+# Function to estimate distance from camera using triangulation
+def estimate_distance(apparent_width, known_width, focal_length):
+    distance = (known_width * focal_length) / apparent_width
+    return distance
 
-        slider_frame = Label(self.root)
-        slider_frame.pack(side=LEFT, fill=BOTH, expand=True)
+# Function to measure the longest side of the bounding box
+def measure_longest_side(contour):
+    _, _, w, h = cv.boundingRect(contour)
+    return max(w, h)
 
-        self.slider_low_h = Scale(slider_frame, from_=0, to=self.MAX_VALUE_H, orient=HORIZONTAL, label=self.LOW_H_NAME)
-        self.slider_low_s = Scale(slider_frame, from_=0, to=self.MAX_VALUE, orient=HORIZONTAL, label=self.LOW_S_NAME)
-        self.slider_low_v = Scale(slider_frame, from_=0, to=self.MAX_VALUE, orient=HORIZONTAL, label=self.LOW_V_NAME)
-        self.slider_high_h = Scale(slider_frame, from_=0, to=self.MAX_VALUE_H, orient=HORIZONTAL, label=self.HIGH_H_NAME)
-        self.slider_high_s = Scale(slider_frame, from_=0, to=self.MAX_VALUE, orient=HORIZONTAL, label=self.HIGH_S_NAME)
-        self.slider_high_v = Scale(slider_frame, from_=0, to=self.MAX_VALUE, orient=HORIZONTAL, label=self.HIGH_V_NAME)
+# Main function for live camera feed
+def main():
+    # Set the path to the "Assets" folder (Made Universal)
+    folder_path = "./src/Assets"
 
-        self.slider_low_h.pack()
-        self.slider_high_h.pack()
-        self.slider_low_s.pack()
-        self.slider_high_s.pack()
-        self.slider_low_v.pack()
-        self.slider_high_v.pack()
+    # Example range for orange color in HSV
+    lower_orange = (10, 150, 100)
+    upper_orange = (15, 255, 255)
 
-        self.img_capture_label = Label(self.root)
-        self.img_detection_label = Label(self.root)
+    # Load torus images
+    torus_images = load_torus_images(folder_path)
 
-        self.img_capture_label.pack(side=RIGHT)
-        self.img_detection_label.pack(side=RIGHT)
+    # Create windows for displaying the live camera feed, color-only view, bounding box view, and combined view
+    cv.namedWindow("Color Only View", cv.WINDOW_NORMAL)
+    cv.namedWindow("Box View", cv.WINDOW_NORMAL)
+    cv.namedWindow("Distance View", cv.WINDOW_NORMAL)
 
-    def capture_task(self):
-        while True:
-            ret, self.mat_frame = self.cap.read()
-            if not ret:
-                break
+    # Open the camera (change 0 to the appropriate camera index if needed [1 or -1 for external cameras])
+    cap = cv.VideoCapture(0)
 
-            frame_hsv = cv2.cvtColor(self.mat_frame, cv2.COLOR_BGR2HSV)
+    # Known physical width of the torus in inches (example)
+    known_width_inches = 10 # change to 10.0 for torus
 
-            thresh = cv2.inRange(frame_hsv, (self.slider_low_h.get(), self.slider_low_s.get(), self.slider_low_v.get()),
-                                 (self.slider_high_h.get(), self.slider_high_s.get(), self.slider_high_v.get()))
+    # Known focal length of the camera (example, you need to calibrate this based on your camera)
+    focal_length = 320.8
 
-            frame_resized = cv2.resize(self.mat_frame, (640, 480))
-            thresh_resized = cv2.resize(thresh, (640, 480))
+    while True:
+        # Read a frame from the camera
+        ret, frame = cap.read()
 
-            self.update_display(frame_resized, thresh_resized)
+        if not ret:
+            print("Failed to capture frame. Exiting...")
+            break
 
-    def update_display(self, img_capture, img_thresh):
-        img_capture = cv2.cvtColor(img_capture, cv2.COLOR_BGR2RGB)
-        img_thresh = cv2.cvtColor(img_thresh, cv2.COLOR_GRAY2RGB)
+        # Detect orange torus in the frame
+        color_only_view, mask = detect_orange_torus(frame.copy(), lower_orange, upper_orange)
 
-        img_capture = Image.fromarray(img_capture)
-        img_thresh = Image.fromarray(img_thresh)
+        # Find contours of the detected orange torus
+        contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
-        img_capture = ImageTk.PhotoImage(img_capture)
-        img_thresh = ImageTk.PhotoImage(img_thresh)
+        # Filter contours based on size or other criteria
+        filtered_contours = [contour for contour in contours if cv.contourArea(contour) > 100]
 
-        self.img_capture_label.configure(image=img_capture)
-        self.img_capture_label.image = img_capture
+        # Draw a bounding box around the detected target in the "Box View" window
+        box_view = draw_bounding_box(frame.copy(), filtered_contours, (0, 255, 0))
+        cv.imshow("Box View", box_view)
 
-        self.img_detection_label.configure(image=img_thresh)
-        self.img_detection_label.image = img_thresh
+        # Calculate apparent width of the torus in pixels
+        if len(filtered_contours) > 0:
+            x, y, w, h = cv.boundingRect(filtered_contours[0])
+            apparent_width = w
+
+            # Estimate distance using triangulation
+            distance = estimate_distance(apparent_width, known_width_inches, focal_length)
+            distance_text = f"Distance: {distance:.2f} inches"
+
+            # Display the combined view with red-colored bounding box and red text
+            combined_view = frame.copy()
+            cv.putText(combined_view, distance_text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            draw_bounding_box(combined_view, filtered_contours, (0, 0, 255))
+            cv.imshow("Distance View", combined_view)
+
+        # Display the color-only view
+        cv.imshow("Color Only View", color_only_view)
+
+        # Exit the program when the 'q' key is pressed
+        if cv.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # Release the camera and close all windows
+    cap.release()
+    cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    # Load the native OpenCV library
-    cv2.ocl.setUseOpenCL(False)
-    # Creating and showing the application's GUI
-    threshold_in_range = ThresholdInRange()
+    main()
