@@ -1,17 +1,16 @@
 import cv2 as cv
 import os
 import numpy as np
-import configparser
+# import configparser
 import yaml
 
 path = os.path.dirname(os.path.realpath(__file__))
 with open(path + '//' + 'config.yaml', 'r') as stream:
     config = yaml.safe_load(stream)
 
-color_preset = config['color_presets'][0]
-
 lOrange = np.array(config['Color']['lowerOrange'], dtype=np.uint8)
 uOrange = np.array(config['Color']['upperOrange'], dtype=np.uint8)
+
 def load_torus_images(folder_path):
     torus_images = [cv.imread(os.path.join(folder_path, img)) for img in os.listdir(folder_path)]
     return torus_images

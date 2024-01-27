@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import threading
-from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button, StringVar
+from tkinter import *
 from PIL import Image, ImageTk
 import json
 import os
@@ -41,9 +41,10 @@ class ThresholdInRange:
         # Release the camera
         if self.cap.isOpened():
             self.cap.release()
-
         # Close the Tkinter window
         self.root.destroy()
+        
+        
 
     def init_ui(self):
         self.root.title(self.WINDOW_NAME)
@@ -145,8 +146,8 @@ class ThresholdInRange:
 
     def capture_task(self):
         # Calibration parameters (change these based on your setup)
-        known_width_inches = 10.0  # Example: the actual width of the torus in inches
-        focal_length = 320.8  # Example: you need to calibrate this based on your camera
+        # known_width_inches = 10.0  # Example: the actual width of the torus in inches
+        # focal_length = 320.8  # Example: you need to calibrate this based on your camera
 
         while True:
             ret, self.mat_frame = self.cap.read()
