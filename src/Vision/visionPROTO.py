@@ -38,8 +38,17 @@ class ThresholdInRange:
 
         self.capture_thread = threading.Thread(target=self.capture_task)
         self.capture_thread.start()
-
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.root.mainloop()
+
+
+    def on_close(self):
+        # Release the camera
+        if self.cap.isOpened():
+            self.cap.release()
+
+        # Close the Tkinter window
+        self.root.destroy()
 
     def init_ui(self):
         self.root.title(self.WINDOW_NAME)
