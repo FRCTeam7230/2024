@@ -49,7 +49,6 @@ class ThresholdInRange:
             self.cap.release()
         # Close the Tkinter window
         self.root.destroy()
-
         self.root.quit()
         
         
@@ -161,7 +160,6 @@ class ThresholdInRange:
             ret, self.mat_frame = self.cap.read()
             if not ret:
                 break
-
             frame_hsv = cv2.cvtColor(self.mat_frame, cv2.COLOR_BGR2HSV)
 
             # Get slider values
