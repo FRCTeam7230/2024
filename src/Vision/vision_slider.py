@@ -1,23 +1,14 @@
 import cv2
 import numpy as np
 import threading
-from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button
+from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button, StringVar
 from PIL import Image, ImageTk
+import json
+import os
 
-def draw_bounding_box(frame, contours, color):
-    for contour in contours:
-        x, y, w, h = cv2.boundingRect(contour)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-    return frame
-
-def filter_and_get_largest_contour(contours, min_area_threshold=100):
-    # Filter out small contours
-    filtered_contours = [contour for contour in contours if cv2.contourArea(contour) > min_area_threshold]
-    
-    # Get the largest contour
-    largest_contour = max(filtered_contours, key=cv2.contourArea, default=None)
-    
-    return largest_contour
+path = os.path.dirname(os.path.abspath(__file__))
+config_f = open('src/Vision/config.json')
+config = json.load(config_f)
 
 class ThresholdInRange:
     def __init__(self, camera_device=0):
@@ -43,8 +34,16 @@ class ThresholdInRange:
 
         self.capture_thread = threading.Thread(target=self.capture_task)
         self.capture_thread.start()
-
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.root.mainloop()
+
+    def on_close(self):
+        # Release the camera
+        if self.cap.isOpened():
+            self.cap.release()
+
+        # Close the Tkinter window
+        self.root.destroy()
 
     def init_ui(self):
         self.root.title(self.WINDOW_NAME)
@@ -88,9 +87,61 @@ class ThresholdInRange:
         self.img_box_label = Label(views_frame)
         self.img_box_label.grid(row=1, column=1, padx=5, pady=5)
 
+        # Add a StringVar to store the current preset name
+        self.current_preset_var = StringVar()
+        self.current_preset_var.set("debug_block")  # Initial preset
+
+        # Create a button to apply presets
+        self.apply_preset_button = Button(self.root, text="Apply Preset", command=self.apply_preset)
+        self.apply_preset_button.pack(side=LEFT, padx=10, pady=10)
+
+        # Dynamically create buttons for each preset
+        for preset in config["color_presets"]:
+            preset_name = preset["name"]
+            button = Button(self.root, text=preset_name, command=lambda name=preset_name: self.select_preset(name))
+            button.pack(side=LEFT, padx=10, pady=10)
+
+
+    def select_preset(self, preset_name):
+        # Set the current preset when a button is clicked
+        self.current_preset_var.set(preset_name)
+        # Apply the selected preset
+        self.apply_preset()
+
     def update_settings(self, event=None):
         # Called when sliders are adjusted
         self.root.update()
+
+    def apply_preset(self):
+        # Get the current preset name
+        current_preset = self.current_preset_var.get()
+
+        # Find the dictionary for the selected preset
+        preset_values = next((preset for preset in config["color_presets"] if preset["name"] == current_preset), {})
+
+        # Update the sliders with values from the selected preset
+        self.slider_low_h.set(int(preset_values.get("low_hue", 0) or 0))
+        self.slider_high_h.set(int(preset_values.get("high_hue", 0) or 0))
+        self.slider_low_s.set(int(preset_values.get("low_saturation", 0) or 0))
+        self.slider_high_s.set(int(preset_values.get("high_saturation", 0) or 0))
+        self.slider_low_v.set(int(preset_values.get("low_value", 0) or 0))
+        self.slider_high_v.set(int(preset_values.get("high_value", 0) or 0))
+
+
+    def draw_bounding_box(self, frame, contours, color):
+        # Sort contours based on area in descending order
+        contours = sorted(contours, key=cv2.contourArea, reverse=True)
+
+        if contours:
+            # Get the largest contour
+            largest_contour = contours[0]
+
+            # Draw bounding box for the largest contour
+            x, y, w, h = cv2.boundingRect(largest_contour)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+
+        return frame
+
 
     def capture_task(self):
         # Calibration parameters (change these based on your setup)
@@ -113,14 +164,17 @@ class ThresholdInRange:
             high_v = self.slider_high_v.get()
 
             # Color Only View
-            color_only_frame = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
-            color_only_view = cv2.cvtColor(color_only_frame, cv2.COLOR_GRAY2RGB)
+            mask = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
+            color_only_view = cv2.bitwise_and(self.mat_frame, self.mat_frame, mask=mask)
+            color_only_view = cv2.cvtColor(color_only_view, cv2.COLOR_BGR2RGB)
             color_only_view = cv2.resize(color_only_view, (400, 300))
             color_only_view = Image.fromarray(color_only_view)
             color_only_view = ImageTk.PhotoImage(color_only_view)
 
             self.img_color_label.configure(image=color_only_view)
             self.img_color_label.image = color_only_view
+
+
 
             # Raw Footage View
             raw_view = cv2.cvtColor(self.mat_frame, cv2.COLOR_BGR2RGB)
@@ -144,22 +198,16 @@ class ThresholdInRange:
             # Box View
             thresh = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
             contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            frame_with_box = np.copy(self.mat_frame)
+            frame_with_box = self.draw_bounding_box(frame_with_box, contours, (0, 255, 0))
 
-            # Filter and get the largest contour
-            largest_contour = filter_and_get_largest_contour(contours, min_area_threshold=100)
+            box_view = cv2.cvtColor(frame_with_box, cv2.COLOR_BGR2RGB)
+            box_view = cv2.resize(box_view, (400, 300))
+            box_view = Image.fromarray(box_view)
+            box_view = ImageTk.PhotoImage(box_view)
 
-            # Draw bounding box only if a valid contour is found
-            if largest_contour is not None:
-                frame_with_box = np.copy(self.mat_frame)
-                frame_with_box = draw_bounding_box(frame_with_box, [largest_contour], (0, 255, 0))
-
-                box_view = cv2.cvtColor(frame_with_box, cv2.COLOR_BGR2RGB)
-                box_view = cv2.resize(box_view, (400, 300))
-                box_view = Image.fromarray(box_view)
-                box_view = ImageTk.PhotoImage(box_view)
-
-                self.img_box_label.configure(image=box_view)
-                self.img_box_label.image = box_view
+            self.img_box_label.configure(image=box_view)
+            self.img_box_label.image = box_view
 
             self.root.update()
 

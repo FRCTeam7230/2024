@@ -14,9 +14,9 @@
             "high_hue": "180",
             "low_hue": "0",
             "high_saturation": "255",
-            "low_saturation": "139",
+            "low_saturation": "49",
             "high_value": "255",
-            "low_value": "105"
+            "low_value": "248"
         },
         {
             "name": "orange_note",
