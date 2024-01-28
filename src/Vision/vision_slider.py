@@ -6,6 +6,8 @@ from PIL import Image, ImageTk
 import json
 import os
 import platform
+import subprocess
+import sys
 
 path = os.path.dirname(os.path.abspath(__file__))
 os_sys = platform.system()
@@ -47,7 +49,6 @@ class ThresholdInRange:
         if self.cap.isOpened():
             self.cap.release()
         self.root.destroy()
-        self.root.quit()
 
     def init_ui(self):
         self.root.title(self.WINDOW_NAME)
@@ -213,7 +214,7 @@ class ThresholdInRange:
             self.img_box_label.image = box_view
 
             self.root.update()
-
+            
         self.cap.release()
 
 if __name__ == "__main__":
