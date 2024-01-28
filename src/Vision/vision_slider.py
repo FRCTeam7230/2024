@@ -6,8 +6,6 @@ from PIL import Image, ImageTk
 import json
 import os
 import platform
-import subprocess
-import sys
 
 path = os.path.dirname(os.path.abspath(__file__))
 os_sys = platform.system()
