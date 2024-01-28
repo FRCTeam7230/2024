@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import threading
-from tkinter import Tk, Label, Scale, HORIZONTAL, RIGHT, LEFT, BOTH, Frame, Button
+from tkinter import *
 from PIL import Image, ImageTk
 import json
 import os
