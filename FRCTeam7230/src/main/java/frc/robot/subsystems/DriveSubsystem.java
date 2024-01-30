@@ -13,9 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-
-import frc.robot.Constants.*;
-
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
@@ -45,21 +42,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final AHRS m_gyro = new AHRS();
-  
-  //Temporary Speed Control variables
-
-    public double speedTrueY = 0.0;
-    public double speedY = 0.0;
-    public double speedX = 0.0;
-    public double speedLimitChangeX = 0.0;
-    public double speedLimitChangeY = 0.0;
-    public double speedLimitChangeTrueY = 0.0;
-    private double rateOfSpeedYChange = 0.0;
-    private double rateOfSpeedXChange = 0.0;
-    private double rateOfSpeedTrueYChange = 0.0;
-    private boolean prevDrive = false, nowDrive = false;
-
-
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -128,9 +110,9 @@ public class DriveSubsystem extends SubsystemBase {
    * Method to drive the robot using joystick info.
    *
    * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the rot direction (sideways).
+   * @param ySpeed        Speed of the robot in the y direction (sideways).
    * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and rot speeds are relative to the
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
@@ -138,96 +120,6 @@ public class DriveSubsystem extends SubsystemBase {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
-
-    //temporary speed control code
-           // speedLimitChangeX = Robot.speedLimitChangeX;
-        // speedLimitChangeY = Robot.speedLimitChangeY;
-        double y = ySpeed;
-        double x = xSpeed;
-        rot *= Math.abs(rot);
-        x *= Math.abs(x);
-        int invertChangeY = 1;
-        int invertChangeX = 1;
-        // if x and rot are negative
-        if (rot < -1 * driveTrainConstants.deadZone || (speedY<0 && Math.abs(rot)<driveTrainConstants.deadZone)){
-            invertChangeY = -1;
-        }
-        if (x < -1 * driveTrainConstants.deadZone || (speedX<0 && Math.abs(x)<driveTrainConstants.deadZone)){
-            invertChangeX = -1;
-        }
-        if (y < -1 * driveTrainConstants.deadZone || (speedTrueY<0 && Math.abs(y)<driveTrainConstants.deadZone)){
-            invertChangeX = -1;
-        }
-        // if rot is being driven, and has not yet reached speed target
-        if(driveTrainConstants.deadZone < Math.abs(rot) && Math.abs(rot) > Math.abs(speedY)) {
-            speedY += invertChangeY * rateOfSpeedYChange;
-            rateOfSpeedYChange += driveTrainConstants.accelY;
-            nowDrive = true;
-        }
-        // if rot is not being driven and is slow
-        else if (driveTrainConstants.deadZone>=Math.abs(rot) && Math.abs(speedY)<driveTrainConstants.dropOff){
-            speedY=0;
-        }
-        // if rot is not being driven and is fast
-        else if (driveTrainConstants.deadZone>=Math.abs(rot) && Math.abs(speedY)>=driveTrainConstants.dropOff){
-            speedY-=driveTrainConstants.decelY*invertChangeY;
-        }
-        // if x being driven
-        if(driveTrainConstants.deadZone < Math.abs(x) && Math.abs(x) > Math.abs(speedX)) {
-            speedX += invertChangeX * rateOfSpeedXChange;
-            rateOfSpeedXChange += driveTrainConstants.accelX;
-            nowDrive = true;
-            
-        }
-        // if x not being driven but is slow
-        else if (driveTrainConstants.deadZone>=Math.abs(x) && Math.abs(speedX)<driveTrainConstants.dropOff){
-            speedX=0;
-        }
-        // if x not being driven but is fast
-        else if (driveTrainConstants.deadZone>=Math.abs(x) && Math.abs(speedX)>=driveTrainConstants.dropOff){
-            speedX-=driveTrainConstants.decelX*invertChangeX;
-        }
-        // if y being driven
-        if(driveTrainConstants.deadZone < Math.abs(y) && Math.abs(y) > Math.abs(speedTrueY)) {
-            speedTrueY += invertChangeX * rateOfSpeedTrueYChange;
-            rateOfSpeedTrueYChange += driveTrainConstants.accelX;
-            nowDrive = true;
-            
-        }
-        // if y not being driven but is slow
-        else if (driveTrainConstants.deadZone>=Math.abs(y) && Math.abs(speedTrueY)<driveTrainConstants.dropOff){
-            speedTrueY=0;
-        }
-        // if y not being driven but is fast
-        else if (driveTrainConstants.deadZone>=Math.abs(y) && Math.abs(speedTrueY)>=driveTrainConstants.dropOff){
-            speedX-=driveTrainConstants.decelX*invertChangeX;
-        }
-        if (Math.abs(x)<driveTrainConstants.deadZone && Math.abs(rot)<driveTrainConstants.deadZone)
-        {
-            nowDrive = false;
-        }
-        // when started driving, reset speed changes and add initial speed
-        if (nowDrive && !prevDrive){
-            rateOfSpeedXChange = 0;
-            rateOfSpeedYChange = 0;
-            if (Math.abs(x)>driveTrainConstants.deadZone){
-                speedX += driveTrainConstants.initSpeed * invertChangeX;
-            }
-            if (Math.abs(rot)>driveTrainConstants.deadZone){
-                speedY += driveTrainConstants.initSpeed * invertChangeY;
-            }
-        }
-        speedX=x;
-        speedY=rot;
-        speedTrueY=y;
-
-        if(true){
-            speedY *= driveTrainConstants.zoomFactor;
-            speedX *= driveTrainConstants.zoomFactor;
-            speedLimitChangeX = 0.1;
-            speedLimitChangeY = 0.1;
-        }
-
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
