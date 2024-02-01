@@ -75,6 +75,15 @@ public class ShooterSubsystem extends SubsystemBase {
           rotationalMotorRight.set(-motorRotateSpeed);
         });
   }
+  public CommandBase StopRotation(){
+    return runOnce(
+      () -> {
+        inRotation = false;
+        rotationalMotorLeft.stopMotor();
+        rotationalMotorRight.stopMotor();
+      });
+    
+  }
 
   public CommandBase StartShooter() {
     return runOnce(() -> {
@@ -110,7 +119,9 @@ public class ShooterSubsystem extends SubsystemBase {
       boolean noteIsIn = IntakeSubsystem.checkSensor();
 
       if (noteIsIn) {
-        // DO SOME COOL STUFF
+        //DO SOME COOL STUFF
+        //pivoting mechanism control
+        //shooter flywheels
       }
 
       if (counterValue() <= -rotateDegree && inRotation) {
