@@ -106,6 +106,14 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+  //Prints the angular position of the swerve drive modules
+  public void printModulePositions(){
+    System.out.println(m_frontLeft.getPosition());
+    System.out.println(m_frontRight.getPosition());
+    System.out.println(m_rearLeft.getPosition());
+    System.out.println(m_rearRight.getPosition());
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *

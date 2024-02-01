@@ -65,9 +65,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Constants.JoystickButtons.button1)
+    new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
+            m_robotDrive));
+    new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.printModulePositions(),
             m_robotDrive));
   }
 

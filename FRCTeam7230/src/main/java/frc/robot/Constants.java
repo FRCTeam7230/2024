@@ -25,7 +25,18 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class JoystickButtons{
-    public static final int button1 = 1;
+    public static final int kButton1 = 1;
+    public static final int kButton2 = 2;
+    public static final int kButton3 = 3;
+    public static final int kButton4 = 4;
+    public static final int kButton5 = 5;
+    public static final int kButton6 = 6;
+    public static final int kButton7 = 7;
+    public static final int kButton8 = 8;
+    public static final int kButton9 = 9;
+    public static final int kButton10 = 10;
+    public static final int kButton11 = 11;
+    public static final int kButton12 = 12;
   }
 
   public static final class DriveConstants {
@@ -50,7 +61,12 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontLeftChassisAngularOffsetModifier = 0;
+    public static final double kFrontRightChassisAngularOffsetModifier = 0;
+    public static final double kBackLeftChassisAngularOffsetModifier = 0;
+    public static final double kBackRightChassisAngularOffsetModifier = 0;
+    
+    public static final double kFrontLeftChassisAngularOffset = (-Math.PI / 2);
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
