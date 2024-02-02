@@ -17,6 +17,7 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -40,6 +41,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
+  //Timer
+  Timer timer = new Timer();
+    
   // The gyro sensor
   private final AHRS m_gyro = new AHRS();
 
@@ -108,10 +112,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   //Prints the angular position of the swerve drive modules
   public void printModulePositions(){
+    
     System.out.println(m_frontLeft.getPosition());
     System.out.println(m_frontRight.getPosition());
     System.out.println(m_rearLeft.getPosition());
     System.out.println(m_rearRight.getPosition());
+
   }
 
   /**
@@ -202,6 +208,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+  }
+
+  public void setZero(){
+    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
   }
 
   /**

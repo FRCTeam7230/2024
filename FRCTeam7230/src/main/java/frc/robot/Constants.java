@@ -61,15 +61,25 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffsetModifier = 0;
-    public static final double kFrontRightChassisAngularOffsetModifier = 0;
-    public static final double kBackLeftChassisAngularOffsetModifier = 0;
-    public static final double kBackRightChassisAngularOffsetModifier = 0;
+    public static final double kFrontLeftChassisAngularOffsetModifier = 5.2534814;
+    public static final double kFrontRightChassisAngularOffsetModifier = 1.8148428;
+    public static final double kBackLeftChassisAngularOffsetModifier = 3.8558091;
+    public static final double kBackRightChassisAngularOffsetModifier = 3.2924052;
     
-    public static final double kFrontLeftChassisAngularOffset = (-Math.PI / 2);
+    // public static final double kFrontLeftChassisAngularOffset = (-Math.PI / 2) + (kFrontLeftChassisAngularOffsetModifier);
+    // public static final double kFrontRightChassisAngularOffset = kFrontRightChassisAngularOffsetModifier;
+    // public static final double kBackLeftChassisAngularOffset = Math.PI + kBackLeftChassisAngularOffsetModifier;
+    // public static final double kBackRightChassisAngularOffset = (Math.PI / 2) + kBackRightChassisAngularOffsetModifier;
+
+    // public static final double kFrontLeftChassisAngularOffset = kFrontLeftChassisAngularOffsetModifier + (Math.PI/2);
+    // public static final double kFrontRightChassisAngularOffset = kFrontRightChassisAngularOffsetModifier;
+    // public static final double kBackLeftChassisAngularOffset = kBackLeftChassisAngularOffsetModifier;
+    // public static final double kBackRightChassisAngularOffset = kBackRightChassisAngularOffsetModifier + (Math.PI/2);
+
+    public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kBackRightChassisAngularOffset = (Math.PI/2);
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 5;
