@@ -49,6 +49,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem() {
     // this is init
+    robotInit();
   }
 
   public void robotInit() {
@@ -61,6 +62,7 @@ public class VisionSubsystem extends SubsystemBase {
     camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, WIDTH, HEIGHT, 30);
 
     cvSink = CameraServer.getVideo();
+    System.out.println("CHECK 2");
     outputStream = CameraServer.putVideo("Processed", WIDTH, HEIGHT);
     matFrame = new Mat();
 
