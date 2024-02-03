@@ -1,0 +1,39 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Mode": "String Chooser",
+      "/SmartDashboard/Autonomous Path": "Command",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/On-the-fly path": "Command",
+      "/SmartDashboard/Pathfind to Pickup Pos": "Command",
+      "/SmartDashboard/Pathfind to Scoring Pos": "Command"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Mode": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous Path": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}

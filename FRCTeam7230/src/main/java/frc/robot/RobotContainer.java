@@ -10,10 +10,14 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveSubSystemBase;
+import frc.robot.subsystems.SwerveSubsystemSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,7 +34,7 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final SwerveSubSystemBase m_robotDrive;
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -39,11 +43,17 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
+    if (RobotBase.isSimulation()) { 
+      m_robotDrive = new SwerveSubsystemSim();
+    }
+    else {
+      m_robotDrive = new DriveSubsystem();
 
-    // Configure default commands
-    m_robotDrive.setDefaultCommand(
+      // Configure the button bindings
+      configureButtonBindings();
+
+      // Configure default commands
+      m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
@@ -53,6 +63,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
+      }
   }
 
   /**
@@ -85,6 +96,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    Autos auto = new Autos(m_robotDrive);
+    return auto.getAutonomousCommand();
+/*
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -128,6 +142,7 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotDrive.drive(0,0,0,false,false))
     );
 
+*/
     
 //     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
   }

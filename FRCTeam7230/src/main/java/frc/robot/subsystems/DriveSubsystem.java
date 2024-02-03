@@ -16,10 +16,13 @@ import edu.wpi.first.util.WPIUtilJNI;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import edu.wpi.first.wpilibj.Timer;
 
-public class DriveSubsystem extends SubsystemBase {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class DriveSubsystem extends SwerveSubSystemBase {
+  
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -69,6 +72,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+	SmartDashboard.putData("Field", m_field);
   }
 
   @Override
@@ -82,6 +86,8 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+	m_field.setRobotPose(getPose());
   }
 
   /**
