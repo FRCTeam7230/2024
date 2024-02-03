@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 import json
 import os
 import platform
+import math
 
 path = os.path.dirname(os.path.abspath(__file__))
 os_sys = platform.system()
@@ -130,7 +131,7 @@ class ThresholdInRange:
         self.rgb_high_label.config(text=f"RGB High: ({high_h}, {high_s}, {high_v})")
 
         self.bgr_low_label.config(text=f"BGR Low: ({low_v}, {low_s}, {low_h})")
-        self.bgr_high_label.config(text=f"BGR High: ({high_v}, {high_s}, {high_h})")
+        self.bgr_high_label.config(text=f"BGR High: ({high_v}, {high_s}, {low_h})")
 
         self.hsv_low_label.config(text=f"HSV Low: ({low_h}, {low_s}, {low_v})")
         self.hsv_high_label.config(text=f"HSV High: ({high_h}, {high_s}, {high_v})")
@@ -156,6 +157,33 @@ class ThresholdInRange:
             x, y, w, h = cv2.boundingRect(largest_contour)
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
 
+            center_x = self.mat_frame.shape[1] // 2
+            center_y = self.mat_frame.shape[0] // 2
+
+            M = cv2.moments(largest_contour)
+            if M["m00"] != 0:
+                cx = int(M["m10"] / M["m00"])
+                cy = int(M["m01"] / M["m00"])
+
+                cv2.line(frame, (center_x, center_y), (cx, cy), (0, 255, 0), 2)
+
+                angle_rad = math.atan2(cy - center_y, cx - center_x)
+                angle_deg = math.degrees(angle_rad)
+                
+                cv2.line(frame, (center_x, center_y), (center_x, cy), (0, 0, 255), 2)
+
+                if center_y < cy:
+                    angle_deg = -angle_deg
+                    angle_text_color = (0, 0, 255) 
+                else:
+                    angle_text_color = (0, 255, 0)  
+                
+                angle_deg = abs(angle_deg)  
+                offset_text = f"Angular Offset: {angle_deg:.2f} degrees"
+                cv2.putText(frame, offset_text, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, angle_text_color, 2, cv2.LINE_AA)
+
+                cv2.line(frame, (center_x, center_y), (cx, center_y), (255, 0, 0), 2)
+
         return frame
 
     def capture_task(self):
@@ -173,22 +201,20 @@ class ThresholdInRange:
             high_v = self.slider_high_v.get()
 
             mask = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
-            color_only_view = cv2.bitwise_and(self.mat_frame, self.mat_frame, mask=mask)
-            color_only_view = cv2.cvtColor(color_only_view, cv2.COLOR_BGR2RGB)
-            color_only_view = cv2.resize(color_only_view, (400, 300))
-            color_only_view = Image.fromarray(color_only_view)
-            color_only_view = ImageTk.PhotoImage(color_only_view)
-
-            self.img_color_label.configure(image=color_only_view)
-            self.img_color_label.image = color_only_view
+            contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            frame_with_box = np.copy(self.mat_frame)
+            frame_with_box = self.draw_bounding_box(frame_with_box, contours, (0, 255, 0))
 
             raw_view = cv2.cvtColor(self.mat_frame, cv2.COLOR_BGR2RGB)
             raw_view = cv2.resize(raw_view, (400, 300))
             raw_view = Image.fromarray(raw_view)
             raw_view = ImageTk.PhotoImage(raw_view)
 
-            self.img_raw_label.configure(image=raw_view)
-            self.img_raw_label.image = raw_view
+            color_only_view = cv2.bitwise_and(self.mat_frame, self.mat_frame, mask=mask)
+            color_only_view = cv2.cvtColor(color_only_view, cv2.COLOR_BGR2RGB)
+            color_only_view = cv2.resize(color_only_view, (400, 300))
+            color_only_view = Image.fromarray(color_only_view)
+            color_only_view = ImageTk.PhotoImage(color_only_view)
 
             bw_frame = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
             bw_frame = cv2.cvtColor(bw_frame, cv2.COLOR_GRAY2RGB)
@@ -196,18 +222,19 @@ class ThresholdInRange:
             bw_frame = Image.fromarray(bw_frame)
             bw_frame = ImageTk.PhotoImage(bw_frame)
 
-            self.img_bw_label.configure(image=bw_frame)
-            self.img_bw_label.image = bw_frame
-
-            thresh = cv2.inRange(frame_hsv, (low_h, low_s, low_v), (high_h, high_s, high_v))
-            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            frame_with_box = np.copy(self.mat_frame)
-            frame_with_box = self.draw_bounding_box(frame_with_box, contours, (0, 255, 0))
-
             box_view = cv2.cvtColor(frame_with_box, cv2.COLOR_BGR2RGB)
             box_view = cv2.resize(box_view, (400, 300))
             box_view = Image.fromarray(box_view)
             box_view = ImageTk.PhotoImage(box_view)
+
+            self.img_raw_label.configure(image=raw_view)
+            self.img_raw_label.image = raw_view
+
+            self.img_color_label.configure(image=color_only_view)
+            self.img_color_label.image = color_only_view
+
+            self.img_bw_label.configure(image=bw_frame)
+            self.img_bw_label.image = bw_frame
 
             self.img_box_label.configure(image=box_view)
             self.img_box_label.image = box_view
