@@ -18,10 +18,12 @@ import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveSubsystem extends SwerveSubSystemBase {
+public class DriveSubsystem extends SubsystemBase {
+    public Field2d m_field = new Field2d();
   
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(

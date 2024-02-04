@@ -4,7 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.SwerveSubSystemBase;
+import frc.robot.subsystems.SwerveSubsystemBase;
+import frc.robot.subsystems.SwerveSubsystemSim;
 
 import java.util.List;
 
@@ -33,22 +34,22 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class Autos {
     private final SendableChooser<Command> autoChooser;
 
-    public Autos(SwerveSubSystemBase subSystem) {
+    public Autos(SwerveSubsystemSim subsystem) {
         NamedCommands.registerCommand("marker1", Commands.print("Passed marker 1"));
         NamedCommands.registerCommand("marker2", Commands.print("Passed marker 2"));
         NamedCommands.registerCommand("print hello", Commands.print("hello"));
 
         // Configure AutoBuilder
         AutoBuilder.configureHolonomic(
-                subSystem::getPose,
-                subSystem::resetPose,
-                subSystem::getSpeeds,
-                subSystem::driveRobotRelative,
+                subsystem::getPose,
+                subsystem::resetPose,
+                subsystem::getSpeeds,
+                subsystem::driveRobotRelative,
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(5.0, 0, 0), // Translation constants
                         new PIDConstants(5.0, 0, 0), // Rotation constants
-                        subSystem.getMaxModuleSpeed(),
-                        subSystem.getNorm(), // Drive base radius (distance from center to furthest module)
+                        subsystem.getMaxModuleSpeed(),
+                        subsystem.getNorm(), // Drive base radius (distance from center to furthest module)
                         new ReplanningConfig()),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
@@ -65,7 +66,7 @@ public class Autos {
                         return false;
                     }
                 },
-                subSystem);
+                subsystem);
 
         // Add a button to run the example auto to SmartDashboard, this will also be in
         // the auto chooser built above
@@ -90,7 +91,7 @@ public class Autos {
         // Add a button to SmartDashboard that will create and follow an on-the-fly path
         // This example will simply move the robot 2m in the +X field direction
         SmartDashboard.putData("On-the-fly path", Commands.runOnce(() -> {
-            Pose2d currentPose = subSystem.getPose();
+            Pose2d currentPose = subsystem.getPose();
 
             // The rotation component in these poses represents the direction of travel
             Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
@@ -115,19 +116,19 @@ public class Autos {
         // Logging callback for current robot pose
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
             // Do whatever you want with the pose here
-            subSystem.m_field.setRobotPose(pose);
+            subsystem.m_field.setRobotPose(pose);
         });
 
         // Logging callback for target robot pose
         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
             // Do whatever you want with the pose here
-            subSystem.m_field.getObject("target pose").setPose(pose);
+            subsystem.m_field.getObject("target pose").setPose(pose);
         });
 
         // Logging callback for the active path, this is sent as a list of poses
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
             // Do whatever you want with the poses here
-            subSystem.m_field.getObject("path").setPoses(poses);
+            subsystem.m_field.getObject("path").setPoses(poses);
         });
 
         autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`

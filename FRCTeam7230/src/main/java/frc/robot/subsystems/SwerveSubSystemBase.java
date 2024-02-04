@@ -10,12 +10,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveSubSystemBase extends SubsystemBase {
-    public Field2d m_field = new Field2d();
+/**
+ * A base for Swerve subsystem.  Used for swerve simulation and actual swerve drivetrain.
+ */
 
-    /** Creates a new ExampleSubsystem. */
-    public SwerveSubSystemBase() {
-    }
+public class SwerveSubsystemBase extends SubsystemBase {
+    public Field2d m_field = new Field2d();
 
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
     }

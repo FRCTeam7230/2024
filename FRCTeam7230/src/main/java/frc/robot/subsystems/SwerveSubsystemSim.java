@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,11 +17,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveSubsystemSim.SimGyro;
+import frc.robot.subsystems.SwerveSubsystemSim.SimSwerveModule;
 
 /**
  * Basic simulation of a swerve subsystem with the methods needed by PathPlanner
  */
-public class SwerveSubsystemSim extends SwerveSubSystemBase {
+public class SwerveSubsystemSim extends SubsystemBase {
+    public Field2d m_field = new Field2d();
+
     public static final Translation2d flModuleOffset = new Translation2d(0.4, 0.4);
     public static final Translation2d frModuleOffset = new Translation2d(0.4, -0.4);
     public static final Translation2d blModuleOffset = new Translation2d(-0.4, 0.4);
@@ -32,13 +34,18 @@ public class SwerveSubsystemSim extends SwerveSubSystemBase {
     public static final double maxModuleSpeed = 4.5; // M/S
 
     private SimSwerveModule[] modules;
-    private SwerveDriveKinematics kinematics;
-    private SwerveDriveOdometry odometry;
+    private SwerveDriveKinematics m_kinematics;
+    private SwerveDriveOdometry m_odometry;
 
-    private SimGyro gyro;
+    private SimGyro m_gyro;
 
+    /**
+     * Constructor. Set up simulation gyro and simulation swerve modules. Also
+     * initialize
+     * kinematics, odometry and SmartDashboard with the field.
+     */
     public SwerveSubsystemSim() {
-        gyro = new SimGyro();
+        m_gyro = new SimGyro();
 
         modules = new SimSwerveModule[] {
                 new SimSwerveModule(),
@@ -47,85 +54,90 @@ public class SwerveSubsystemSim extends SwerveSubSystemBase {
                 new SimSwerveModule()
         };
 
-        kinematics = new SwerveDriveKinematics(
+        m_kinematics = new SwerveDriveKinematics(
                 flModuleOffset,
                 frModuleOffset,
                 blModuleOffset,
                 brModuleOffset);
 
-        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
-
-        // Set up custom logging to add the current path to a field 2d widget
-        PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
+        // Creating my m_odometry object from the m_kinematics object, initial wheel
+        // positions and starting pose.
+        m_odometry = new SwerveDriveOdometry(m_kinematics,
+                m_gyro.getRotation2d(),
+                getModulePositions(),
+                new Pose2d(1.85, 4.98, new Rotation2d())); // Starting Pose.
 
         SmartDashboard.putData("Field", m_field);
     }
 
-    @Override
+    /**
+     * This is where the robot wakes up the swerve drivetrain to process latest
+     * inputs.
+     */
     public void periodic() {
-        // Update the simulated gyro, not needed in a real project
-        gyro.updateRotation(getSpeeds().omegaRadiansPerSecond);
+        // Update the simulated m_gyro, not needed in a real project
+        m_gyro.updateRotation(getSpeeds().omegaRadiansPerSecond);
 
-        odometry.update(gyro.getRotation2d(), getPositions());
+        m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
 
         m_field.setRobotPose(getPose());
     }
 
-    public void printPose() {
-        Pose2d m_pose = getPose();
-        System.out.println("x: " + m_pose.getX() + ", y: " + m_pose.getY());
-    }
-
+    /**
+     * Get the current pose from the odometry.
+     * 
+     * @return The current pose from the odometry.
+     */
     public Pose2d getPose() {
-        return odometry.getPoseMeters();
+        return m_odometry.getPoseMeters();
     }
 
+    /**
+     * Update the current pose of the swerve modules.
+     * 
+     * @param pose The pose to set to.
+     */
     public void resetPose(Pose2d pose) {
-        odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
+        m_odometry.resetPosition(m_gyro.getRotation2d(), getModulePositions(), pose);
     }
 
+    /**
+     * Get the current chassis speed.
+     * 
+     * @return The current chassis speed.
+     */
     public ChassisSpeeds getSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
+        return m_kinematics.toChassisSpeeds(getModuleStates());
     }
 
+    /**
+     * Update the swerve modules based on the current chassis speed.
+     * 
+     * @param fieldRelativeSpeeds The current chassis speed to update the swerve modules to.
+     */
     public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
         driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
     }
 
+    /**
+     * Update the swerve modules based on the current chassis speed.
+     * 
+     * @param robotRelativeSpeeds The current chassis speed to update the swerve modules to.
+     */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-        // System.out.print("Before: ");
-        // printPose();
-
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
-        SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+        SwerveModuleState[] targetStates = m_kinematics.toSwerveModuleStates(targetSpeeds);
 
-        // printModuleStates(targetStates);
-
-        setStates(targetStates);
-
-        // printModulePositions();
-
-        // System.out.print("After: ");
-        // printPose();
+        setModuleStates(targetStates);
     }
 
-    public void printModuleStates(SwerveModuleState[] states) {
-        System.out.println("States: ");
-        System.out.println(states[0]);
-        System.out.println(states[1]);
-        System.out.println(states[2]);
-        System.out.println(states[3]);
-    }
-
-    // Prints the angular position of the swerve drive modules
-    public void printModulePositions() {
-        for (int i = 0; i < modules.length; i++) {
-            System.out.println(modules[i].getPosition());
-        }
-    }
-
-    public void setStates(SwerveModuleState[] targetStates) {
+    /**
+     * Set the states of each swerve module.
+     * 
+     * @param targetStates The states to set the swerve modules to.
+     */
+    public void setModuleStates(SwerveModuleState[] targetStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, maxModuleSpeed);
 
         for (int i = 0; i < modules.length; i++) {
@@ -133,28 +145,103 @@ public class SwerveSubsystemSim extends SwerveSubSystemBase {
         }
     }
 
+    /**
+     * Get the states of each swerve module.
+     * 
+     * @return The state of each swerve module.
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
         for (int i = 0; i < modules.length; i++) {
             states[i] = modules[i].getState();
         }
+
         return states;
     }
 
-    public SwerveModulePosition[] getPositions() {
+    /**
+     * Get the position of each swerve module.
+     * 
+     * @return The position of each swerve module.
+     */
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+
         for (int i = 0; i < modules.length; i++) {
             positions[i] = modules[i].getPosition();
         }
+
         return positions;
     }
 
+    /**
+     * Get the norm, or distance from the origin to the translation.
+     * 
+     * @return The norm, or distance from the origin to the translation.
+     */
     public double getNorm() {
         return flModuleOffset.getNorm();
     }
 
+    /**
+     * Get the maximum speed of the swerve modules.
+     *
+     * @return The maximum speed of the swerve module.
+     */
     public double getMaxModuleSpeed() {
         return maxModuleSpeed;
+    }
+
+    /**
+     * Prints the pose. Used for debugging.
+     */
+    public void printPose() {
+        Pose2d m_pose = getPose();
+        System.out.println("x: " + m_pose.getX() + ", y: " + m_pose.getY());
+    }
+
+    /**
+     * Prints the states of each swerve module. Used for debugging.
+     */
+    public void printModuleStates(SwerveModuleState[] states) {
+        for (int i = 0; i < states.length; i++) {
+            System.out.println(states[i]);
+        }
+    }
+
+    /**
+     * Prints the position of each swerve module. Used for debugging.
+     */
+    public void printModulePositions() {
+        for (int i = 0; i < modules.length; i++) {
+            System.out.println(modules[i].getPosition());
+        }
+    }
+
+    /**
+     * Method to drive the robot using joystick info.
+     *
+     * @param xSpeed        Speed of the robot in the x direction (forward).
+     * @param ySpeed        Speed of the robot in the y direction (sideways).
+     * @param rot           Angular rate of the robot.
+     * @param fieldRelative Whether the provided x and y speeds are relative to the
+     *                      field.
+     * @param rateLimit     Whether to enable rate limiting for smoother control.
+     */
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                ChassisSpeeds.discretize(
+                        fieldRelative
+                                ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                                        xSpeed, ySpeed, rot, m_gyro.getRotation2d())
+                                : new ChassisSpeeds(xSpeed, ySpeed, rot),
+                        0.02));
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+                swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+        setModuleStates(swerveModuleStates);
     }
 
     /**
@@ -183,7 +270,8 @@ public class SwerveSubsystemSim extends SwerveSubSystemBase {
     }
 
     /**
-     * Basic simulation of a gyro, will just hold its current state and not use any
+     * Basic simulation of a m_gyro, will just hold its current state and not use
+     * any
      * hardware
      */
     class SimGyro {
