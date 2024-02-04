@@ -104,6 +104,9 @@ class ThresholdInRange:
         self.img_box_label = Label(views_frame)
         self.img_box_label.grid(row=1, column=1, padx=5, pady=5)
 
+        self.img_raw_label = Label(views_frame)
+        self.img_raw_label.grid(row=0, column=0, padx=5, pady=5)
+
         self.current_preset_var = StringVar()
         self.current_preset_var.set("debug_block")
 
@@ -148,6 +151,10 @@ class ThresholdInRange:
         self.slider_high_s.set(int(preset_values.get("high_saturation", 0) or 0))
         self.slider_low_v.set(int(preset_values.get("low_value", 0) or 0))
         self.slider_high_v.set(int(preset_values.get("high_value", 0) or 0))
+    
+    def estimate_distance(apparent_width, known_width, focal_length):
+        distance = (known_width * focal_length) / apparent_width
+        return distance
 
     def draw_bounding_box(self, frame, contours, color):
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
@@ -187,6 +194,9 @@ class ThresholdInRange:
         return frame
 
     def capture_task(self):
+        known_width_inches = 10
+
+        focal_length = 320.8
         while True:
             ret, self.mat_frame = self.cap.read()
             if not ret:
