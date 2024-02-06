@@ -59,9 +59,9 @@ public class RobotContainer {
                                     // Multiply by max speed to map the joystick unitless inputs to actual units.
                                     // This will map the [-1, 1] to [max speed backwards, max speed forwards],
                                     // converting them to actual units.
-                                    -MathUtil.applyDeadband(m_driverControllerSim.getLeftY(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverControllerSim.getLeftX(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverControllerSim.getRightX(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
                                     false,
                                     false),
                             m_robotDriveSim));
@@ -97,6 +97,11 @@ public class RobotContainer {
             new JoystickButton(m_driverController, Button.kRightBumper.value)
             .whileTrue(new RunCommand(
                 () -> m_robotDrive.setX(),
+                m_robotDrive));
+
+            new JoystickButton(m_driverController, Button.kLeftBumper.value)
+            .whileTrue(new RunCommand(
+                () -> m_robotDrive.setZero(),
                 m_robotDrive));
         }
         else {

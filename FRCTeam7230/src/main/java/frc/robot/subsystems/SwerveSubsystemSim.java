@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,6 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +30,15 @@ import frc.robot.subsystems.SwerveSubsystemSim.SimSwerveModule;
  */
 public class SwerveSubsystemSim extends SubsystemBase {
     public Field2d m_field = new Field2d();
+    private final StructArrayPublisher<SwerveModuleState> publisher;
+
+    StructPublisher<Pose3d> publisher3d = NetworkTableInstance.getDefault()
+            .getStructTopic("Pose3d", Pose3d.struct).publish();
+    StructArrayPublisher<Pose3d> arrayPublisher3d = NetworkTableInstance.getDefault()
+            .getStructArrayTopic("PoseArray3d", Pose3d.struct).publish();
+
+    Pose3d poseA = new Pose3d();
+    Pose3d poseB = new Pose3d();
 
     public static final Translation2d flModuleOffset = new Translation2d(0.4, 0.4);
     public static final Translation2d frModuleOffset = new Translation2d(0.4, -0.4);
@@ -68,6 +81,12 @@ public class SwerveSubsystemSim extends SubsystemBase {
                 new Pose2d(1.85, 4.98, new Rotation2d())); // Starting Pose.
 
         SmartDashboard.putData("Field", m_field);
+
+        publisher = NetworkTableInstance.getDefault()
+                .getStructArrayTopic("/SwerveStates", SwerveModuleState.struct).publish();
+
+        publisher3d.set(poseA);
+        arrayPublisher3d.set(new Pose3d[] {poseA, poseB});
     }
 
     /**
@@ -81,6 +100,9 @@ public class SwerveSubsystemSim extends SubsystemBase {
         m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
 
         m_field.setRobotPose(getPose());
+
+        // Periodically send a set of module states
+        publisher.set(getModuleStates());
     }
 
     /**
@@ -113,7 +135,8 @@ public class SwerveSubsystemSim extends SubsystemBase {
     /**
      * Update the swerve modules based on the current chassis speed.
      * 
-     * @param fieldRelativeSpeeds The current chassis speed to update the swerve modules to.
+     * @param fieldRelativeSpeeds The current chassis speed to update the swerve
+     *                            modules to.
      */
     public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
         driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
@@ -122,7 +145,8 @@ public class SwerveSubsystemSim extends SubsystemBase {
     /**
      * Update the swerve modules based on the current chassis speed.
      * 
-     * @param robotRelativeSpeeds The current chassis speed to update the swerve modules to.
+     * @param robotRelativeSpeeds The current chassis speed to update the swerve
+     *                            modules to.
      */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
@@ -243,6 +267,41 @@ public class SwerveSubsystemSim extends SubsystemBase {
 
         setModuleStates(swerveModuleStates);
     }
+
+      /**
+   * Sets the wheels into an X formation to prevent movement.
+   */
+  public void setX() {
+    //modules[0].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    //modules[1].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    //modules[2].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    //modules[3].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+    states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+    states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+    states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+    states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+
+    setModuleStates(states);
+  }
+
+  public void setZero(){
+    //modules[0].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //modules[1].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //modules[2].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //modules[3].setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+    states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+
+    setModuleStates(states);
+  }
 
     /**
      * Basic simulation of a swerve module, will just hold its current state and not
