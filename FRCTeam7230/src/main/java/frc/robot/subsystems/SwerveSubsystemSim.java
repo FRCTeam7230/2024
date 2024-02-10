@@ -52,6 +52,9 @@ public class SwerveSubsystemSim extends SubsystemBase {
 
     private SimGyro m_gyro;
 
+    public static final double speedMultiplier = 3.0;
+    public static final double angleMultiplier = 3.0;
+
     /**
      * Constructor. Set up simulation gyro and simulation swerve modules. Also
      * initialize
@@ -87,6 +90,9 @@ public class SwerveSubsystemSim extends SubsystemBase {
 
         publisher3d.set(poseA);
         arrayPublisher3d.set(new Pose3d[] {poseA, poseB});
+
+        SmartDashboard.putNumber("Speed Multiplier", speedMultiplier);
+        SmartDashboard.putNumber("Angle Multiplier", angleMultiplier);
     }
 
     /**
@@ -268,7 +274,7 @@ public class SwerveSubsystemSim extends SubsystemBase {
         setModuleStates(swerveModuleStates);
     }
 
-      /**
+  /**
    * Sets the wheels into an X formation to prevent movement.
    */
   public void setX() {
@@ -308,6 +314,9 @@ public class SwerveSubsystemSim extends SubsystemBase {
      * use any hardware
      */
     class SimSwerveModule {
+        //public static final double speedMetersPerSecond = 10.0;
+        //public Rotation2d angle = Rotation2d.fromDegrees(0);
+
         private SwerveModulePosition currentPosition = new SwerveModulePosition();
         private SwerveModuleState currentState = new SwerveModuleState();
 
@@ -320,11 +329,12 @@ public class SwerveSubsystemSim extends SubsystemBase {
         }
 
         public void setTargetState(SwerveModuleState targetState) {
+            double multiplier = SmartDashboard.getNumber("Speed Multiplier", speedMultiplier);
             // Optimize the state
             currentState = SwerveModuleState.optimize(targetState, currentState.angle);
 
             currentPosition = new SwerveModulePosition(
-                    currentPosition.distanceMeters + (currentState.speedMetersPerSecond * 0.02), currentState.angle);
+                    currentPosition.distanceMeters + (currentState.speedMetersPerSecond * 0.02 * multiplier), currentState.angle);
         }
     }
 
@@ -341,7 +351,8 @@ public class SwerveSubsystemSim extends SubsystemBase {
         }
 
         public void updateRotation(double angularVelRps) {
-            currentRotation = currentRotation.plus(new Rotation2d(angularVelRps * 0.02));
+            double multiplier = SmartDashboard.getNumber("Angle Multiplier", angleMultiplier);
+            currentRotation = currentRotation.plus(new Rotation2d(angularVelRps * 0.02 * multiplier));
         }
     }
 }
