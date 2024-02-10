@@ -94,15 +94,18 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         if (RobotBase.isSimulation()) {
-            new JoystickButton(m_driverController, Button.kRightBumper.value)
-            .whileTrue(new RunCommand(
-                () -> m_robotDrive.setX(),
-                m_robotDrive));
-
-            new JoystickButton(m_driverController, Button.kLeftBumper.value)
-            .whileTrue(new RunCommand(
-                () -> m_robotDrive.setZero(),
-                m_robotDrive));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDriveSim.setX(),
+                            m_robotDriveSim));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDriveSim.printModulePositions(),
+                            m_robotDriveSim));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+                    .whileTrue(new InstantCommand(
+                            () -> m_robotDriveSim.setZero(),
+                            m_robotDriveSim));
         }
         else {
             new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
