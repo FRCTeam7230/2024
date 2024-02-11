@@ -1,4 +1,4 @@
-# WPILib documentation
+# Useful References
 - [FRC Team 7230 GitHub Repository](https://github.com/FRCTeam7230)
 - [FRC - WPI Library](https://docs.wpilib.org/en/stable/index.html)
 - [PathPlanner](https://pathplanner.dev/home.html)
