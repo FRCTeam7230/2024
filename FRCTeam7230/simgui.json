@@ -1,30 +1,8 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "SPARK MAX [1]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [7]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [8]": {
-        "header": {
-          "open": true
-        }
+      "window": {
+        "visible": false
       }
     }
   },
@@ -39,11 +17,6 @@
       "/SmartDashboard/Pathfind to Scoring Pos": "Command"
     },
     "windows": {
-      "/SmartDashboard/Auto Mode": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Autonomous Path": {
         "window": {
           "visible": true
@@ -53,13 +26,14 @@
         "bottom": 1476,
         "height": 8.210550308227539,
         "left": 150,
-        "path": {
-          "arrows": false,
-          "style": "Line"
-        },
         "right": 2961,
         "top": 79,
         "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/On-the-fly path": {
         "window": {
           "visible": true
         }
@@ -77,37 +51,8 @@
     }
   },
   "NetworkTables": {
-    "retained": {
-      "SmartDashboard": {
-        "Auto Mode": {
-          "open": true
-        },
-        "open": true
-      }
-    },
     "transitory": {
-      "FMSInfo": {
-        "open": true
-      },
-      "LiveWindow": {
-        "open": true
-      },
-      "PathPlanner": {
-        "HotReload": {
-          "open": true
-        },
-        "open": true
-      },
-      "Shuffleboard": {
-        "open": true
-      },
       "SmartDashboard": {
-        "Field": {
-          "double[]##v_/SmartDashboard/Field/Robot": {
-            "open": true
-          },
-          "open": true
-        },
         "open": true
       }
     }
@@ -119,16 +64,8 @@
     "Connections": {
       "open": true
     },
-    "DartClient_49920672@1": {
-      "open": true
-    },
     "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "Subscribers": {
-        "open": true
-      }
+      "open": true
     },
     "visible": true
   }
