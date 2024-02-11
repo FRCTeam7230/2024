@@ -19,7 +19,7 @@ https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/index.html
 https://github.com/mjansen4857/pathplanner/releases
 
 
-# Running Simulation
+# Robot Simulation
 
 ## About Simulation
 - https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html
