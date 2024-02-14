@@ -64,6 +64,4 @@ public class Limelight {
     //public static boolean proceedMoving(double objAreaRequired) {
         // refreshData();
         // this method's placement might be temporary, ill be working apriltag detection and will deem later if needed
-
-
 }
