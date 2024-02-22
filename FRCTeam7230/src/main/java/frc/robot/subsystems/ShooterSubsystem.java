@@ -16,10 +16,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class ShooterSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
-  CANSparkMax pivotMotor = Mechanisms.shooterPivotMotor;
+  CANSparkMax pivotMotor = Mechanisms.m_shooterPivotMotor;
   
 
-  private static CANSparkMax shooterMotor = Mechanisms.shooterMotor;
+  private static CANSparkMax shooterMotor = Mechanisms.m_shooterMotor;
 
   double motorRotateSpeed = ShooterConstants.kRotationalSpeed;
   double rotateDegree = ShooterConstants.kDegreesPerStep;

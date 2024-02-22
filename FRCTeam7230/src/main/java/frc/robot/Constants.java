@@ -20,11 +20,6 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
-    public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
-    public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = (Math.PI/2);
-
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 5;
     public static final int kRearLeftDrivingCanId = 3;
