@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -17,45 +16,4 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-
-  public static final class DriveConstants {
-    public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
-    public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = (Math.PI/2);
-
-    // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 5;
-    public static final int kRearLeftDrivingCanId = 3;
-    public static final int kFrontRightDrivingCanId = 7;
-    public static final int kRearRightDrivingCanId = 1;
-
-    public static final int kFrontLeftTurningCanId = 6;
-    public static final int kRearLeftTurningCanId = 4;
-    public static final int kFrontRightTurningCanId = 8;
-    public static final int kRearRightTurningCanId = 2;
-  }
-
-  public static final class ShooterConstants {
-    public static final int kShooterMotorId = 1;
-    public static final int kShooterPivotMotorId = 1;
-    public static final int kNoteBeamSensorId = 1;
-    public static final int kPivotEncoderId = 1;
-    public static final int kUpperLimitSwitchId = 1;
-  }
-
-  public static final class IntakeConstants {
-    public static final int kIntakeMotorId = 1;
-    public static final int kTransferToShooterMotorId = 1;
-  }
-
-  public static final class ClimbingConstants {
-    public static final int kClimbingMotorId = 1;
-    public static final int kClimbingEncoderId = 1;
-  }
-
-  public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-  
 }
