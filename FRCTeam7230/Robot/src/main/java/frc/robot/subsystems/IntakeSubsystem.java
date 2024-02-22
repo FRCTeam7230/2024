@@ -6,15 +6,17 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Mechanisms;
 import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IntakeSubsystem extends SubsystemBase {
 
   /** Variables */
-  public Spark flywheelMotor = new Spark(IntakeConstants.kFlywheelMotorPort1);
-  public static DigitalInput intakeSensor = new DigitalInput(IntakeConstants.kSensorPort);
+  private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
+  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
 
   public static boolean intakeSystemOn = false;
 
