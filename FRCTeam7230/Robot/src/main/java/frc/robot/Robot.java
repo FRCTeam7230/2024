@@ -5,8 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Vision2Subsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  private boolean red = true;
+  private final SendableChooser<String> color_chooser = new SendableChooser<>();
+  private String colorSelected;
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -28,6 +35,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Vision2Subsystem vision = new Vision2Subsystem();
+    color_chooser.setDefaultOption("Red", "red");
+    color_chooser.addOption("Blue", "blue");
+    SmartDashboard.putData("Color choice", color_chooser);
+
   }
 
   /**
@@ -43,6 +55,15 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    colorSelected = color_chooser.getSelected();
+    switch (colorSelected) {
+      case "red":
+        red = true;
+        break;
+      case "blue":
+        red = false;
+        break;
+    }
     CommandScheduler.getInstance().run();
   }
 
@@ -54,15 +75,15 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
+  //@Override
+  /*public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-  }
+  }*/
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -77,6 +98,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    VisionSubsystem visSub = new VisionSubsystem();
   }
 
   /** This function is called periodically during operator control. */
