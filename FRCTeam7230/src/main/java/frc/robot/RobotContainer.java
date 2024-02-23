@@ -45,11 +45,11 @@ public class RobotContainer {
 
     // d_button0Pressed.onTrue(m_shooterSubsystem.whateverCoolCommand());
 
-    d_axisUp.whileTrue(s_shooterSubsystem.RotateShooterUp());
-    d_axisDown.whileTrue(s_shooterSubsystem.RotateShooterDown());
+    // d_axisUp.whileTrue(s_shooterSubsystem.RotateShooterUp());
+    // d_axisDown.whileTrue(s_shooterSubsystem.RotateShooterDown());
 
-    d_axisUp.onFalse(s_shooterSubsystem.StopRotation());
-    d_axisDown.onFalse(s_shooterSubsystem.StopRotation());
+    // d_axisUp.onFalse(s_shooterSubsystem.StopRotation());
+    // d_axisDown.onFalse(s_shooterSubsystem.StopRotation());
 
     // onTrue / onFalse: Schedules for one iteration.
     // whileTrue / whileFalse: Schedules every iteration it is true.

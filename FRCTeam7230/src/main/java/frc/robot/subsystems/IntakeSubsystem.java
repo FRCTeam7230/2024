@@ -7,18 +7,18 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mechanisms;
-import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.Constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
 
 public class IntakeSubsystem extends SubsystemBase {
 
   /** Variables */
   private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
-  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
+  private static CANSparkMax transferMotor = Mechanisms.m_transferToShooterMotor;
 
   public static boolean intakeSystemOn = false;
 
-  /** Creates a new ExampleSubsystem. */
+
   public IntakeSubsystem() {
 
   }
@@ -58,23 +58,23 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-  public static boolean checkSensor() {
-    return intakeSensor.get();
-  }
+  // public static boolean checkSensor() {
+  //   // return intakeSensor.get();
+  // }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run :) 
+  // @Override
+  // public void periodic() {
+  //   // This method will be called once per scheduler run :) 
 
-    if (intakeSystemOn) {
-      if (checkSensor() == false) {
-        // this means we haven't picked up yet
-        /* Talk with OPENCV when finioshed */
-      } else {
-        // means we picked up, skip
-      }
-    }
-  }
+  //   if (intakeSystemOn) {
+  //     if (checkSensor() == false) {
+  //       // this means we haven't picked up yet
+  //       /* Talk with OPENCV when finioshed */
+  //     } else {
+  //       // means we picked up, skip
+  //     }
+  //   }
+  // }
 
   @Override
   public void simulationPeriodic() {

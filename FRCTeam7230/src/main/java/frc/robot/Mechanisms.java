@@ -26,7 +26,8 @@ public class Mechanisms {
     public static final CANSparkMax m_frontRightDrivingMotor = new CANSparkMax(DriveConstants.kFrontRightDrivingCanId, MotorType.kBrushless);
 
     //Shooter Subsystem
-    public static final CANSparkMax m_shooterMotor = new CANSparkMax(ShooterConstants.kShooterMotorId, MotorType.kBrushless);
+    public static final CANSparkMax m_rightShooterMotor = new CANSparkMax(ShooterConstants.kShooterMotorId, MotorType.kBrushless);
+    public static final CANSparkMax m_leftShooterMotor = new CANSparkMax(ShooterConstants.kShooterMotorId, MotorType.kBrushless);
     public static final DigitalInput m_noteBeamSensor = new DigitalInput(ShooterConstants.kNoteBeamSensorId);
 
     public static final CANSparkMax m_shooterPivotMotor = new CANSparkMax(ShooterConstants.kShooterPivotMotorId, MotorType.kBrushless);
@@ -40,4 +41,5 @@ public class Mechanisms {
     //Climbing Subsystem
     public static final CANSparkMax m_climbingMotor = new CANSparkMax(ClimbingConstants.kClimbingMotorId, MotorType.kBrushless);
     public static final DutyCycleEncoder m_climberEncoder = new DutyCycleEncoder(ClimbingConstants.kClimbingEncoderId);
+
 }
