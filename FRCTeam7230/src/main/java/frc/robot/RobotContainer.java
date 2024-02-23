@@ -6,10 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,9 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
-  private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
-  private final AutosSubsystem a_autos = new AutosSubsystem();
 
   private final Joystick driveJoystick = Mechanisms.m_driverController;
   private final Joystick mechJoystick = Mechanisms.m_mechanismsController;
@@ -44,17 +38,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     // All joystick bindings
-    Trigger d_button0Pressed = new Trigger(new JoystickButton(driveJoystick, 0));
-    Trigger d_axisUp = new Trigger(() -> driveJoystick.getRawAxis(1) > 0.25);
-    Trigger d_axisDown = new Trigger(() -> driveJoystick.getRawAxis(1) < 0.25);
 
-    // d_button0Pressed.onTrue(m_shooterSubsystem.whateverCoolCommand());
 
-    d_axisUp.whileTrue(s_shooterSubsystem.RotateShooterUp());
-    d_axisDown.whileTrue(s_shooterSubsystem.RotateShooterDown());
 
-    d_axisUp.onFalse(s_shooterSubsystem.StopRotation());
-    d_axisDown.onFalse(s_shooterSubsystem.StopRotation());
 
     // onTrue / onFalse: Schedules for one iteration.
     // whileTrue / whileFalse: Schedules every iteration it is true.
@@ -70,6 +56,6 @@ public class RobotContainer {
    */
   public void getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return a_autos.soontobemadecommand();
+    
   }
 }
