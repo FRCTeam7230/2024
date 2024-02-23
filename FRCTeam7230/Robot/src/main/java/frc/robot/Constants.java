@@ -16,6 +16,7 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kMechanismsControllerPort = 0;
   }
 
   public static final class DriveConstants {
@@ -42,6 +43,9 @@ public final class Constants {
     public static final int kNoteBeamSensorId = 1;
     public static final int kPivotEncoderId = 1;
     public static final int kUpperLimitSwitchId = 1;
+
+    public static final double kRotationalSpeed = 0.5;
+    public static final double kDegreesPerStep = 1;
   }
 
   public static final class IntakeConstants {
@@ -52,10 +56,6 @@ public final class Constants {
   public static final class ClimbingConstants {
     public static final int kClimbingMotorId = 1;
     public static final int kClimbingEncoderId = 1;
-  }
-
-  public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
   }
   
 }
