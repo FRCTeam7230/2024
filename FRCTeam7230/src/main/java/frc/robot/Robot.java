@@ -87,7 +87,18 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(Mechanisms.m_driverController.getRawButton(7))
+    {
+      Mechanisms.m_rearLeftTurningMotor.set(1);
+      Mechanisms.m_frontLeftTurningMotor.set(-1);
+    }
+    if(Mechanisms.m_driverController.getRawButton(8))
+    {
+      Mechanisms.m_rearLeftTurningMotor.set(0);
+      Mechanisms.m_frontLeftTurningMotor.set(0);
+    }
+  }
 
   @Override
   public void testInit() {
