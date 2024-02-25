@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Vision2Subsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,14 +18,25 @@ import frc.robot.subsystems.VisionSubsystem;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   private boolean red = true;
   private final SendableChooser<String> color_chooser = new SendableChooser<>();
+  Limelight limelight = new Limelight();
   private String colorSelected;
   private Command m_autonomousCommand;
-
+  private double offsetX, offsetY, tagDistance, tagID;
   private RobotContainer m_robotContainer;
-
+  private void refreshLimeghtData() {
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);
+  }
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -35,9 +46,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    Vision2Subsystem vision = new Vision2Subsystem();
-    color_chooser.setDefaultOption("Red", "red");
-    color_chooser.addOption("Blue", "blue");
+    // Vision2Subsystem vision = new Vision2Subsystem();
+    color_chooser.setDefaultOption("red", "red");
+    color_chooser.addOption("blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
 
   }
@@ -87,7 +98,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    // offsetX = Limelight.getTargetAngleX();
+    // offsetY = Limelight.getTargetAngleY();
+    // tagID = Limelight.getTargetID();
+    // tagDistance = Limelight.apriltagDistance();
+    // SmartDashboard.putNumber("X offset", offsetX);
+    // SmartDashboard.putNumber("Y offset", offsetY);
+    // SmartDashboard.putNumber("Tag ID", tagID);
+    // SmartDashboard.putNumber("Tag Distance", tagDistance);
+    // SmartDashboard.updateValues();
+  }
 
   @Override
   public void teleopInit() {
@@ -99,12 +120,22 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    VisionSubsystem visSub = new VisionSubsystem();
+    // Vision2Subsystem visSub = new Vision2Subsystem();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    Limelight.limelight(colorSelected);
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber(" X offset", offsetX);
+    SmartDashboard.putNumber(" Y offset", offsetY);
+    SmartDashboard.putNumber(" Tag ID", tagID);
+    SmartDashboard.putNumber(" Tag Distance", tagDistance);
+  }
 
   @Override
   public void testInit() {

@@ -4,10 +4,10 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 /* TODO:
- * - set up the general limelight [x (maybe? i dont know ill test with the limelight)]
- * - set up the apriltag detection [--68%--]
+ * - set up the general limelight [x]
+ * - set up the apriltag detection [x]
  * - set up the red blue team integration [x]
- * - test this integration with the apriltags and the red blue team chooserand integration []
+ * - test this integration with the apriltags and the red blue team chooser and integration []
  */
 public class Limelight {
     private static NetworkTableInstance table = null;
@@ -19,7 +19,7 @@ public class Limelight {
         // rest of the code works off of this
         if (teamColor == "red") {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); // pipeline 0 is for red team
-        } else if (teamColor == "blue") {
+        } else {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); // pipeline 1 is for blue team
         }
     }
@@ -36,7 +36,6 @@ public class Limelight {
         targetX = tx.getDouble(0.0);
         targetY = ty.getDouble(0.0);
         targetID = tid.getDouble(0.0);
-        // add tid here
     }
 
     public static void manualLimelightOff(boolean manualLayout){
@@ -65,17 +64,18 @@ public class Limelight {
         return targetID;
     } // this gets the apriltag's ID
 
+    
+
     public static double apriltagDistance() {
         // this is where we calculate the distance to the apriltag
-        double h1 = 0; // height of the limelight from the ground
-        double h2 = 0; // height of the apriltag from the ground
-        double a1 = 0; // angle of the limelight
-        double a2 = 0; // angle of the apriltag
+        double h1 = 9.120; // height of the limelight from the ground
+        double h2 = 50.4; // height of the apriltag from the ground
+        double a1deg = 22.85; // angle of the limelight
+        double a2deg = 0; // angle of the apriltag
+        double a1 = Math.toRadians(a1deg);
+        double a2 = Math.toRadians(a2deg);
         double d = (h2 - h1) / Math.tan(a1 + a2);
         return d;
+        
     } // this is where we calculate the distance to the apriltag
-
-    //public static boolean proceedMoving(double objAreaRequired) {
-        // refreshData();
-        // this method's placement might be temporary, ill be working apriltag detection and will deem later if needed
 }
