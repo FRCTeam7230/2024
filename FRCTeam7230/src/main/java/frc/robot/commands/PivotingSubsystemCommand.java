@@ -35,15 +35,20 @@ public class PivotingSubsystemCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double current;
     pivot = m_mechanismsController.getY();
-    if(pivot != 0){
+    if(pivot != 0){//joystick no button
       s_pivotingSubsystem.RotateShooter(pivot_limit.calculate(pivot));//does this account for both up and down?
-    }else{
-      double current = s_pivotingSubsystem.counterValue();
-      while(s_pivotingSubsystem.counterValue() < current){
-        s_pivotingSubsystem.RotateShooter(rotationalCoefficient*0.5);//check for directionality
+    }else if(rotationalCoefficient==-1){
+      current = s_pivotingSubsystem.counterValue();
+      while(s_pivotingSubsystem.counterValue() > current - 10){
+        s_pivotingSubsystem.RotateShooter(-0.5);
       }
-      
+    }else if(rotationalCoefficient==1){
+      current = s_pivotingSubsystem.counterValue();
+      while(s_pivotingSubsystem.counterValue() < current + 10){
+        s_pivotingSubsystem.RotateShooter(0.5);
+      }
     }
   }
 

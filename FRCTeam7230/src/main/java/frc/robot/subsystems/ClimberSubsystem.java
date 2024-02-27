@@ -14,6 +14,8 @@ public class ClimberSubsystem extends SubsystemBase {
   /** Variables */
   private static CANSparkMax climberMotor = Mechanisms.m_climbingMotor;
   private static DutyCycleEncoder climberEncoder = Mechanisms.m_climberEncoder;
+  //private double motorRotateSpeed = 0.5;
+
 
   /** Creates a new ExampleSubsystem. */
   public ClimberSubsystem() {}
@@ -23,24 +25,26 @@ public class ClimberSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
+  public void startClimber(double motorRotateSpeed) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+    climberMotor.set(motorRotateSpeed);
+        
   }
-
+  public void stopClimber() {
+    climberMotor.stopMotor();;
+  }
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public double getClimbEncoder(){
+    return climberEncoder.getDistance();
   }
+    // Query some boolean state, such as a digital sensor.
+    
+  
 
   @Override
   public void periodic() {
