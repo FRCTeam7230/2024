@@ -4,7 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Mechanisms;
 
 public class PivotingSubsystem extends SubsystemBase {
   /** Creates a new PivotingSubsystem. */
@@ -14,21 +19,21 @@ public class PivotingSubsystem extends SubsystemBase {
   private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch;
   
   public PivotingSubsystem() {
-    pivotMotor.configFactoryDefault();
+    //pivotMotor.restoreFactoryDefaults();
 
   }
 
-  public Command RotateShooter(double motorRotateSpeed) {
-    pivotMotor.set(ControlMode.PercentOutput, motorRotateSpeed);
+  public void RotateShooter(double motorRotateSpeed) {
+    pivotMotor.set(motorRotateSpeed);
   }
 
  /*public Command RotateShooterDown(double motorRotateSpeed) {
     pivotMotor.set(ControlMode.PercentOutput, -motorRotateSpeed);    
   }*/
-  public Command StopRotation(){
+  public void StopRotation(){
     pivotMotor.stopMotor();
   }
-  public int counterValue() {
+  public double counterValue() {
     return pivotEncoder.getDistance();
   }
   

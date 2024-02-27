@@ -4,9 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.PivotingSubsystem;
 
-public class ShooterSubsystemCommand extends Command {
+public class PivotingSubsystemCommand extends Command {
   /** Creates a new ShooterSubsystemCommand. */
   private PivotingSubsystem s_pivotingSubsystem;
   private Joystick m_mechanismsController;
@@ -32,13 +35,13 @@ public class ShooterSubsystemCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot = control.getY();
+    pivot = m_mechanismsController.getY();
     if(pivot != 0){
       s_pivotingSubsystem.RotateShooter(pivot_limit.calculate(pivot));//does this account for both up and down?
     }else{
-      int current = s_pivotingSubsystem.counterValue();
+      double current = s_pivotingSubsystem.counterValue();
       while(s_pivotingSubsystem.counterValue() < current){
-        s_pivotingSubsystem.RotateShooter(rotationalCoefficient*0.5);
+        s_pivotingSubsystem.RotateShooter(rotationalCoefficient*0.5);//check for directionality
       }
       
     }

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeSubsystemCommand extends Command {
   /** Creates a new IntakeSubsystemCommand. */
@@ -36,6 +37,6 @@ public class IntakeSubsystemCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return s_intakeSubsystem.checkSensor();
+    return IntakeSubsystem.checkSensor();
   }
 }

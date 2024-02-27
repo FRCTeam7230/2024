@@ -5,7 +5,9 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.AutosSubsystem;
+import frc.robot.commands.IntakeSubsystemCommand;
+import frc.robot.commands.PivotingSubsystemCommand;
+//import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.PivotingSubsystem;
@@ -22,11 +24,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer extends Command{
+public class RobotContainer{
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
   private final PivotingSubsystem s_pivotingSubsystem = new PivotingSubsystem();
+  private final Joystick m_mechanismsController = new Joystick(0);
   //private final AutosSubsystem a_autos = new AutosSubsystem();
 
   private final Joystick driveJoystick = Mechanisms.m_driverController;
@@ -45,13 +48,13 @@ public class RobotContainer extends Command{
   }
 
   private void configureBindings() {
-    PivotUpButton.whenHeld(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, 1));
-    PivotDownButton.whenHeld(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, -1));
-    intakeButton.whenPressed(new IntakeSubsystemCommand(s_intakeSubsystem));
+    PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, 1));
+    PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, -1));
+    intakeButton.whileTrue(new IntakeSubsystemCommand(s_intakeSubsystem));
     
   }
   public void defaultCommands(){
-    s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController));
+    s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
    
 
 

@@ -40,9 +40,9 @@ public class ShooterSubsystem extends SubsystemBase{
 
   public ShooterSubsystem() {
     
-    leftShooterMotor.configFactoryDefault();
+    //leftShooterMotor.configFactoryDefault();
 
-    rightShooterMotor.configFactoryDefault();
+    //rightShooterMotor.configFactoryDefault();
   }
 
   /**
@@ -55,12 +55,12 @@ public class ShooterSubsystem extends SubsystemBase{
 
   
 
-  public Command StartShooter() {
+  public void StartShooter() {
     rightShooterMotor.set(motorRotateSpeed);
     leftShooterMotor.set(motorRotateSpeed);
   }
 
-  public Command StopShooter() {
+  public void StopShooter() {
     rightShooterMotor.stopMotor();
     leftShooterMotor.stopMotor();
   }

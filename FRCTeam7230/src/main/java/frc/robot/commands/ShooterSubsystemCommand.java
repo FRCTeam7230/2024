@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterSubsystemCommand extends Command {
   /** Creates a new ShooterSubsystemCommand. */
@@ -24,7 +26,7 @@ public class ShooterSubsystemCommand extends Command {
   @Override
   public void execute() {
     s_shooterSubsystem.StartShooter();
-    new wait(4.0);
+    new WaitCommand(4.0);
     s_shooterSubsystem.StopShooter();
   }
 
