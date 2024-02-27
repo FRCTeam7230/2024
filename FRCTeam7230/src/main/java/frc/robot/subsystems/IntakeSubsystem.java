@@ -35,10 +35,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void startIntakeSystem() {
     intakeMotor.set(motorRotateSpeed);
+    transferMotor.set(motorRotateSpeed);
   }
 
   public void stopIntakeSystem() {
     intakeMotor.stopMotor();
+    transferMotor.stopMotor();
   }
 
   /**

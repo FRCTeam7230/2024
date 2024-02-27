@@ -26,6 +26,7 @@ public class IntakeSubsystemCommand extends Command {
   @Override
   public void execute() {
     s_intakeSubsystem.startIntakeSystem();
+    
   }
 
   // Called once the command ends or is interrupted.
