@@ -15,12 +15,15 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Variables */
   private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
   private static CANSparkMax transferMotor = Mechanisms.m_transferToShooterMotor;
+  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
 
-  public static boolean intakeSystemOn = false;
+  //public static boolean intakeSystemOn = false;
+  private double motorRotateSpeed = 0.5;
 
 
   public IntakeSubsystem() {
-
+    intakeMotor.configFactoryDefault();
+    transferMotor.configFactoryDefault();
   }
 
   /**
@@ -28,27 +31,13 @@ public class IntakeSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-
-        });
-  }
 
   public Command startIntakeSystem() {
-    return runOnce(
-        () -> {
-          intakeSystemOn = true;
-        });
+    intakeMotor.set(motorRotateSpeed);
   }
 
   public Command stopIntakeSystem() {
-    return runOnce(
-        () -> {
-          intakeSystemOn = false;
-        });
+    intakeMotor.stopMotor();
   }
 
   /**
@@ -58,23 +47,15 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-  // public static boolean checkSensor() {
-  //   // return intakeSensor.get();
-  // }
+  public static boolean checkSensor() {
+    return intakeSensor.get();
+  }
 
-  // @Override
-  // public void periodic() {
-  //   // This method will be called once per scheduler run :) 
+@Override
+public void periodic() {
+  // This method will be called once per scheduler run :) 
 
-  //   if (intakeSystemOn) {
-  //     if (checkSensor() == false) {
-  //       // this means we haven't picked up yet
-  //       /* Talk with OPENCV when finioshed */
-  //     } else {
-  //       // means we picked up, skip
-  //     }
-  //   }
-  // }
+}
 
   @Override
   public void simulationPeriodic() {

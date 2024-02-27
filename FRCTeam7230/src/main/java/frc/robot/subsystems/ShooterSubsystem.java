@@ -13,7 +13,7 @@ import frc.robot.Constants.ShooterConstants;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase{
 
   
   /** Variables */
@@ -24,21 +24,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;
   private static CANSparkMax leftShooterMotor = Mechanisms.m_leftShooterMotor;
+  //private static Joystick buttonControlling = Mechanisms.m_mechanismsController;
+
 
   
   double motorRotateSpeed = ShooterConstants.kRotationalSpeed;
-  double rotateDegree = ShooterConstants.kDegreesPerStep;
+  
 
-  Counter motorCounter = new Counter();
-  Counter absoluteCounter = new Counter();
-
-  boolean inRotation = false;
-  boolean inAbsoluteRotation = false;
-  int targetDegree;
+  //public boolean inRotation = false;
+  //public boolean shooterOn = false;
+  //boolean inAbsoluteRotation = false;
+  //double target;
 
   public static boolean shooterOn = false;
 
   public ShooterSubsystem() {
+    
+    leftShooterMotor.configFactoryDefault();
+
+    rightShooterMotor.configFactoryDefault();
   }
 
   /**
@@ -46,60 +50,19 @@ public class ShooterSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
+ 
 
-  public Command RotateToAngle(int degree){
-    return runOnce(() -> {
-      inAbsoluteRotation = true;
-      targetDegree = degree;
-    });
-  }
 
-  public Command RotateShooterUp() {
-    return runOnce(
-        () -> {
-          motorCounter.reset();
-          inRotation = true;
-
-         // pivotMotor.set(motorRotateSpeed);
-        });
-  }
-
-  // public Command RotateShooterDown() {
-  //   return runOnce(
-  //       () -> {
-  //         motorCounter.reset();
-  //         inRotation = true;
-
-  //         pivotMotor.set(-motorRotateSpeed);
-  //       });
-  // }
-  // public Command StopRotation(){
-  //   return runOnce(
-  //     () -> {
-  //       inRotation = false;
-  //       pivotMotor.stopMotor();
-  //     });
-    
-  // }
+  
 
   public Command StartShooter() {
-    return runOnce(() -> {
-      shooterOn = true;
-    });
+    rightShooterMotor.set(motorRotateSpeed);
+    leftShooterMotor.set(motorRotateSpeed);
   }
 
   public Command StopShooter() {
-    return runOnce(() -> {
-      shooterOn = false;
-    });
+    rightShooterMotor.stopMotor();
+    leftShooterMotor.stopMotor();
   }
 
   /**
@@ -109,50 +72,12 @@ public class ShooterSubsystem extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-  public int counterValue() {
-    return motorCounter.get();
-  }
-
-  public int getCurrentDegree(){
-    return absoluteCounter.get();
-  }
+  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (shooterOn) {
-     // boolean noteIsIn = IntakeSubsystem.checkSensor();
-
-      // if (noteIsIn) {
-      //   //DO SOME COOL STUFF
-      //   //pivoting mechanism control
-      //   //shooter flywheels
-      // }
-
-      // if (counterValue() <= -rotateDegree && inRotation) {
-      //   inRotation = false;
-      //   pivotMotor.stopMotor();
-      // }
-      // if (counterValue() >= rotateDegree && inRotation) {
-      //   inRotation = false;
-      //   pivotMotor.stopMotor();
-      // }
-
-      // if(inAbsoluteRotation){
-      //   int currentDegree = getCurrentDegree();
-        
-      //   if(currentDegree < targetDegree){
-      //     //it needs to go up
-      //     RotateShooterUp();
-      //   }else if(currentDegree > targetDegree){
-      //     //it needs to go down
-      //     RotateShooterDown();
-      //   }else{
-      //     inAbsoluteRotation = false;
-      //     pivotMotor.stopMotor();
-      //   }
-      // }
-    }
+    
   }
 
   @Override

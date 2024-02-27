@@ -1,12 +1,14 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+//autonomous goes here
 
 package frc.robot;
 
 import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.PivotingSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,50 +22,51 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer extends Command{
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
-  private final AutosSubsystem a_autos = new AutosSubsystem();
+  private final PivotingSubsystem s_pivotingSubsystem = new PivotingSubsystem();
+  //private final AutosSubsystem a_autos = new AutosSubsystem();
 
   private final Joystick driveJoystick = Mechanisms.m_driverController;
   private final Joystick mechJoystick = Mechanisms.m_mechanismsController;
-
+  private JoystickButton intakeButton = new JoystickButton(m_mechanismsController, 1);//is it always going to be autnonmous?
+  private JoystickButton PivotUpButton = new JoystickButton(m_mechanismsController, 2);
+  private JoystickButton PivotDownButton = new JoystickButton(m_mechanismsController, 3);//is it always going to be autnonmous?
+  //is it always going to be autnonmous?
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    defaultCommands();
   }
 
   private void configureBindings() {
-    // All joystick bindings
-    Trigger d_button0Pressed = new Trigger(new JoystickButton(driveJoystick, 0));
-    Trigger d_axisUp = new Trigger(() -> driveJoystick.getRawAxis(1) > 0.25);
-    Trigger d_axisDown = new Trigger(() -> driveJoystick.getRawAxis(1) < 0.25);
-
-    // d_button0Pressed.onTrue(m_shooterSubsystem.whateverCoolCommand());
-
-    // d_axisUp.whileTrue(s_shooterSubsystem.RotateShooterUp());
-    // d_axisDown.whileTrue(s_shooterSubsystem.RotateShooterDown());
-
-    // d_axisUp.onFalse(s_shooterSubsystem.StopRotation());
-    // d_axisDown.onFalse(s_shooterSubsystem.StopRotation());
-
-    // onTrue / onFalse: Schedules for one iteration.
-    // whileTrue / whileFalse: Schedules every iteration it is true.
-    // toggleOnTrue / toggleOnFalse: just dont use, as frc does not recommend it
-    // YOU CAN CHAIN DIFFERENT CONDITIONALS. FOR EXAMPLE: .onTrue().onFalse()
-    // YOU CAN ALSO DO AND OR XOR ETC
+    PivotUpButton.whenHeld(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, 1));
+    PivotDownButton.whenHeld(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, -1));
+    intakeButton.whenPressed(new IntakeSubsystemCommand(s_intakeSubsystem));
+    
   }
+  public void defaultCommands(){
+    s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController));
+   
 
+
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public void getAutonomousCommand() {
+  public void teleopInit(){
+  
+    //add wait function for about 4 seconds
+      //go into original subsystem file and check encoder value encoder -= 10 return the encoder value 
+  }
+  public void autnomousInit() {
     // An example command will be run in autonomous
     // return a_autos.soontobemadecommand();
   }
