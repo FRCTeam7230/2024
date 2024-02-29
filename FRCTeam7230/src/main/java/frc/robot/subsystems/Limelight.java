@@ -9,20 +9,29 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * - set up the red blue team integration [x]
  * - test this integration with the apriltags and the red blue team chooser and integration []
  */
-public class Limelight {
+public class Limelight{
+    private static NetworkTableEntry pipelineEntry;
     private static NetworkTableInstance table = null;
     public static double targetX, targetY, visionTargets, targetID;
     public static double targetArea;
     
+    static {
+        // Initialize the NetworkTableEntry in a static block
+        pipelineEntry = NetworkTableInstance.getDefault().getTable("limelight-stalin").getEntry("pipeline");
+    }
+
     public static void limelight(String teamColor) {
         // this is where we set which pipeline to use based on the team color that gets passed here, the
         // rest of the code works off of this
-        if (teamColor == "red") {
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); // pipeline 0 is for red team
+        if ("red".equals(teamColor)) {
+            table.getEntry("pipeline").setNumber(1); // pipeline 0 is for red team
         } else {
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); // pipeline 1 is for blue team
+            table.getEntry("pipeline").setNumber(0); // pipeline 1 is for blue team
         }
+        
+        NetworkTableInstance.getDefault().flush(); // Force an immediate update
     }
+    
     public static void refreshData() {
         // this is where we refresh the limelight data
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");

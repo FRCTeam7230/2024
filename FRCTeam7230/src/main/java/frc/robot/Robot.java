@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import frc.robot.subsystems.Vision2Subsystem;
 // import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,10 +20,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private boolean red = true;
+  private String red = "red";
   private final SendableChooser<String> color_chooser = new SendableChooser<>();
   private String colorSelected;
   private Command m_autonomousCommand;
+  private double offsetX, offsetY, tagDistance, tagID;
 
   private RobotContainer m_robotContainer;
 
@@ -58,18 +60,31 @@ public class Robot extends TimedRobot {
     colorSelected = color_chooser.getSelected();
     switch (colorSelected) {
       case "red":
-        red = true;
+        red = "red";
         break;
       case "blue":
-        red = false;
+        red = "blue";
         break;
     }
+    System.out.println(red);
+    Limelight.limelight(red);
     CommandScheduler.getInstance().run();
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    Limelight.initializeLimelightOff();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -87,7 +102,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);
+  }
 
   @Override
   public void teleopInit() {
@@ -105,7 +129,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);    
   }
 
   @Override
