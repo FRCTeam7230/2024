@@ -1,0 +1,72 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Mode": "String Chooser",
+      "/SmartDashboard/Autonomous Path": "Command",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/On-the-fly path": "Command",
+      "/SmartDashboard/Pathfind to Pickup Pos": "Command",
+      "/SmartDashboard/Pathfind to Scoring Pos": "Command"
+    },
+    "windows": {
+      "/SmartDashboard/Autonomous Path": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/On-the-fly path": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Pathfind to Pickup Pos": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Pathfind to Scoring Pos": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
+    "visible": true
+  }
+}

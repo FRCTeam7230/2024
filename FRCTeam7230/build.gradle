@@ -80,6 +80,9 @@ test {
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
+wpi.sim.envVar("HALSIMWS_HOST", "127.0.0.1")
+wpi.sim.addWebsocketsClient().defaultEnabled = true
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.

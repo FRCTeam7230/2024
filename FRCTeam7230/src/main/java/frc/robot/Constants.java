@@ -37,6 +37,9 @@ public final class Constants {
     public static final int kButton10 = 10;
     public static final int kButton11 = 11;
     public static final int kButton12 = 12;
+
+    public static final int INSTANT_BRAKE_BUTTON = kButton1;
+    public static final int TOGGLE_FIELDRELATIVE_BUTTON = kButton3;
   }
 
   public static final class DriveConstants {
@@ -47,7 +50,7 @@ public final class Constants {
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 1.6; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -78,8 +81,12 @@ public final class Constants {
 
     public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
     public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackLeftChassisAngularOffset = 5*(Math.PI/4);
     public static final double kBackRightChassisAngularOffset = (Math.PI/2);
+    // public static final double kFrontLeftChassisAngularOffset = (Math.PI/2);
+    // public static final double kFrontRightChassisAngularOffset = Math.PI;
+    // public static final double kBackLeftChassisAngularOffset = Math.PI + Math.PI;
+    // public static final double kBackRightChassisAngularOffset = (Math.PI/2)  + Math.PI;
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 5;
@@ -87,8 +94,8 @@ public final class Constants {
     public static final int kFrontRightDrivingCanId = 7;
     public static final int kRearRightDrivingCanId = 1;
 
-    public static final int kFrontLeftTurningCanId = 6;
-    public static final int kRearLeftTurningCanId = 4;
+    public static final int kFrontLeftTurningCanId = 6;//WAS 6
+    public static final int kRearLeftTurningCanId = 4;//WAS 4
     public static final int kFrontRightTurningCanId = 8;
     public static final int kRearRightTurningCanId = 2;
 
@@ -148,7 +155,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.2;
   }
 
   public static final class AutoConstants {
@@ -170,21 +177,4 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  //temporary DriveTrain Constants
-  public static final class driveTrainConstants {
-    //drive related
-    public static final double deadZone = 0.2;
-    public static final double zoomFactor = 2.0;
-    public static final double slowFactor = 0.45;
-    public static final double speedFactor = 0.575;
-    public static final double turnFactor = 0.725;
-    public static final double accelY = 0.005;
-    public static final double accelX = 0.001;
-    public static final double decelY = 0.075;
-    public static final double decelX = 0.075;
-    public static final double limitX = 0.7;
-    public static final double limitY = 0.45;
-    public static final double initSpeed = 0.2;
-    public static final double dropOff = 0.4; //drop off point when speed is able to drop to 0
-  }
 }
