@@ -25,6 +25,6 @@ https://github.com/mjansen4857/pathplanner/releases
 - https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html
 
 ## Running Simulation
-- Clone repository (example, to C:\Robotics)
+- Clone repository (example, to C:\Robotics) - DO NOT clone into OneDrive or other file sharing folders.
 - WPILib: Simulate Robot Code
 
