@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.DriveConstants.*;
+import frc.robot.Mechanisms;
 import frc.utils.SwerveUtils;
 
 
@@ -29,25 +30,10 @@ public class DriveSubsystem extends SubsystemBase {
     public Field2d m_field = new Field2d();
   
   // Create MAXSwerveModules
-  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
-      kFrontLeftDrivingCanId,
-      kFrontLeftTurningCanId,
-      kFrontLeftChassisAngularOffset);
-
-  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
-      kFrontRightDrivingCanId,
-      kFrontRightTurningCanId,
-      kFrontRightChassisAngularOffset);
-
-  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
-      kRearLeftDrivingCanId,
-      kRearLeftTurningCanId,
-      kBackLeftChassisAngularOffset);
-
-  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
-      kRearRightDrivingCanId,
-      kRearRightTurningCanId,
-      kBackRightChassisAngularOffset);
+  private final MAXSwerveModule frontLeft = Mechanisms.m_frontLeft;
+  private final MAXSwerveModule frontRight = Mechanisms.m_frontRight;
+  private final MAXSwerveModule rearLeft = Mechanisms.m_rearLeft;
+  private final MAXSwerveModule rearRight = Mechanisms.m_rearRight;
 
     
   // The gyro sensor
@@ -80,10 +66,10 @@ public class DriveSubsystem extends SubsystemBase {
       kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getAngle()),
       new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
+          frontLeft.getPosition(),
+          frontRight.getPosition(),
+          rearLeft.getPosition(),
+          rearRight.getPosition()
       });
 
   /** Creates a new DriveSubsystem. */
@@ -97,10 +83,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            rearLeft.getPosition(),
+            rearRight.getPosition()
         });
 
 	m_field.setRobotPose(getPose());
@@ -124,10 +110,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            rearLeft.getPosition(),
+            rearRight.getPosition()
         },
         pose);
   }
@@ -135,10 +121,10 @@ public class DriveSubsystem extends SubsystemBase {
   //Prints the angular position of the swerve drive modules
   public void printModulePositions(){
     
-    System.out.println(m_frontLeft.getPosition());
-    System.out.println(m_frontRight.getPosition());
-    System.out.println(m_rearLeft.getPosition());
-    System.out.println(m_rearRight.getPosition());
+    System.out.println(frontLeft.getPosition());
+    System.out.println(frontRight.getPosition());
+    System.out.println(rearLeft.getPosition());
+    System.out.println(rearRight.getPosition());
 
   }
 
@@ -238,10 +224,10 @@ public class DriveSubsystem extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, kMaxSpeedMetersPerSecond * newthrottleValue);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
+    frontLeft.setDesiredState(swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    rearLeft.setDesiredState(swerveModuleStates[2]);
+    rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   //Turns the robot a set angle
@@ -257,10 +243,10 @@ public class DriveSubsystem extends SubsystemBase {
    * Sets the wheels into an X formation to prevent movement.
    */
   public void setX() {
-    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
   //input directionToRotate as negative for left, positive for right
@@ -278,10 +264,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, kMaxSpeedMetersPerSecond * newthrottleValue);
-    m_frontLeft.setDesiredState(desiredStates[0]);
-    m_frontRight.setDesiredState(desiredStates[1]);
-    m_rearLeft.setDesiredState(desiredStates[2]);
-    m_rearRight.setDesiredState(desiredStates[3]);
+    frontLeft.setDesiredState(desiredStates[0]);
+    frontRight.setDesiredState(desiredStates[1]);
+    rearLeft.setDesiredState(desiredStates[2]);
+    rearRight.setDesiredState(desiredStates[3]);
   }
       
   public void testRotation(boolean rotateMode, double rotateSpeed) {
@@ -293,10 +279,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
-    m_frontLeft.resetEncoders();
-    m_rearLeft.resetEncoders();
-    m_frontRight.resetEncoders();
-    m_rearRight.resetEncoders();
+    frontLeft.resetEncoders();
+    rearLeft.resetEncoders();
+    frontRight.resetEncoders();
+    rearRight.resetEncoders();
   }
 
   /** Zeroes the heading of the robot. */
