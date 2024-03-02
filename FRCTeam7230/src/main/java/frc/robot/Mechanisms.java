@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.subsystems.MAXSwerveModule;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import com.revrobotics.CANSparkMax;
@@ -19,17 +20,25 @@ public class Mechanisms {
     public static final Joystick m_mechanismsController = new Joystick(kMechanismsControllerPort);
 
     //Swerve Drive Subsystem
-    public static final CANSparkMax m_rearLeftTurningMotor = new CANSparkMax(kRearLeftTurningCanId, kBrushless);
-    public static final CANSparkMax m_rearLeftDrivingMotor = new CANSparkMax(kRearLeftDrivingCanId, kBrushless);
+public static final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
+      kFrontLeftDrivingCanId,
+      kFrontLeftTurningCanId,
+      kFrontLeftChassisAngularOffset);
 
-    public static final CANSparkMax m_rearRightTurningMotor = new CANSparkMax(kRearRightTurningCanId, kBrushless);
-    public static final CANSparkMax m_rearTightDrivingMotor = new CANSparkMax(kRearRightDrivingCanId, kBrushless);
+  public static final MAXSwerveModule m_frontRight = new MAXSwerveModule(
+      kFrontRightDrivingCanId,
+      kFrontRightTurningCanId,
+      kFrontRightChassisAngularOffset);
 
-    public static final CANSparkMax m_frontLeftTurningMotor = new CANSparkMax(kFrontLeftTurningCanId, kBrushless);
-    public static final CANSparkMax m_frontLeftDrivingMotor = new CANSparkMax(kFrontLeftDrivingCanId, kBrushless);
+  public static final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
+      kRearLeftDrivingCanId,
+      kRearLeftTurningCanId,
+      kBackLeftChassisAngularOffset);
 
-    public static final CANSparkMax m_frontRightTurningMotor = new CANSparkMax(kFrontRightTurningCanId, kBrushless);
-    public static final CANSparkMax m_frontRightDrivingMotor = new CANSparkMax(kFrontRightDrivingCanId, kBrushless);
+  public static final MAXSwerveModule m_rearRight = new MAXSwerveModule(
+      kRearRightDrivingCanId,
+      kRearRightTurningCanId,
+      kBackRightChassisAngularOffset);
 
     //Shooter Subsystem
     public static final CANSparkMax m_rightShooterMotor = new CANSparkMax(kRightShooterMotorId, kBrushless);
