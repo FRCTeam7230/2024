@@ -14,9 +14,9 @@ public class Limelight{
         // this is where we set which pipeline to use based on the team color that gets passed here, the
         // rest of the code works off of this
         if ("red".equals(teamColor)) {
-            table.getEntry("pipeline").setNumber(1); // pipeline 0 is for red team
+            table.getEntry("pipeline").setNumber(1); // pipeline 1 is for red team
         } else {
-            table.getEntry("pipeline").setNumber(0); // pipeline 1 is for blue team
+            table.getEntry("pipeline").setNumber(0); // pipeline 0 is for blue team
         }
         
         NetworkTableInstance.getDefault().flush(); // Force an immediate update
@@ -71,7 +71,7 @@ public class Limelight{
         double h1 = 9.120; // height of the limelight from the ground
         double h2 = 50.4; // height of the apriltag from the ground
         double a1deg = 22.85; // angle of the limelight
-        double a2deg = 0; // angle of the apriltag
+        double a2deg = 42; // angle of the apriltag
         double a1 = Math.toRadians(a1deg);
         double a2 = Math.toRadians(a2deg);
         double d = (h2 - h1) / Math.tan(a1 + a2);
