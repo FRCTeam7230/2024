@@ -88,15 +88,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-<<<<<<< Updated upstream
-    
-=======
-      //if(RobotContainer.m_driverController.getRawButton(7))
-      //{
-        // RobotContainer.m_leftMotor.set(0.5);
-        // RobotContainer.m_rightMotor.set(-0.5);
-      //}
->>>>>>> Stashed changes
+
   }
 
   @Override
