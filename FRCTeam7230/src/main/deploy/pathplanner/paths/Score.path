@@ -3,41 +3,105 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.678477614558091,
-        "y": 4.58891221896934
+        "x": 1.2,
+        "y": 3.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.789375872132782,
-        "y": 4.631933271022177
+        "x": 0.31089825757469103,
+        "y": 3.2430210520528364
       },
       "isLocked": false,
       "linkedName": "game piece 1"
     },
     {
       "anchor": {
-        "x": 3.394537307858158,
-        "y": 4.76099642718069
+        "x": 1.5297111504213117,
+        "y": 5.6425396332493944
       },
       "prevControl": {
-        "x": 4.312319751652028,
-        "y": 4.804017479233528
+        "x": 1.4315478680413345,
+        "y": 5.593457992059405
       },
       "nextControl": {
-        "x": 2.8432719593933977,
-        "y": 4.735155863971404
+        "x": 2.0233192695805844,
+        "y": 5.889343692829034
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.903140836693123,
-        "y": 3.800192931333985
+        "x": 3.198486950880925,
+        "y": 5.6425396332493944
       },
       "prevControl": {
-        "x": 2.4624145133800113,
-        "y": 4.560231517600782
+        "x": 2.5164291752894905,
+        "y": 5.5451290002772895
+      },
+      "nextControl": {
+        "x": 3.8805447264723596,
+        "y": 5.739950266221499
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5297111504213117,
+        "y": 5.487114436147764
+      },
+      "prevControl": {
+        "x": 1.879308460098956,
+        "y": 5.798377179290175
+      },
+      "nextControl": {
+        "x": 1.180113840743668,
+        "y": 5.175851693005353
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.302977634638992,
+        "y": 7.671247469100638
+      },
+      "prevControl": {
+        "x": 6.408383777078894,
+        "y": 6.85053492141203
+      },
+      "nextControl": {
+        "x": 10.197571492199089,
+        "y": 8.49196001678926
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7342179887121838,
+        "y": 5.487114436147764
+      },
+      "prevControl": {
+        "x": 3.888710813747498,
+        "y": 6.157202187745249
+      },
+      "nextControl": {
+        "x": -0.4202748363231321,
+        "y": 4.817026684550276
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.302977634638992,
+        "y": 6.174257412805986
+      },
+      "prevControl": {
+        "x": 8.859236234792185,
+        "y": 7.0004650395041335
       },
       "nextControl": null,
       "isLocked": false,
@@ -57,7 +121,92 @@
             {
               "type": "named",
               "data": {
-                "name": "marker2"
+                "name": "Shoot with preloaded note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.9500000000000002,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Align robot to pick up note or to get ready for teleop"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 3.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Come back to speaker to shoot note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 4.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Align robot to pick up note or to get ready for teleop"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 5.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Come back to speaker to shoot note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 6.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Align robot to pick up note or to get ready for teleop"
               }
             }
           ]

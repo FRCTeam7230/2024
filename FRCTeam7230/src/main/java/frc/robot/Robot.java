@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
   
 
 
-  /** This function is called periodically during autonomous. */
+  /** This function is called periodically during autonomous every 20 ms. */
   @Override
   public void autonomousPeriodic() {
     offsetX = Limelight.getTargetAngleX();

@@ -11,13 +11,26 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Mode": "String Chooser",
       "/SmartDashboard/Autonomous Path": "Command",
+      "/SmartDashboard/Autonomous Path Left": "Command",
+      "/SmartDashboard/Autonomous Path Middle": "Command",
+      "/SmartDashboard/Autonomous Path Right": "Command",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/On-the-fly path": "Command",
       "/SmartDashboard/Pathfind to Pickup Pos": "Command",
       "/SmartDashboard/Pathfind to Scoring Pos": "Command"
     },
     "windows": {
-      "/SmartDashboard/Autonomous Path": {
+      "/SmartDashboard/Autonomous Path Left": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous Path Middle": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous Path Right": {
         "window": {
           "visible": true
         }
@@ -32,27 +45,21 @@
         "window": {
           "visible": true
         }
-      },
-      "/SmartDashboard/On-the-fly path": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Pathfind to Pickup Pos": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Pathfind to Scoring Pos": {
-        "window": {
-          "visible": true
-        }
       }
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
-      "SmartDashboard": {
+      "PathPlanner": {
+        "double[]##v_/PathPlanner/targetPose": {
+          "open": true
+        },
         "open": true
       }
     }
