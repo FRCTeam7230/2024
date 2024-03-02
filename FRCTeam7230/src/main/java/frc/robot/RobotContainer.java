@@ -13,12 +13,26 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
+import frc.robot.commands.Autos;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveSubsystemSim;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+import edu.wpi.first.wpilibj.RobotBase;
+
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
@@ -40,6 +54,9 @@ public class RobotContainer {
     private final Joystick m_driverController = Mechanisms.m_driverController;
 
     private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
+ 
+    boolean rotateMode = false;
+    boolean fieldRelative = true;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -71,8 +88,15 @@ public class RobotContainer {
                                     -MathUtil.applyDeadband(m_driverController.getY(), kDriveDeadband),
                                     -MathUtil.applyDeadband(m_driverController.getX(), kDriveDeadband),
                                     -MathUtil.applyDeadband(m_driverController.getZ(), kDriveDeadband),
-                                    true, true),
+                                    fieldRelative, true),
                             m_robotDrive));
+                    new RunCommand(
+                        () -> m_robotDrive.testRotation(
+                                rotateMode, m_driverController.getX()), m_robotDrive);
+                    new RunCommand(
+                        () -> m_robotDrive.speedMultiplier(
+                                m_driverController.getThrottle()), m_robotDrive);
+        
         }
 
         // Configure the button bindings
@@ -90,16 +114,33 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         if (RobotBase.isSimulation()) {
-            new JoystickButton(m_driverController, BRAKE)
+            new JoystickButton(m_driverController, BRAKE_BUTTON)
                     .whileTrue(new RunCommand(
                             () -> m_robotDriveSim.setX(),
                             m_robotDriveSim));
         }
         else {
-            new JoystickButton(m_driverController, BRAKE)
+            new JoystickButton(m_driverController, BRAKE_BUTTON)
                     .whileTrue(new RunCommand(
                             () -> m_robotDrive.setX(),
                             m_robotDrive));
+                // new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+                //         .whileTrue(new RunCommand(
+                //                 () -> m_robotDrive.printModulePositions(),
+                //                  m_robotDrive));
+                new JoystickButton(m_driverController, CIRCLING_TOGGLE_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> rotateMode = !rotateMode,
+                                m_robotDrive));                
+                new JoystickButton(m_driverController, DRIVE_CONTROL_TOGGLE_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> fieldRelative = !fieldRelative,
+                                m_robotDrive));
+                new JoystickButton(m_driverController, SET_FORWARD_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> m_robotDrive.zeroHeading(),
+                                m_robotDrive));
+
         }
     }
 
@@ -109,10 +150,10 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // Autos auto = new Autos(m_robotDriveSim);
+        Autos auto = new Autos(m_robotDriveSim);
+        return auto.getAutonomousCommand();
         
-        
-         // Create config for trajectory
+        /*  // Create config for trajectory
          TrajectoryConfig config = new TrajectoryConfig(
          kAutoMaxSpeedMetersPerSecond,
          kMaxAccelerationMetersPerSecondSquared)
@@ -153,7 +194,7 @@ public class RobotContainer {
          .setKinematics(kDriveKinematics);
          // Reset odometry to the starting pose of the trajectory.
 
-        //  return auto.getAutonomousCommand();
+         
          
          // Run path following command, then stop at the end.
          return Commands.sequence(
@@ -166,6 +207,6 @@ public class RobotContainer {
         
 
         // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-        // false, false));
+        // false, false)); */
     }
 }

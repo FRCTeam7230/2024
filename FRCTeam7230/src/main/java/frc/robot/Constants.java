@@ -57,8 +57,10 @@ public final class Constants {
     public static final int PIVOT_DOWN = kButton10;
     public static final int CLIMBER_DOWN = kButton11;
     public static final int CLIMBER_UP = kButton12;
+    public static final int INSTANT_BRAKE_BUTTON = kButton1;
+    public static final int TOGGLE_FIELDRELATIVE_BUTTON = kButton3;
 
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.1;
   }
 
   public static final class DriveConstants {
@@ -69,7 +71,7 @@ public final class Constants {
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 1.6; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -85,8 +87,12 @@ public final class Constants {
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
     public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackLeftChassisAngularOffset = 5*(Math.PI/4);
     public static final double kBackRightChassisAngularOffset = (Math.PI/2);
+    // public static final double kFrontLeftChassisAngularOffset = (Math.PI/2);
+    // public static final double kFrontRightChassisAngularOffset = Math.PI;
+    // public static final double kBackLeftChassisAngularOffset = Math.PI + Math.PI;
+    // public static final double kBackRightChassisAngularOffset = (Math.PI/2)  + Math.PI;
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 5;
@@ -94,8 +100,8 @@ public final class Constants {
     public static final int kFrontRightDrivingCanId = 7;
     public static final int kRearRightDrivingCanId = 1;
 
-    public static final int kFrontLeftTurningCanId = 6;
-    public static final int kRearLeftTurningCanId = 4;
+    public static final int kFrontLeftTurningCanId = 6;//WAS 6
+    public static final int kRearLeftTurningCanId = 4;//WAS 4
     public static final int kFrontRightTurningCanId = 8;
     public static final int kRearRightTurningCanId = 2;
 
@@ -198,5 +204,5 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  }
+}
 

@@ -7,15 +7,20 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -49,15 +54,25 @@ public class DriveSubsystem extends SubsystemBase {
     
   // The gyro sensor
   private final AHRS m_gyro = new AHRS();
+  
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
+  private double newthrottleValue = 0.0;
 
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+  public Rotation2d angle = new Rotation2d(Math.PI/4); //vision gives us this angle
+  public Translation2d distanceAngle = new Translation2d(2, angle); //vision gives us distance
+  public Translation2d frontrightWheelMeters = new Translation2d(0.3429,0.3429); 
+  public Translation2d frontleftWheelMeters = new Translation2d(-0.3429,0.3429); 
+  public Translation2d rearrightWheelMeters = new Translation2d(0.3429,-0.3429); 
+  public Translation2d rearleftWheelMeters = new Translation2d(-0.3429,-0.3429); 
+  public SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontrightWheelMeters,frontleftWheelMeters,rearrightWheelMeters,rearleftWheelMeters);
+  
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -126,6 +141,19 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
+  //Prints the angular position of the robot
+  public void printGyroAngles(){
+    System.out.println(m_gyro.getAngle());
+    System.out.println(m_gyro.getYaw());
+  }
+
+  //Resets the gyroscope
+  public void resetGyro(){
+    m_gyro.reset();
+    new WaitCommand(1);
+  }
+
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -135,7 +163,16 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
+   * @param rotateMode    Switches toggle to rotating in a circle
    */
+   
+   //slows/speeds up the robot in a controlled manner: from 0.5x - 2x of current speed
+    public double speedMultiplier(double throttleValue) {
+      newthrottleValue = (0.75 * throttleValue) + 1.25;
+      return newthrottleValue;
+    }
+     
+
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
     
     double xSpeedCommanded;
@@ -149,7 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
       // Calculate the direction slew rate based on an estimate of the lateral acceleration
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(kDirectionSlewRate / m_currentTranslationMag);
+        directionSlewRate = Math.abs(kDirectionSlewRate * newthrottleValue / m_currentTranslationMag);
       } else {
         directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
       }
@@ -196,16 +233,25 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = kDriveKinematics.toSwerveModuleStates(
       fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
+            ? ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle())) // ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, kMaxSpeedMetersPerSecond);
+        swerveModuleStates, kMaxSpeedMetersPerSecond * newthrottleValue);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  //Turns the robot a set angle
+  public void turnSetAngle(double angle){
+
+  }
+
+  //Drives the robot a set distance
+  public void driveSetDistance(double distance){
+    
+  }
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -221,6 +267,7 @@ public class DriveSubsystem extends SubsystemBase {
       setModuleStates(kDriveKinematics.toSwerveModuleStates(
         new ChassisSpeeds(0,0,kSmartIntakeSpeed*directionToRotate)));
   }
+  
 
   /**
    * Sets the swerve ModuleStates.
@@ -229,12 +276,19 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, kMaxSpeedMetersPerSecond);
+        desiredStates, kMaxSpeedMetersPerSecond * newthrottleValue);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
     m_rearRight.setDesiredState(desiredStates[3]);
   }
+      
+  public void testRotation(boolean rotateMode, double rotateSpeed) {
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(rotateSpeed, rotateSpeed, 0);
+    setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds, distanceAngle));
+  }
+  
+  
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
