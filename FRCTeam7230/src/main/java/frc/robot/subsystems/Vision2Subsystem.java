@@ -1,215 +1,163 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import edu.wpi.first.cameraserver.CameraServer;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// import org.opencv.core.*;
-// import org.opencv.imgproc.Imgproc;
-// import org.opencv.videoio.VideoCapture;
-// import javax.swing.*;
-// import java.awt.*;
-// import java.awt.event.WindowAdapter;
-// import java.awt.event.WindowEvent;
-// import java.awt.image.BufferedImage;
-// import java.awt.image.DataBufferByte;
-// import java.util.ArrayList;
-// import java.util.List;
+import org.opencv.core.*;
+import org.opencv.core.Point;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-// public class Vision2Subsystem extends SubsystemBase {
+import frc.robot.subsystems.GripPipeline;
 
-//     // Constants for color thresholding
-//     private final int MAX_VALUE_H = 180;
-//     private final int MAX_VALUE = 255;
+public class Vision2Subsystem {
+    // Video capture object
+    private VideoCapture capture;
+    // private UsbCamera camera;
+    // private CvSink cvSink;
+    private CvSource output;
+    // private CvSource maskOutput;
 
-//     // Video capture object
-//     private VideoCapture capture;
+    private final int lowH = 0;
+    private final int highH = 30;
+    private final int lowS = 71;
+    private final int highS = 255;
+    private final int lowV = 151;
+    private final int highV = 255;
 
-//     // UI components
-//     private JFrame frame;
-//     private JPanel controlsPanel;
-//     private JLabel rawLabel;
-//     private JLabel colorLabel;
-//     private JLabel bwLabel;
-//     private JLabel boxLabel;
-//     private JLabel distanceLabel;
-//     private JSlider lowHSlider;
-//     private JSlider highHSlider;
-//     private JSlider lowSSlider;
-//     private JSlider highSSlider;
-//     private JSlider lowVSlider;
-//     private JSlider highVSlider;
+    private GripPipeline pipeline = new GripPipeline();
 
-//     public Vision2Subsystem() {
-//         // Initialize OpenCV
-//         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    public Vision2Subsystem() {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        capture = new VideoCapture();
+        capture.open(0); // Adjust camera index as needed
+        output = CameraServer.putVideo("Processed", 320, 240);
+        // Start capture thread
+    }
 
-//         // Initialize UI
-//         initUI();
+    public double[] getFromOffset(double yawCam, double disCam, double xDist, double yOffset, double xOffset) {
 
-//         // Initialize video capture
-//         capture = new VideoCapture();
-//         capture.open(0); // Adjust camera index as needed
+        double verticalDistance = Math.sqrt(Math.pow(disCam, 2) - Math.pow(xDist, 2));
+        double robotyDistance = verticalDistance + yOffset;
+        double robotxDistance = xDist + xOffset;
 
-//         // Start capture thread
-//         Thread captureThread = new Thread(this::captureTask);
-//         captureThread.start();
-//     }
+        double distRobot = Math.sqrt(Math.pow(robotxDistance, 2) + Math.pow(robotyDistance, 2));
 
-//     private void initUI() {
-//         // Create frame
-//         frame = new JFrame("Color Thresholding");
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.addWindowListener(new WindowAdapter() {
-//             @Override
-//             public void windowClosing(WindowEvent e) {
-//                 capture.release();
-//             }
-//         });
+        double yawRobot = Math.toDegrees(Math.atan(robotxDistance / robotyDistance));
 
-//         // Create controls panel
-//         controlsPanel = new JPanel(new GridLayout(0, 1));
+        double[] data = { distRobot, yawRobot };
 
-//         // Create sliders
-//         lowHSlider = new JSlider(0, MAX_VALUE_H);
-//         highHSlider = new JSlider(0, MAX_VALUE_H);
-//         lowSSlider = new JSlider(0, MAX_VALUE);
-//         highSSlider = new JSlider(0, MAX_VALUE);
-//         lowVSlider = new JSlider(0, MAX_VALUE);
-//         highVSlider = new JSlider(0, MAX_VALUE);
+        return data;
+    }
 
-//         // Add sliders to the controls panel
-//         controlsPanel.add(new JLabel("Low Hue"));
-//         controlsPanel.add(lowHSlider);
-//         controlsPanel.add(new JLabel("High Hue"));
-//         controlsPanel.add(highHSlider);
-//         controlsPanel.add(new JLabel("Low Saturation"));
-//         controlsPanel.add(lowSSlider);
-//         controlsPanel.add(new JLabel("High Saturation"));
-//         controlsPanel.add(highSSlider);
-//         controlsPanel.add(new JLabel("Low Value"));
-//         controlsPanel.add(lowVSlider);
-//         controlsPanel.add(new JLabel("High Value"));
-//         controlsPanel.add(highVSlider);
+    public double[] captureTask(double xOffset, double yOffset) {
 
-//         // Create image labels
-//         rawLabel = new JLabel();
-//         colorLabel = new JLabel();
-//         bwLabel = new JLabel();
-//         boxLabel = new JLabel();
-//         distanceLabel = new JLabel();
+        Mat frameMat = new Mat();
 
-//         // Add labels to the frame
-//         frame.add(controlsPanel, BorderLayout.WEST);
-//         frame.add(rawLabel, BorderLayout.NORTH);
-//         frame.add(colorLabel, BorderLayout.EAST);
-//         frame.add(bwLabel, BorderLayout.CENTER);
-//         frame.add(boxLabel, BorderLayout.SOUTH);
-//         frame.add(distanceLabel, BorderLayout.SOUTH);
+        capture.read(frameMat);
+        Mat frameWithBox = frameMat.clone();
 
-//         // Display the frame
-//         frame.pack();
-//         frame.setVisible(true);
-//     }
+        pipeline.process(frameMat);
 
-//     private void captureTask() {
-//         while (true) {
-//             Mat frameMat = new Mat();
-//             capture.read(frameMat);
+        ArrayList<MatOfPoint> contours = pipeline.findContoursOutput();
 
-//             // Convert BGR to HSV
-//             Mat hsvFrame = new Mat();
-//             Imgproc.cvtColor(frameMat, hsvFrame, Imgproc.COLOR_BGR2HSV);
+        contours.sort((c1, c2) -> Double.compare(Imgproc.contourArea(c2), Imgproc.contourArea(c1)));
+        frameWithBox = drawBoundingBox(frameWithBox, contours, new Scalar(0, 255, 0));
+        output.putFrame(frameWithBox);
+        double distance;
+        double yaw;
+        // double distance = 0;
 
-//             // Get slider values
-//             int lowH = lowHSlider.getValue();
-//             int highH = highHSlider.getValue();
-//             int lowS = lowSSlider.getValue();
-//             int highS = highSSlider.getValue();
-//             int lowV = lowVSlider.getValue();
-//             int highV = highVSlider.getValue();
+        // Calculate distance
+        if (!contours.isEmpty()) {
+            Point topLeft = Imgproc.boundingRect(contours.get(0)).tl();
+            Point bottomRight = Imgproc.boundingRect(contours.get(0)).br();
 
-//             // Create mask
-//             Mat mask = new Mat();
-//             Core.inRange(hsvFrame, new Scalar(lowH, lowS, lowV), new Scalar(highH, highS, highV), mask);
+            double xPosition = (topLeft.x + (bottomRight.x - topLeft.x) / 2);
+            double yPosition = (topLeft.y + (bottomRight.y - topLeft.y) / 2);
 
-//             // Find contours
-//             List<MatOfPoint> contours = new ArrayList<>();
-//             Mat hierarchy = new Mat();
-//             Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            double width = (bottomRight.x - topLeft.x);
+            double height = (topLeft.y - bottomRight.y);
 
-//             // Draw bounding box
-//             Mat frameWithBox = frameMat.clone();
-//             frameWithBox = drawBoundingBox(frameWithBox, contours, new Scalar(0, 255, 0));
+            SmartDashboard.putNumber("xPosition", xPosition);
+            SmartDashboard.putNumber("yPosition", yPosition);
+            SmartDashboard.putNumber("width", width);
 
-//             // Calculate distance
-//             if (!contours.isEmpty()) {
-//                 MatOfPoint largestContour = contours.get(0);
-//                 double apparentWidth = Imgproc.arcLength(new MatOfPoint2f(largestContour.toArray()), true);
+            // // Check if apparent width is not zero
+            if (width > 0) {
 
-//                 // Check if apparent width is not zero
-//                 if (apparentWidth > 0) {
-//                     // Known physical width of the object in inches (example)
-//                     double knownWidthInches = 10;
+                double xPC = xPosition - 160;
+                double yPC = yPosition - 120;
 
-//                     // Known focal length of the camera (example, you need to calibrate this based on your camera)
-//                     double focalLength = 320.8;
+                double xPred = (xPC - 160) / 160;
+                double yPred = (yPC - 120) / 120;
 
-//                     // Estimate distance using triangulation
-//                     double distance = (knownWidthInches * focalLength) / apparentWidth;
+                double fovV = 0.73704695509;
+                double fovH = 0.99954490199;
 
-//                     // Display distance
-//                     distanceLabel.setText("Distance: " + String.format("%.2f", distance) + " inches");
-//                 }
-//             }
+                double pitch = (yPred / 4) * fovV;
+                yaw = (xPred / 4) * fovH;
 
-//             // Convert Mats to BufferedImages
-//             ImageIcon rawIcon = new ImageIcon(matToBufferedImage(frameMat));
-//             ImageIcon colorIcon = new ImageIcon(matToBufferedImage(mask));
-//             ImageIcon bwIcon = new ImageIcon(matToBufferedImage(hsvFrame));
-//             ImageIcon boxIcon = new ImageIcon(matToBufferedImage(frameWithBox));
+                double heightCam = 24.94630774;
+                double heightRing = 2.54;
 
-//             // Update labels
-//             rawLabel.setIcon(rawIcon);
-//             colorLabel.setIcon(colorIcon);
-//             bwLabel.setIcon(bwIcon);
-//             boxLabel.setIcon(boxIcon);
+                distance = -(heightRing - heightCam) / Math.tan(pitch);
 
-//             // Sleep for a while
-//             try {
-//                 Thread.sleep(100);
-//             } catch (InterruptedException e) {
-//                 e.printStackTrace();
-//             }
-//         }
-//     }
+                SmartDashboard.putNumber("pitch", Math.toDegrees(pitch));
+                SmartDashboard.putNumber("yaw", Math.toDegrees(yaw));
 
-//     private Mat drawBoundingBox(Mat frame, List<MatOfPoint> contours, Scalar color) {
-//         contours.sort((c1, c2) -> Double.compare(Imgproc.contourArea(c2), Imgproc.contourArea(c1)));
+                SmartDashboard.putNumber("distance", distance);
+            }
 
-//         if (!contours.isEmpty()) {
-//             Rect boundingRect = Imgproc.boundingRect(contours.get(0));
-//             Imgproc.rectangle(frame, boundingRect.tl(), boundingRect.br(), color, 2);
-//         }
-//         return frame;
-//     }
+            double[] datatosend = getFromOffset(yaw, distance, xPosition, yOffset, xOffset);
 
-//     private BufferedImage matToBufferedImage(Mat mat) {
-//         int type = BufferedImage.TYPE_BYTE_GRAY;
-//         if (mat.channels() > 1) {
-//             type = BufferedImage.TYPE_3BYTE_BGR;
-//         }
-//         BufferedImage image = new BufferedImage(mat.width(), mat.height(), type);
-//         mat.get(0, 0, ((DataBufferByte) image.getRaster().getDataBuffer()).getData());
-//         return image;
-//     }
+            frameMat.release();
+            frameWithBox.release();
 
-//     public static void main(String[] args) {
-//         // Load OpenCV
-//         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+            for (MatOfPoint p : contours) {
+                p.release();
+            }
 
-//         // Start camera server
-//         CameraServer.startAutomaticCapture();
+            return datatosend;
+        }
+    }
 
-//     }
-// }
+    private Mat drawBoundingBox(Mat frame, List<MatOfPoint> contours, Scalar color) {
+        if (!contours.isEmpty()) {
+            Rect boundingRect = Imgproc.boundingRect(contours.get(0));
+            Imgproc.rectangle(frame, boundingRect.tl(), boundingRect.br(), color, 2);
+        }
+        return frame;
+    }
+
+    // private BufferedImage matToBufferedImage(Mat mat) {
+    // int type = BufferedImage.TYPE_BYTE_GRAY;
+    // if (mat.channels() > 1) {
+    // type = BufferedImage.TYPE_3BYTE_BGR;
+    // }
+    // BufferedImage image = new BufferedImage(mat.width(), mat.height(), type);
+    // mat.get(0, 0, ((DataBufferByte)
+    // image.getRaster().getDataBuffer()).getData());
+    // return image;
+    // }
+
+    // public static void main(String[] args) {
+    // // Load OpenCV
+
+    // // Start camera server
+    // CameraServer.startAutomaticCapture();
+
+}

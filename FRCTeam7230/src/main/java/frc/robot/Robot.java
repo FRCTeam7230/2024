@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private Vision2Subsystem vision;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,6 +44,9 @@ public class Robot extends TimedRobot {
     color_chooser.addOption("Blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
 
+    vision = new Vision2Subsystem();
+    // double[] visionData = vision.captureTask(xoffset, yoffset);
+    // fisrt is distance, second is angle
   }
 
   /**
