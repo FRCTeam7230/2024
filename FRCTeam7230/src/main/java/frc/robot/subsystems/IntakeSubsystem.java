@@ -15,7 +15,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   /** Variables */
   private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
-  private static CANSparkMax transferMotor = Mechanisms.m_transferToShooterMotor;
+ 
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
 
   //public static boolean intakeSystemOn = false;
@@ -35,12 +35,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void startIntakeSystem() {
     intakeMotor.set(motorRotateSpeed);
-    transferMotor.set(motorRotateSpeed);
+    //transferMotor.set(motorRotateSpeed);
   }
 
   public void stopIntakeSystem() {
     intakeMotor.stopMotor();
-    transferMotor.stopMotor();
+    //transferMotor.stopMotor();
   }
 
   /**
