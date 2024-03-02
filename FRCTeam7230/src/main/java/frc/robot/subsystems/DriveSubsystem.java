@@ -225,6 +225,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
   }
 
+  //input directionToRotate as negative for left, positive for right
+  public void rotateUntil(int directionToRotate){
+      setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        new ChassisSpeeds(0,0,DriveConstants.kSmartIntakeSpeed*directionToRotate)));
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *
