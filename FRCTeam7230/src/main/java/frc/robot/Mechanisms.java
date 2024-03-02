@@ -1,15 +1,17 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
+import com.revrobotics.CANSparkMax;
+import static com.revrobotics.CANSparkLowLevel.MotorType.*;
+
 import static frc.robot.Constants.OperatorConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.ClimbingConstants.*;
-import com.revrobotics.CANSparkMax;
-import static com.revrobotics.CANSparkLowLevel.MotorType.*;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class Mechanisms {
     //General

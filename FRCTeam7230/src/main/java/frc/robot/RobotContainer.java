@@ -1,13 +1,8 @@
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -17,24 +12,19 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import static frc.robot.Constants.AutoConstants.*;
-import static frc.robot.Constants.DriveConstants.*;
-import static frc.robot.Constants.OperatorConstants.*;
-import frc.robot.commands.Autos;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.SwerveSubsystemSim;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import java.util.List;
 
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveSubsystemSim;
+import static frc.robot.Constants.AutoConstants.*;
+import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.OperatorConstants.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -119,8 +109,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Autos auto = new Autos(m_robotDriveSim);
-        return auto.getAutonomousCommand();
+        // Autos auto = new Autos(m_robotDriveSim);
+        
         
          // Create config for trajectory
          TrajectoryConfig config = new TrajectoryConfig(
@@ -156,9 +146,14 @@ public class RobotContainer {
          thetaController,
          m_robotDrive::setModuleStates,
          m_robotDrive);
-         
+         new TrajectoryConfig(
+         kAutoMaxSpeedMetersPerSecond,
+         kMaxAccelerationMetersPerSecondSquared)
+         // Add kinematics to ensure max speed is actually obeyed
+         .setKinematics(kDriveKinematics);
          // Reset odometry to the starting pose of the trajectory.
-         
+
+        //  return auto.getAutonomousCommand();
          
          // Run path following command, then stop at the end.
          return Commands.sequence(
@@ -170,7 +165,7 @@ public class RobotContainer {
          
         
 
-        return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-        false, false));
+        // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
+        // false, false));
     }
 }
