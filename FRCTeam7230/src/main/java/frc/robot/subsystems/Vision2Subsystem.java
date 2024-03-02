@@ -77,9 +77,11 @@ public class Vision2Subsystem {
         contours.sort((c1, c2) -> Double.compare(Imgproc.contourArea(c2), Imgproc.contourArea(c1)));
         frameWithBox = drawBoundingBox(frameWithBox, contours, new Scalar(0, 255, 0));
         output.putFrame(frameWithBox);
-        double distance;
-        double yaw;
+        double distance = 0;
+        double yaw = 0;
         // double distance = 0;
+
+        double datatosend = {};
 
         // Calculate distance
         if (!contours.isEmpty()) {
@@ -122,7 +124,7 @@ public class Vision2Subsystem {
                 SmartDashboard.putNumber("distance", distance);
             }
 
-            double[] datatosend = getFromOffset(yaw, distance, xPosition, yOffset, xOffset);
+            datatosend = getFromOffset(yaw, distance, xPosition, yOffset, xOffset);
 
             frameMat.release();
             frameWithBox.release();
@@ -131,8 +133,8 @@ public class Vision2Subsystem {
                 p.release();
             }
 
-            return datatosend;
         }
+        return datatosend;
     }
 
     private Mat drawBoundingBox(Mat frame, List<MatOfPoint> contours, Scalar color) {
