@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import frc.robot.subsystems.Vision2Subsystem;
+// import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.Limelight;
 
 
 
@@ -20,12 +23,17 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  private String red = "red";
+  private final SendableChooser<String> color_chooser = new SendableChooser<>();
+  private String colorSelected;
+
   private Command m_autonomousCommand;
+  private double offsetX, offsetY, tagDistance, tagID;
 
   private RobotContainer m_robotContainer;
 
+  private Vision2Subsystem vision;
 
- 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -35,7 +43,14 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    // Vision2Subsystem vision = new Vision2Subsystem();
+    color_chooser.setDefaultOption("Red", "red");
+    color_chooser.addOption("Blue", "blue");
+    SmartDashboard.putData("Color choice", color_chooser);
 
+    vision = new Vision2Subsystem();
+    // double[] visionData = vision.captureTask(xoffset, yoffset);
+    // fisrt is distance, second is angle
   }
 
   /**
@@ -51,19 +66,41 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    
+
+    colorSelected = color_chooser.getSelected();
+    switch (colorSelected) {
+      case "red":
+        red = "red";
+        break;
+      case "blue":
+        red = "blue";
+        break;
+    }
+    Limelight.limelight(red);
+
     CommandScheduler.getInstance().run();
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    Limelight.initializeLimelightOff();
+  }
 
   @Override
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  //@Override
+  @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -72,10 +109,31 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
+  
+
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);
+
+    //autonomous 15 seconddddddd wooooooooo
+      //AUTONOMOUS LEVEL 2
+      //first thing is to engage limelight + have a fixed shooting angle
+      //   align -> use drive subsystem 
+      //   once note is released (shooter system stopped) and noteIntakeSensor 
+      //returns true, engage intake camera
+      // use drive subsystem to align robot with the closest note in our vision
+      //once intakesensor returns false, then engage limelight 
+      //repeat cycle
+  }
 
   @Override
   public void teleopInit() {
@@ -86,11 +144,24 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
+
+    // VisionSubsystem visSub = new VisionSubsystem();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    offsetX = Limelight.getTargetAngleX();
+    offsetY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    SmartDashboard.putNumber("X offset", offsetX);
+    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);    
+  }
 
   @Override
   public void testInit() {
