@@ -42,23 +42,21 @@ public final class Constants {
     public static final int kButton12 = 12;
 
     //Drive Stick Buttons
-    public static final int BRAKE = kButton1;
-    public static final int CIRCLING_TOGGLE = kButton3;
-    public static final int DRIVE_CONTROL_TOGGLE = kButton5;
-    public static final int RESET_GYRO = kButton6;
+    public static final int BRAKE_BUTTON = kButton1;
+    public static final int CIRCLING_TOGGLE_BUTTON = kButton3;
+    public static final int DRIVE_CONTROL_TOGGLE_BUTTON = kButton5;
+    public static final int SET_FORWARD_BUTTON = kButton6; //sets the shooter side to the robot as the forward direction
     
     //Mechansism Stick Buttons
-    public static final int SHOOT = kButton1;
-    public static final int CLOSE_PIVOT = kButton3;
-    public static final int FAR_PIVOT = kButton5;
-    public static final int INTAKE = kButton4;
-    public static final int SMART_TOGGLE = kButton6;
-    public static final int PIVOT_UP = kButton9;
-    public static final int PIVOT_DOWN = kButton10;
-    public static final int CLIMBER_DOWN = kButton11;
-    public static final int CLIMBER_UP = kButton12;
-    public static final int INSTANT_BRAKE_BUTTON = kButton1;
-    public static final int TOGGLE_FIELDRELATIVE_BUTTON = kButton3;
+    public static final int SHOOT_BUTTON = kButton1;
+    public static final int CLOSE_PIVOT_BUTTON = kButton3;
+    public static final int FAR_PIVOT_BUTTON = kButton5;
+    public static final int INTAKE_BUTTON = kButton4;
+    public static final int SMART_TOGGLE_BUTTON = kButton6;
+    public static final int PIVOT_UP_BUTTON = kButton9;
+    public static final int PIVOT_DOWN_BUTTON = kButton10;
+    public static final int CLIMBER_DOWN_BUTTON = kButton11;
+    public static final int CLIMBER_UP_BUTTON = kButton12;
 
     public static final double kDriveDeadband = 0.1;
   }
@@ -186,6 +184,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+    //For manual trajectory based auto
     public static final double kAutoMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;

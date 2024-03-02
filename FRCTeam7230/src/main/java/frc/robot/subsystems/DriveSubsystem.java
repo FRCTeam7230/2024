@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
@@ -20,12 +19,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-
-
 import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.DriveConstants.*;
 import frc.utils.SwerveUtils;
+
 
 public class DriveSubsystem extends SubsystemBase {
     public Field2d m_field = new Field2d();
@@ -61,17 +59,20 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
   private double newthrottleValue = 0.0;
+  private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(kRotationalSlewRate);
-  private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-  public Rotation2d angle = new Rotation2d(Math.PI/4); //vision gives us this angle
-  public Translation2d distanceAngle = new Translation2d(2, angle); //vision gives us distance
-  public Translation2d frontrightWheelMeters = new Translation2d(0.3429,0.3429); 
-  public Translation2d frontleftWheelMeters = new Translation2d(-0.3429,0.3429); 
-  public Translation2d rearrightWheelMeters = new Translation2d(0.3429,-0.3429); 
-  public Translation2d rearleftWheelMeters = new Translation2d(-0.3429,-0.3429); 
-  public SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontrightWheelMeters,frontleftWheelMeters,rearrightWheelMeters,rearleftWheelMeters);
+  
+  private Rotation2d angle = new Rotation2d(Math.PI/4); //vision gives us this angle
+  private Translation2d distanceAngle = new Translation2d(2, angle); //vision gives us distance
+
+  private Translation2d frontrightWheelMeters = new Translation2d(0.3429,0.3429); 
+  private Translation2d frontleftWheelMeters = new Translation2d(-0.3429,0.3429); 
+  private Translation2d rearrightWheelMeters = new Translation2d(0.3429,-0.3429); 
+  private Translation2d rearleftWheelMeters = new Translation2d(-0.3429,-0.3429); 
+  
+  private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontrightWheelMeters,frontleftWheelMeters,rearrightWheelMeters,rearleftWheelMeters);
   
 
   // Odometry class for tracking robot pose
