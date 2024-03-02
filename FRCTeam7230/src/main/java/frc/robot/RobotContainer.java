@@ -37,90 +37,94 @@ import com.revrobotics.CANSparkMax;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+    // The robot's subsystems
+    private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
-  // The driver's controller
-  public static final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
-    
+    // The driver's controller
+    Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
 
-  boolean fieldRelative = true;
-  boolean rotateMode = false;
- 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
+    // Only used for testing simulation with an XBox controller.
+    XboxController m_driverControllerSim = new XboxController(Constants.OIConstants.kDriverControllerPort);
+    private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
 
-    // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
-                fieldRelative, true),
-            m_robotDrive));
-        new RunCommand(
-            () -> m_robotDrive.testRotation(rotateMode, m_driverController.getX()), m_robotDrive);
-        new RunCommand(
-            () -> m_robotDrive.speedMultiplier(m_driverController.getThrottle()), m_robotDrive);
-        
-  }
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        if (RobotBase.isSimulation()) {
+            // Configure default commands
+            m_robotDriveSim.setDefaultCommand(
+                    // The left stick controls translation of the robot.
+                    // Turning is controlled by the X axis of the right stick.
+                    new RunCommand(
+                            () -> m_robotDriveSim.drive(
+                                    // Multiply by max speed to map the joystick unitless inputs to actual units.
+                                    // This will map the [-1, 1] to [max speed backwards, max speed forwards],
+                                    // converting them to actual units.
+                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
+                                    false,
+                                    false),
+                            m_robotDriveSim));
+        } else {
+            // Configure default commands
+            m_robotDrive.setDefaultCommand(
+                    // The left stick controls translation of the robot.
+                    // Turning is controlled by the X axis of the right stick.
+                    new RunCommand(
+                            () -> m_robotDrive.drive(
+                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
+                                    true, true),
+                            m_robotDrive));
+        }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Constants.JoystickButtons.INSTANT_BRAKE_BUTTON)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-    new JoystickButton(m_driverController, Constants.JoystickButtons.kButton12)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.resetGyro(),
-            m_robotDrive));
-    new JoystickButton(m_driverController, Constants.JoystickButtons.TOGGLE_FIELDRELATIVE_BUTTON)
-        .whileTrue(new InstantCommand(
-            () -> fieldRelative = !fieldRelative,
-            m_robotDrive));
-    new JoystickButton(m_driverController,Constants.JoystickButtons.kButton4)
-        .whileTrue(new InstantCommand(
-            () -> m_robotDrive.driveSetDistance(0),
-            m_robotDrive));
-    new JoystickButton(m_driverController,Constants.JoystickButtons.kButton5)
-        .whileTrue(new InstantCommand(
-            () -> m_robotDrive.turnSetAngle(0),
-            m_robotDrive));
-    new JoystickButton(m_driverController, Constants.JoystickButtons.kButton10)
-        .whileTrue(new InstantCommand(
-            () -> rotateMode = !rotateMode,
-            m_robotDrive));
-  }
+        // Configure the button bindings
+        configureButtonBindings();
+    }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-/*   public Command getAutonomousCommand() {
-    //Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-*/
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by
+     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+     * subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+     * passing it to a
+     * {@link JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        if (RobotBase.isSimulation()) {
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDriveSim.setX(),
+                            m_robotDriveSim));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDriveSim.printModulePositions(),
+                            m_robotDriveSim));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+                    .whileTrue(new InstantCommand(
+                            () -> m_robotDriveSim.setZero(),
+                            m_robotDriveSim));
+        }
+        else {
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDrive.setX(),
+                            m_robotDrive));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+                    .whileTrue(new RunCommand(
+                            () -> m_robotDrive.printModulePositions(),
+                            m_robotDrive));
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+                    .whileTrue(new InstantCommand(
+                            () -> m_robotDrive.setZero(),
+                            m_robotDrive));
+        }
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
