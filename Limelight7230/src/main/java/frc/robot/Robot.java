@@ -110,15 +110,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Y offset", offsetY);
     SmartDashboard.putNumber("Tag ID", tagID);
     SmartDashboard.putNumber("Tag Distance", tagDistance);
-    //autonomous 15 seconddddddd wooooooooo
-      //AUTONOMOUS LEVEL 2
-      //first thing is to engage limelight + have a fixed shooting angle
-      //   align -> use drive subsystem 
-      //   once note is released (shooter system stopped) and noteIntakeSensor 
-      //returns true, engage intake camera
-      // use drive subsystem to align robot with the closest note in our vision
-      //once intakesensor returns false, then engage limelight 
-      //repeat cycle
   }
 
   @Override
