@@ -4,14 +4,12 @@
 
 package frc.robot.subsystems;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
-import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mechanisms;
 import frc.robot.Constants.ShooterConstants;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
+
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
@@ -19,33 +17,21 @@ public class ShooterSubsystem extends SubsystemBase{
 
   
   /** Variables */
-  private static CANSparkMax pivotMotor = Mechanisms.m_shooterPivotMotor;
-  private static DutyCycleEncoder pivotEncoder = Mechanisms.m_pivotEncoder;
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
   private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch;
   private static CANSparkMax transferMotor = Mechanisms.m_transferToShooterMotor;
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;
   private static CANSparkMax leftShooterMotor = Mechanisms.m_leftShooterMotor;
-  //private static Joystick buttonControlling = Mechanisms.m_mechanismsController;
 
 
   
   double motorRotateSpeed = ShooterConstants.kRotationalSpeed;
-  
 
-  //public boolean inRotation = false;
-  //public boolean shooterOn = false;
-  //boolean inAbsoluteRotation = false;
-  //double target;
 
   public static boolean shooterOn = false;
 
   public ShooterSubsystem() {
-    
-    //leftShooterMotor.configFactoryDefault();
-
-    //rightShooterMotor.configFactoryDefault();
   }
 
   /**

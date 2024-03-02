@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.subsystems.Vision2Subsystem;
-// import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.Limelight;
 
 
@@ -32,7 +31,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private Vision2Subsystem vision;
+  private VisionSubsystem vision;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,12 +42,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    // Vision2Subsystem vision = new Vision2Subsystem();
+    // VisionSubsystem vision = new VisionSubsystem();
     color_chooser.setDefaultOption("Red", "red");
     color_chooser.addOption("Blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
 
-    vision = new Vision2Subsystem();
+    vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle
   }
