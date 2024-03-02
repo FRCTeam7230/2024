@@ -49,7 +49,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -65,9 +67,12 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during autonomous. */
+  /** This function is called periodically during autonomous every 20 ms. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+
+  }
 
   @Override
   public void teleopInit() {
@@ -83,7 +88,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+<<<<<<< Updated upstream
+    
+=======
+      //if(RobotContainer.m_driverController.getRawButton(7))
+      //{
+        // RobotContainer.m_leftMotor.set(0.5);
+        // RobotContainer.m_rightMotor.set(-0.5);
+      //}
+>>>>>>> Stashed changes
   }
 
   @Override
