@@ -3,12 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-/* TODO:
- * - set up the general limelight [x]
- * - set up the apriltag detection [x]
- * - set up the red blue team integration [x]
- * - test this integration with the apriltags and the red blue team chooser and integration []
- */
+
 public class Limelight{
     private static NetworkTableInstance table = NetworkTableInstance.getDefault();
     public static double targetX, targetY, visionTargets, targetID;
