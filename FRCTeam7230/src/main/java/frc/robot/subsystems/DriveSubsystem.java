@@ -168,10 +168,10 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rotateMode    Switches toggle to rotating in a circle
    */
    
-     public double speedMultiplier(double throttleValue) {
-    newthrottleValue = (.75*throttleValue) + 1.25;
-    
-    return newthrottleValue;
+   //slows/speeds up the robot in a controlled manner: from 0.5x - 2x of current speed
+    public double speedMultiplier(double throttleValue) {
+      newthrottleValue = (0.75 * throttleValue) + 1.25;
+      return newthrottleValue;
     }
      
 
@@ -238,7 +238,7 @@ public class DriveSubsystem extends SubsystemBase {
             ? ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle())) // ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, (DriveConstants.kMaxSpeedMetersPerSecond * newthrottleValue));
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -279,7 +279,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        desiredStates, (DriveConstants.kMaxSpeedMetersPerSecond * newthrottleValue));
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
@@ -291,7 +291,7 @@ public class DriveSubsystem extends SubsystemBase {
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds, distanceAngle));
   }
   
-
+  
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {

@@ -54,6 +54,7 @@ public class SwerveSubsystemSim extends SubsystemBase {
 
     public static final double speedMultiplier = 3.0;
     public static final double angleMultiplier = 3.0;
+    public double newthrottleValue;
 
     /**
      * Constructor. Set up simulation gyro and simulation swerve modules. Also
@@ -269,7 +270,7 @@ public class SwerveSubsystemSim extends SubsystemBase {
                         0.02));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+                swerveModuleStates, (DriveConstants.kMaxSpeedMetersPerSecond * newthrottleValue));
 
         setModuleStates(swerveModuleStates);
     }

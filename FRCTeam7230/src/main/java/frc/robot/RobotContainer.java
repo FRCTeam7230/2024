@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+import edu.wpi.first.wpilibj.RobotBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -46,6 +47,9 @@ public class RobotContainer {
     // Only used for testing simulation with an XBox controller.
     XboxController m_driverControllerSim = new XboxController(Constants.OIConstants.kDriverControllerPort);
     private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
+ 
+    boolean rotateMode = false;
+    boolean fieldRelative = true;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,12 +77,19 @@ public class RobotContainer {
                     // The left stick controls translation of the robot.
                     // Turning is controlled by the X axis of the right stick.
                     new RunCommand(
-                            () -> m_robotDrive.drive(
+                        () -> m_robotDrive.drive(
                                     -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
                                     -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
                                     -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
-                                    true, true),
+                                    fieldRelative, true),
                             m_robotDrive));
+                    new RunCommand(
+                        () -> m_robotDrive.testRotation(
+                                rotateMode, m_driverController.getX()), m_robotDrive);
+                    new RunCommand(
+                        () -> m_robotDrive.speedMultiplier(
+                                m_driverController.getThrottle()), m_robotDrive);
+        
         }
 
         // Configure the button bindings
@@ -110,18 +121,27 @@ public class RobotContainer {
                             m_robotDriveSim));
         }
         else {
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDrive.setX(),
-                            m_robotDrive));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDrive.printModulePositions(),
-                            m_robotDrive));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
-                    .whileTrue(new InstantCommand(
-                            () -> m_robotDrive.setZero(),
-                            m_robotDrive));
+                new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+                        .whileTrue(new RunCommand(
+                                () -> m_robotDrive.setX(),
+                                 m_robotDrive));
+                new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+                        .whileTrue(new RunCommand(
+                                () -> m_robotDrive.printModulePositions(),
+                                 m_robotDrive));
+                new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+                        .whileTrue(new InstantCommand(
+                                () -> rotateMode = !rotateMode,
+                                m_robotDrive));                
+                new JoystickButton(m_driverController, Constants.JoystickButtons.kButton5)
+                        .whileTrue(new InstantCommand(
+                                () -> fieldRelative = !fieldRelative,
+                                m_robotDrive));
+                new JoystickButton(m_driverController, Constants.JoystickButtons.kButton6)
+                        .whileTrue(new InstantCommand(
+                                () -> m_robotDrive.zeroHeading(),
+                                m_robotDrive));
+
         }
     }
 
