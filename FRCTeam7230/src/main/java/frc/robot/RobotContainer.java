@@ -21,10 +21,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
-import frc.robot.Constants.OIConstants;
+import static frc.robot.Constants.AutoConstants.*;
+import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.OperatorConstants.*;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
@@ -48,10 +47,8 @@ public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
     // The driver's controller
-    Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
+    private final Joystick m_driverController = Mechanisms.m_driverController;
 
-    // Only used for testing simulation with an XBox controller.
-    XboxController m_driverControllerSim = new XboxController(Constants.OIConstants.kDriverControllerPort);
     private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
 
     /**
@@ -68,9 +65,9 @@ public class RobotContainer {
                                     // Multiply by max speed to map the joystick unitless inputs to actual units.
                                     // This will map the [-1, 1] to [max speed backwards, max speed forwards],
                                     // converting them to actual units.
-                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getY(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getX(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getZ(), kDriveDeadband),
                                     false,
                                     false),
                             m_robotDriveSim));
@@ -81,9 +78,9 @@ public class RobotContainer {
                     // Turning is controlled by the X axis of the right stick.
                     new RunCommand(
                             () -> m_robotDrive.drive(
-                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getY(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getX(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(m_driverController.getZ(), kDriveDeadband),
                                     true, true),
                             m_robotDrive));
         }
@@ -103,31 +100,15 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         if (RobotBase.isSimulation()) {
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+            new JoystickButton(m_driverController, BRAKE)
                     .whileTrue(new RunCommand(
                             () -> m_robotDriveSim.setX(),
                             m_robotDriveSim));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDriveSim.printModulePositions(),
-                            m_robotDriveSim));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
-                    .whileTrue(new InstantCommand(
-                            () -> m_robotDriveSim.setZero(),
-                            m_robotDriveSim));
         }
         else {
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+            new JoystickButton(m_driverController, BRAKE)
                     .whileTrue(new RunCommand(
                             () -> m_robotDrive.setX(),
-                            m_robotDrive));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDrive.printModulePositions(),
-                            m_robotDrive));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
-                    .whileTrue(new InstantCommand(
-                            () -> m_robotDrive.setZero(),
                             m_robotDrive));
         }
     }
@@ -140,56 +121,56 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         Autos auto = new Autos(m_robotDriveSim);
         return auto.getAutonomousCommand();
-        /*
-         * // Create config for trajectory
-         * TrajectoryConfig config = new TrajectoryConfig(
-         * AutoConstants.kMaxSpeedMetersPerSecond,
-         * AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-         * // Add kinematics to ensure max speed is actually obeyed
-         * .setKinematics(DriveConstants.kDriveKinematics);
-         * 
-         * // An example trajectory to follow. All units in meters.
-         * Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-         * // Start at the origin facing the +X direction
-         * new Pose2d(0, 0, new Rotation2d(0)),
-         * // Pass through these two interior waypoints, making an 's' curve path
-         * List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-         * // End 3 meters straight ahead of where we started, facing forward
-         * new Pose2d(3, 0, new Rotation2d(0)),
-         * config);
-         * 
-         * var thetaController = new ProfiledPIDController(
-         * AutoConstants.kPThetaController, 0, 0,
-         * AutoConstants.kThetaControllerConstraints);
-         * thetaController.enableContinuousInput(-Math.PI, Math.PI);
-         * 
-         * SwerveControllerCommand swerveControllerCommand = new
-         * SwerveControllerCommand(
-         * exampleTrajectory,
-         * m_robotDrive::getPose, // Functional interface to feed supplier
-         * DriveConstants.kDriveKinematics,
-         * 
-         * // Position controllers
-         * new PIDController(AutoConstants.kPXController, 0, 0),
-         * new PIDController(AutoConstants.kPYController, 0, 0),
-         * thetaController,
-         * m_robotDrive::setModuleStates,
-         * m_robotDrive);
-         * 
-         * // Reset odometry to the starting pose of the trajectory.
-         * 
-         * 
-         * // Run path following command, then stop at the end.
-         * return Commands.sequence(
-         * new InstantCommand(() ->
-         * m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())),
-         * swerveControllerCommand,
-         * new InstantCommand(() -> m_robotDrive.drive(0,0,0,false,false))
-         * );
-         * 
-         */
+        
+         // Create config for trajectory
+         TrajectoryConfig config = new TrajectoryConfig(
+         kAutoMaxSpeedMetersPerSecond,
+         kMaxAccelerationMetersPerSecondSquared)
+         // Add kinematics to ensure max speed is actually obeyed
+         .setKinematics(kDriveKinematics);
+         
+         // An example trajectory to follow. All units in meters.
+         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+         // Start at the origin facing the +X direction
+         new Pose2d(0, 0, new Rotation2d(0)),
+         // Pass through these two interior waypoints, making an 's' curve path
+         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+         // End 3 meters straight ahead of where we started, facing forward
+         new Pose2d(3, 0, new Rotation2d(0)),
+         config);
+         
+         var thetaController = new ProfiledPIDController(
+         kPThetaController, 0, 0,
+         kThetaControllerConstraints);
+         thetaController.enableContinuousInput(-Math.PI, Math.PI);
+         
+         SwerveControllerCommand swerveControllerCommand = new
+         SwerveControllerCommand(
+         exampleTrajectory,
+         m_robotDrive::getPose, // Functional interface to feed supplier
+         kDriveKinematics,
+         
+         // Position controllers
+         new PIDController(kPXController, 0, 0),
+         new PIDController(kPYController, 0, 0),
+         thetaController,
+         m_robotDrive::setModuleStates,
+         m_robotDrive);
+         
+         // Reset odometry to the starting pose of the trajectory.
+         
+         
+         // Run path following command, then stop at the end.
+         return Commands.sequence(
+         new InstantCommand(() ->
+         m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())),
+         swerveControllerCommand,
+         new InstantCommand(() -> m_robotDrive.drive(0,0,0,false,false))
+         );
+         
+        
 
-        // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-        // false, false));
+        return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
+        false, false));
     }
 }
