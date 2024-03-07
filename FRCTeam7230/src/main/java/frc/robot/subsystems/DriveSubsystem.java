@@ -22,6 +22,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.DriveConstants.*;
 import frc.robot.Mechanisms;
+import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 
 
@@ -29,10 +30,10 @@ public class DriveSubsystem extends SubsystemBase {
     public Field2d m_field = new Field2d();
   
   // Create MAXSwerveModules
-  private final MAXSwerveModule frontLeft = Mechanisms.m_frontLeft;
-  private final MAXSwerveModule frontRight = Mechanisms.m_frontRight;
-  private final MAXSwerveModule rearLeft = Mechanisms.m_rearLeft;
-  private final MAXSwerveModule rearRight = Mechanisms.m_rearRight;
+  private final MAXSwerveModule frontLeft = new MAXSwerveModule(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, kMaxAngularSpeed);
+  private final MAXSwerveModule frontRight = new MAXSwerveModule(DriveConstants.kFrontRightDrivingCanId,DriveConstants.kFrontRightTurningCanId, kMaxAngularSpeed);
+  private final MAXSwerveModule rearLeft = new MAXSwerveModule(DriveConstants.kRearRightDrivingCanId,DriveConstants.kRearRightTurningCanId, kMaxAngularSpeed);
+  private final MAXSwerveModule rearRight = new MAXSwerveModule(DriveConstants.kRearRightDrivingCanId,DriveConstants.kRearRightTurningCanId, kMaxAngularSpeed);
 
     
   // The gyro sensor
