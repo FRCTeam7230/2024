@@ -233,9 +233,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   //input directionToRotate as negative one for left, positive one for right
-  public void rotateUntil(int directionToRotate, double rotateSpeed){
+  public void rotateUntil(double rotateSpeed){
       setModuleStates(kDriveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(0,0,kSmartIntakeSpeed * directionToRotate * speedMultiplierCommanded)));
+        new ChassisSpeeds(0,0,rotateSpeed * speedMultiplierCommanded)));
   }
 
   /**

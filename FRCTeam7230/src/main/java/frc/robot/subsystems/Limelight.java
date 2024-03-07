@@ -10,7 +10,7 @@ public class Limelight{
     public static double targetArea;
 
 
-    public static void initLimelight(String teamColor) {
+    public static void setTeamColor(String teamColor) {
         // this is where we set which pipeline to use based on the team color that gets passed here, the
         // rest of the code works off of this
         if ("red".equals(teamColor)) {

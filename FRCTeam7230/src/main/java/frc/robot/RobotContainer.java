@@ -56,6 +56,7 @@ public class RobotContainer {
  
     private boolean circlingMode = false;
     private boolean fieldRelative = true;
+    private boolean manualLayout = false;
 
       // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
@@ -155,6 +156,10 @@ public class RobotContainer {
                 new JoystickButton(driveJoystick, SET_FORWARD_BUTTON)
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.zeroHeading(),
+                                m_robotDrive));
+                new JoystickButton(driveJoystick, SMART_TOGGLE_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> manualLayout = !manualLayout,
                                 m_robotDrive));
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));

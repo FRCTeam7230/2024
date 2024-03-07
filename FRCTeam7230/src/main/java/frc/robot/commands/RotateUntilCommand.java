@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-
 import static frc.robot.Constants.DriveConstants.kSmartIntakeSpeed;
 import static frc.robot.Constants.VisionConstants.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +17,6 @@ public class RotateUntilCommand extends Command {
   private final DriveSubsystem m_driveSubsystem;
   private final VisionSubsystem m_visionSubsystem;
 
-  private boolean finishedRotating = false;
 
   /**
    * Creates a new ExampleCommand.
@@ -35,23 +33,20 @@ public class RotateUntilCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    finishedRotating = false;
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double[] visionData = m_visionSubsystem.captureTask();
     if (visionData[1] > kSmartAngleMargin){
-      m_driveSubsystem.rotateUntil(1, kSmartIntakeSpeed);
+      m_driveSubsystem.rotateUntil(-kSmartIntakeSpeed);
     }
     else if (visionData[1] < -kSmartAngleMargin){
-      m_driveSubsystem.rotateUntil(-1, kSmartIntakeSpeed);
+      m_driveSubsystem.rotateUntil(kSmartIntakeSpeed);
     }
     else {
-      m_driveSubsystem.rotateUntil(0,0);
-      finishedRotating = true;
+      m_driveSubsystem.rotateUntil(0);
     }
   }
 
@@ -62,6 +57,6 @@ public class RotateUntilCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finishedRotating;
+    return false;
   }
 }

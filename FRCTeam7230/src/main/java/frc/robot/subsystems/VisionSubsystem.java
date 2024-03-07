@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.opencv.core.*;
 import org.opencv.core.Point;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class VisionSubsystem {
+public class VisionSubsystem extends SubsystemBase{
     private VideoCapture capture;
     private CvSource output;
     private GripPipeline pipeline = new GripPipeline();

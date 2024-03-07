@@ -130,7 +130,9 @@ public final class Constants {
     public static final int kClimbingEncoderId = 1;
   }
 
-
+  public static final class VisionConstants {
+    public static final int kSmartAngleMargin = 5;
+  }
 
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.

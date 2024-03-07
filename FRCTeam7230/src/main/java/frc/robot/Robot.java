@@ -27,11 +27,9 @@ public class Robot extends TimedRobot {
   private String colorSelected;
 
   private Command m_autonomousCommand;
-  private double offsetX, offsetY, tagDistance, tagID;
+  private double angleX, angleY, tagDistance, tagID;
 
   private RobotContainer m_robotContainer;
-
-  private VisionSubsystem vision;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -46,8 +44,6 @@ public class Robot extends TimedRobot {
     color_chooser.setDefaultOption("Red", "red");
     color_chooser.addOption("Blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
-
-    vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle
   }
@@ -75,7 +71,7 @@ public class Robot extends TimedRobot {
         red = "blue";
         break;
     }
-    Limelight.initLimelight(red);
+    Limelight.setTeamColor(red);
 
     CommandScheduler.getInstance().run();
     angleX = Limelight.getTargetAngleX();
@@ -92,7 +88,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Limelight.initializeLimelightOff();
   }
 
   @Override
@@ -114,14 +109,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous every 20 ms. */
   @Override
   public void autonomousPeriodic() {
-    offsetX = Limelight.getTargetAngleX();
-    offsetY = Limelight.getTargetAngleY();
-    tagID = Limelight.getTargetID();
-    tagDistance = Limelight.apriltagDistance();
-    SmartDashboard.putNumber("X offset", offsetX);
-    SmartDashboard.putNumber("Y offset", offsetY);
-    SmartDashboard.putNumber("Tag ID", tagID);
-    SmartDashboard.putNumber("Tag Distance", tagDistance);
+
 
     //autonomous 15 seconddddddd wooooooooo
       //AUTONOMOUS LEVEL 2
@@ -152,14 +140,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    offsetX = Limelight.getTargetAngleX();
-    offsetY = Limelight.getTargetAngleY();
-    tagID = Limelight.getTargetID();
-    tagDistance = Limelight.apriltagDistance();
-    SmartDashboard.putNumber("X offset", offsetX);
-    SmartDashboard.putNumber("Y offset", offsetY);
-    SmartDashboard.putNumber("Tag ID", tagID);
-    SmartDashboard.putNumber("Tag Distance", tagDistance);    
+ 
   }
 
   @Override
