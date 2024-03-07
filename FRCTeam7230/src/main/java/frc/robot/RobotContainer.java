@@ -10,6 +10,7 @@ import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 // import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -83,6 +84,7 @@ public class RobotContainer {
   private JoystickButton ClimberDownButton = new JoystickButton(mechJoystick, CLIMBER_DOWN_BUTTON);
   private JoystickButton FarPivotButton = new JoystickButton(mechJoystick, FAR_PIVOT_BUTTON);
   private JoystickButton ClosePivotButton = new JoystickButton(mechJoystick, CLOSE_PIVOT_BUTTON);
+  private JoystickButton SmartToggleButton = new JoystickButton(mechJoystick, SMART_TOGGLE_BUTTON);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

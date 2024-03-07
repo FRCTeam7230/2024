@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PivotingSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 
 
 
@@ -27,9 +29,13 @@ public class Robot extends TimedRobot {
   private String colorSelected;
 
   private Command m_autonomousCommand;
-  private double angleX, angleY, tagDistance, tagID;
+  private double angleX, angleY, tagDistance, tagID, gyroData;
+  public double shooterAngle;
+  private boolean intakeSensor, isTargetFound;
 
   private RobotContainer m_robotContainer;
+
+  private VisionSubsystem vision;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -44,6 +50,14 @@ public class Robot extends TimedRobot {
     color_chooser.setDefaultOption("Red", "red");
     color_chooser.addOption("Blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
+    angleX = Limelight.getTargetAngleX();
+    angleY = Limelight.getTargetAngleY();
+    tagID = Limelight.getTargetID();
+    tagDistance = Limelight.apriltagDistance();
+    gyroData = GyroSubsystem.FetchGyroData();
+    intakeSensor = PivotingSubsystem.intakeSensor();
+    shooterAngle = PivotingSubsystem.counterValue();
+    vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle
   }
@@ -71,23 +85,23 @@ public class Robot extends TimedRobot {
         red = "blue";
         break;
     }
-    Limelight.setTeamColor(red);
-
     CommandScheduler.getInstance().run();
-    angleX = Limelight.getTargetAngleX();
-    angleY = Limelight.getTargetAngleY();
-    tagID = Limelight.getTargetID();
-    tagDistance = Limelight.apriltagDistance();
-    SmartDashboard.putNumber("X Angle", angleX);
-    SmartDashboard.putNumber("Y Angle", angleY);
+    Limelight.setTeamColor(red);
+    SmartDashboard.putNumber("X offset", angleX);
+    SmartDashboard.putNumber("Y offset", angleY);
     SmartDashboard.putNumber("Tag ID", tagID);
-    SmartDashboard.putNumber("Tag Distance", tagDistance);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);   
+    SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
+    SmartDashboard.putNumber("Gyro", gyroData);
+    SmartDashboard.putNumber("Shooter Angle", shooterAngle);
+
 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    Limelight.setLimelightOff();
   }
 
   @Override
@@ -109,7 +123,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous every 20 ms. */
   @Override
   public void autonomousPeriodic() {
-
+    SmartDashboard.putNumber("X offset", angleX);
+    SmartDashboard.putNumber("Y offset", angleY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);   
+    SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
+    SmartDashboard.putNumber("Gyro", gyroData);
+    SmartDashboard.putNumber("Shooter Angle", shooterAngle);
 
     //autonomous 15 seconddddddd wooooooooo
       //AUTONOMOUS LEVEL 2
@@ -140,7 +160,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
- 
+    SmartDashboard.putNumber("X offset", angleX);
+    SmartDashboard.putNumber("Y offset", angleY);
+    SmartDashboard.putNumber("Tag ID", tagID);
+    SmartDashboard.putNumber("Tag Distance", tagDistance);   
+    SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
+    SmartDashboard.putNumber("Gyro", gyroData);
+    SmartDashboard.putNumber("Shooter Angle", shooterAngle);
   }
 
   @Override

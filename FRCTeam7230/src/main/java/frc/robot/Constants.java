@@ -57,7 +57,6 @@ public final class Constants {
     public static final int PIVOT_DOWN_BUTTON = kButton10;
     public static final int CLIMBER_DOWN_BUTTON = kButton11;
     public static final int CLIMBER_UP_BUTTON = kButton12;
-
     public static final double kDriveDeadband = 0.1;
   }
 

@@ -19,7 +19,7 @@ public class ShooterSubsystem extends SubsystemBase{
   
   /** Variables */
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
-  private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch;
+  private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch; //povit low
   private static CANSparkMax transferMotor = Mechanisms.m_transferToShooterMotor;
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;

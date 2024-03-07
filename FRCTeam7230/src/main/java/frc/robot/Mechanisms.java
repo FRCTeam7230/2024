@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.MAXSwerveModule;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import com.revrobotics.CANSparkMax;
@@ -56,4 +57,6 @@ public static final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
     //Climbing Subsystem
     public static final CANSparkMax m_climbingMotor = new CANSparkMax(kClimbingMotorId, kBrushless);
     public static final DutyCycleEncoder m_climberEncoder = new DutyCycleEncoder(kClimbingEncoderId);
+
+    public static AHRS gyro = new AHRS();
 }

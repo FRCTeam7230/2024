@@ -33,12 +33,15 @@ public class PivotingSubsystem extends SubsystemBase {
   public void stopRotation(){
     pivotMotor.stopMotor();
   }
-  public double counterValue() {
+  public static double counterValue() {
     return pivotEncoder.getDistance();
   }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+  public static boolean intakeSensor() {
+    return intakeSensor.get();
   }
 }

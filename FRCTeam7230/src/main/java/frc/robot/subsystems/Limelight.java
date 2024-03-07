@@ -21,6 +21,12 @@ public class Limelight{
         
         NetworkTableInstance.getDefault().flush(); // Force an immediate update
     }
+
+    public static void setLimelightOff() {
+        // this is where we turn off the limelight
+        table.getEntry("pipeline").setNumber(1);
+        NetworkTableInstance.getDefault().flush(); // Force an immediate update
+    }
     
     public static void refreshData() {
         // this is where we refresh the limelight data
