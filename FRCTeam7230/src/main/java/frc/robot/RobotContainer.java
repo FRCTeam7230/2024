@@ -180,7 +180,7 @@ public class RobotContainer {
                 }
                 else{
                 intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
-                shooterButton.whileTrue(new SmartShooterCommand(s_pivotingSubsystem,s_visionSubsystem,s_shooterSubsystem,m_robotDrive));
+                shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
                 }
                 
         }

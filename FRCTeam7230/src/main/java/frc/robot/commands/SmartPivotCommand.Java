@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class SmartPivotCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_driveSubsystem;
-  private final PivoitngSubsystem m_pivotSubsystem;
+  private final VisionSubsystem m_visionSubsystem;
+  private final PivotingSubsystem m_pivotingSubsystem;
   private boolean finishedPivoting = false;
 
 
