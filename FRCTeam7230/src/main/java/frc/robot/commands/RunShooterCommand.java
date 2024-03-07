@@ -4,41 +4,38 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.ShooterSubsystem;
+import static frc.robot.Constants.ShooterConstants.*;
 
-/** An example command that uses an example subsystem. */
-public class LimelightCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Limelight m_limelight;
+public class RunShooterCommand extends Command {
+  /** Creates a new RunShooterCommand. */
+  private ShooterSubsystem s_shooterSubsystem;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public LimelightCommand(LimelightSubsystem subsystem) {
-    m_limelight = subsystem;
+  public RunShooterCommand(ShooterSubsystem shoot) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    this.s_shooterSubsystem = shoot;
+    addRequirements(s_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_limelight.initLimelight();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_limelight.getTargetAngleX();
-    m_limelight
+    s_shooterSubsystem.StartShooter(kRotationalSpeed);
+    new WaitCommand(4.0);
+    s_shooterSubsystem.StopShooter();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    s_shooterSubsystem.StopShooter();
+  }
 
   // Returns true when the command should end.
   @Override

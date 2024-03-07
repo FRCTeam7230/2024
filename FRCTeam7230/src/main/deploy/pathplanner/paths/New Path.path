@@ -197,7 +197,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "Align robot to pick up note or to get ready for teleop",
       "waypointRelativePos": 5.95,
       "command": {
         "type": "parallel",
@@ -206,7 +206,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Align robot to pick up note or to get ready for teleop"
+                "name": "pickup"
               }
             }
           ]

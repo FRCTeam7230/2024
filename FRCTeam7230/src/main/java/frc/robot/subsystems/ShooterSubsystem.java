@@ -7,7 +7,8 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mechanisms;
-import frc.robot.Constants.ShooterConstants;
+import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.NeoMotorConstants.*;
 import com.revrobotics.CANSparkMax;
 
 
@@ -25,10 +26,6 @@ public class ShooterSubsystem extends SubsystemBase{
   private static CANSparkMax leftShooterMotor = Mechanisms.m_leftShooterMotor;
 
 
-  
-  double motorRotateSpeed = ShooterConstants.kRotationalSpeed;
-
-
   public static boolean shooterOn = false;
 
   public ShooterSubsystem() {
@@ -44,11 +41,11 @@ public class ShooterSubsystem extends SubsystemBase{
 
   
 
-  public void StartShooter() {
+  public void StartShooter(double motorRotateSpeed) {
     rightShooterMotor.set(motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
     leftShooterMotor.set(motorRotateSpeed);
     if(rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity() == (917*motorRotateSpeed) 
-    && rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity()== (917*motorRotateSpeed)){
+    && leftShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity()== (kMotorVoltsToRPM*motorRotateSpeed)){
       transferMotor.set(motorRotateSpeed);
     }
   }
@@ -57,6 +54,7 @@ public class ShooterSubsystem extends SubsystemBase{
   public void StopShooter() {
     rightShooterMotor.stopMotor();
     leftShooterMotor.stopMotor();
+    transferMotor.stopMotor();
   }
 
   /**
