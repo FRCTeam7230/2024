@@ -98,8 +98,8 @@ public final class Constants {
     public static final int kFrontRightDrivingCanId = 7;
     public static final int kRearRightDrivingCanId = 1;
 
-    public static final int kFrontLeftTurningCanId = 6;//WAS 6
-    public static final int kRearLeftTurningCanId = 4;//WAS 4
+    public static final int kFrontLeftTurningCanId = 6;
+    public static final int kRearLeftTurningCanId = 4;
     public static final int kFrontRightTurningCanId = 8;
     public static final int kRearRightTurningCanId = 2;
 
@@ -109,12 +109,12 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int kRightShooterMotorId = 1;
-    public static final int kLeftShooterMotorId = 1;
-    public static final int kShooterPivotMotorId = 1;
-    public static final int kNoteBeamSensorId = 1;
-    public static final int kPivotEncoderId = 1;
-    public static final int kUpperLimitSwitchId = 1;
+    public static final int kRightShooterMotorId = 9;
+    public static final int kLeftShooterMotorId = 10;
+    public static final int kShooterPivotMotorId = 11;
+    public static final int kNoteBeamSensorId = 12;
+    public static final int kPivotEncoderId = 13;
+    public static final int kUpperLimitSwitchId = 14;
 
     public static final double kRotationalSpeed = 0.5;
     public static final double kDegreesPerStep = 1;

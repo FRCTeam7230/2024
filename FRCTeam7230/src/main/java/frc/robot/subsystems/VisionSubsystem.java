@@ -40,9 +40,11 @@ public class VisionSubsystem {
         return data;
     }
 
-    public double[] captureTask(double xOffset, double yOffset) {
+    public double[] captureTask() {
 
         Mat frameMat = new Mat();
+        double xOffset = 2.734; 
+        double yOffset = 13.37;
 
         capture.read(frameMat);
         Mat frameWithBox = frameMat.clone();

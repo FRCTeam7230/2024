@@ -54,8 +54,8 @@ public class RobotContainer {
 
     private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
  
-    boolean rotateMode = false;
-    boolean fieldRelative = true;
+    private boolean circlingMode = false;
+    private boolean fieldRelative = true;
 
       // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
@@ -68,11 +68,13 @@ public class RobotContainer {
 
   private final Joystick driveJoystick = Mechanisms.m_driverController;
   private final Joystick mechJoystick = Mechanisms.m_mechanismsController;
-  private JoystickButton intakeButton = new JoystickButton(m_mechanismsController, 1);//is it always going to be autnonmous?
-  private JoystickButton PivotUpButton = new JoystickButton(m_mechanismsController, 2);
-  private JoystickButton PivotDownButton = new JoystickButton(m_mechanismsController, 3);//is it always going to be autnonmous?
-  private JoystickButton ClimberUpButton = new JoystickButton(m_mechanismsController, 4);
-  private JoystickButton ClimberDownButton = new JoystickButton(m_mechanismsController, 5);
+  private JoystickButton intakeButton = new JoystickButton(mechJoystick, INTAKE_BUTTON);//is it always going to be autnonmous?
+  private JoystickButton PivotUpButton = new JoystickButton(mechJoystick, PIVOT_UP_BUTTON);
+  private JoystickButton PivotDownButton = new JoystickButton(mechJoystick,PIVOT_DOWN_BUTTON);//is it always going to be autnonmous?
+  private JoystickButton ClimberUpButton = new JoystickButton(mechJoystick, CLIMBER_UP_BUTTON);
+  private JoystickButton ClimberDownButton = new JoystickButton(mechJoystick, CLIMBER_DOWN_BUTTON);
+  private JoystickButton FarPivotButton = new JoystickButton(mechJoystick, FAR_PIVOT_BUTTON);
+  private JoystickButton ClosePivotButton = new JoystickButton(mechJoystick, CLOSE_PIVOT_BUTTON);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -104,26 +106,19 @@ public class RobotContainer {
                                     -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
                                     -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
                                     -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
-                                    fieldRelative, true),
+                                    driveJoystick.getThrottle(),
+                                    fieldRelative, true, circlingMode),
                             m_robotDrive));
                     new RunCommand(
-                        () -> m_robotDrive.testRotation(
-                                rotateMode, driveJoystick.getX()), m_robotDrive);
-                    new RunCommand(
-                        () -> m_robotDrive.speedMultiplier(
-                                driveJoystick.getThrottle()), m_robotDrive);
+                        () -> m_robotDrive.circlingDrive(
+                                circlingMode, driveJoystick.getX()), m_robotDrive);
                     s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
-        //s_Limelight.setDefaultCommand(new Limelight());
-        
         }
 
         // Configure the button bindings
         configureButtonBindings();
     }
 
-  public void defaultCommands(){ //for anything that runs constantly
-
-  }
     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by
@@ -151,7 +146,7 @@ public class RobotContainer {
                 //                  m_robotDrive));
                 new JoystickButton(driveJoystick, CIRCLING_TOGGLE_BUTTON)
                         .whileTrue(new InstantCommand(
-                                () -> rotateMode = !rotateMode,
+                                () -> circlingMode = !circlingMode,
                                 m_robotDrive));                
                 new JoystickButton(driveJoystick, DRIVE_CONTROL_TOGGLE_BUTTON)
                         .whileTrue(new InstantCommand(
@@ -161,10 +156,10 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.zeroHeading(),
                                 m_robotDrive));
-                PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, 1));
-                PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController, -1));
-                ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, m_mechanismsController, 1));
-                ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, m_mechanismsController, -1));
+                PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
+                PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
+                ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
+                ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, -1));
                 intakeButton.whileTrue(new IntakeSubsystemCommand(s_intakeSubsystem));
 
         }

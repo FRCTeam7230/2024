@@ -75,15 +75,15 @@ public class Robot extends TimedRobot {
         red = "blue";
         break;
     }
-    Limelight.limelight(red);
+    Limelight.initLimelight(red);
 
     CommandScheduler.getInstance().run();
-    offsetX = Limelight.getTargetAngleX();
-    offsetY = Limelight.getTargetAngleY();
+    angleX = Limelight.getTargetAngleX();
+    angleY = Limelight.getTargetAngleY();
     tagID = Limelight.getTargetID();
     tagDistance = Limelight.apriltagDistance();
-    SmartDashboard.putNumber("X offset", offsetX);
-    SmartDashboard.putNumber("Y offset", offsetY);
+    SmartDashboard.putNumber("X Angle", angleX);
+    SmartDashboard.putNumber("Y Angle", angleY);
     SmartDashboard.putNumber("Tag ID", tagID);
     SmartDashboard.putNumber("Tag Distance", tagDistance);
 
