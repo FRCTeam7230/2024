@@ -6,17 +6,19 @@ package frc.robot.commands;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotingSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /** An example command that uses an example subsystem. */
-public class SmartIntakeCommand extends SequentialCommandGroup {
+public class SmartShooterCommand extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_driveSubsystem;
   private final VisionSubsystem m_visionSubsystem;
-  private final IntakeSubsystem m_IntakeSubsystem;
+  private final ShooterSubsystem m_shooterSubsystem;
+  private final PivotingSubsystem m_pivotingSubsystem;
   
 
   /**
@@ -24,15 +26,19 @@ public class SmartIntakeCommand extends SequentialCommandGroup {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SmartIntakeCommand(DriveSubsystem subsystem, VisionSubsystem subsystem2, IntakeSubsystem subsystem3) {
+  public SmartShooterCommand(DriveSubsystem subsystem, VisionSubsystem subsystem2, ShooterSubsystem subsystem3, PivotingSubsystem subsystem4) {
     m_driveSubsystem = subsystem;
     m_visionSubsystem = subsystem2;
-    m_IntakeSubsystem = subsystem3;
+    m_shooterSubsystem = subsystem3;
+    m_pivotingSubsystem = subsystem4;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
     addRequirements(subsystem2);
+    addRequirements(subsystem3);
+    addRequirements(subsystem4);
   addCommands(
     new SmartRotateCommand(m_driveSubsystem,m_visionSubsystem),
-    new RunIntakeCommand(m_IntakeSubsystem));
+    new SmartPivotCommand(m_pivotingSubsystem, m_visionSubsystem),
+    new RunShooterCommand(m_shooterSubsystem));
   }
 }

@@ -5,40 +5,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ShooterSubsystemCommand extends Command {
-  /** Creates a new ShooterSubsystemCommand. */
-  private ShooterSubsystem s_shooterSubsystem;
-
-  public ShooterSubsystemCommand(ShooterSubsystem shoot) {
+public class RunIntakeCommand extends Command {
+  /** Creates a new IntakeSubsystemCommand. */
+  private IntakeSubsystem s_intakeSubsystem;
+  public RunIntakeCommand(IntakeSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.s_shooterSubsystem = shoot;
-    addRequirements(s_shooterSubsystem);
+    this.s_intakeSubsystem = intake;
+    addRequirements(s_intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    s_shooterSubsystem.StartShooter();
-    new WaitCommand(4.0);
-    s_shooterSubsystem.StopShooter();
+    s_intakeSubsystem.startIntakeSystem();
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    s_shooterSubsystem.StopShooter();
+    s_intakeSubsystem.stopIntakeSystem();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return IntakeSubsystem.checkSensor();
   }
 }

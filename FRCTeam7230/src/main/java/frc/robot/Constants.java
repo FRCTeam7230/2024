@@ -58,7 +58,6 @@ public final class Constants {
     public static final int PIVOT_DOWN_BUTTON = kButton10;
     public static final int CLIMBER_DOWN_BUTTON = kButton11;
     public static final int CLIMBER_UP_BUTTON = kButton12;
-
     public static final double kDriveDeadband = 0.1;
   }
 
@@ -106,7 +105,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kSmartIntakeSpeed = 1;
+    public static final double kSmartRotateSpeed = 1;
   }
 
   public static final class ShooterConstants {
@@ -119,6 +118,8 @@ public final class Constants {
 
     public static final double kRotationalSpeed = 0.5;
     public static final double kDegreesPerStep = 1;
+
+    public static final double kSmartPivotSpeed = 0.5;
   }
 
   public static final class IntakeConstants {
@@ -132,7 +133,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final int kSmartAngleMargin = 5;
+    public static final int kSmartDrivingAngleMargin = 5;
+    public static final int kSmartPivotingAngleMargin = 5;
   }
 
   public static final class ModuleConstants {
@@ -204,6 +206,8 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+    public static final int kMotorVoltsToRPM = 917;
+    //assuming no load
   }
 
 }

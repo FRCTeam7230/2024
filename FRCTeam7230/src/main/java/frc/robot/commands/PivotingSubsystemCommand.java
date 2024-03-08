@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PivotingSubsystem;
 
 public class PivotingSubsystemCommand extends Command {
-  /** Creates a new ShooterSubsystemCommand. */
+  /** Creates a new RunShooterCommand. */
   private PivotingSubsystem s_pivotingSubsystem;
   private Joystick m_mechanismsController;
 
@@ -38,16 +38,16 @@ public class PivotingSubsystemCommand extends Command {
     double current;
     pivot = m_mechanismsController.getY();
     if(pivot != 0){//joystick no button
-      s_pivotingSubsystem.RotateShooter(pivot_limit.calculate(pivot));//does this account for both up and down?
+      s_pivotingSubsystem.rotateShooter(pivot_limit.calculate(pivot));//does this account for both up and down?
     }else if(rotationalCoefficient==-1){
       current = s_pivotingSubsystem.counterValue();
       while(s_pivotingSubsystem.counterValue() > current - 10){
-        s_pivotingSubsystem.RotateShooter(-0.5);
+        s_pivotingSubsystem.rotateShooter(-0.5);
       }
     }else if(rotationalCoefficient==1){
       current = s_pivotingSubsystem.counterValue();
       while(s_pivotingSubsystem.counterValue() < current + 10){
-        s_pivotingSubsystem.RotateShooter(0.5);
+        s_pivotingSubsystem.rotateShooter(0.5);
       }
     }
   }
@@ -55,7 +55,7 @@ public class PivotingSubsystemCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    s_pivotingSubsystem.StopRotation();
+    s_pivotingSubsystem.stopRotation();
     
   }
 

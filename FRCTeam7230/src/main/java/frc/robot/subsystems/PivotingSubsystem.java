@@ -23,14 +23,14 @@ public class PivotingSubsystem extends SubsystemBase {
 
   }
 
-  public void RotateShooter(double motorRotateSpeed) {
+  public void rotateShooter(double motorRotateSpeed) {
     pivotMotor.set(motorRotateSpeed);
   }
 
- /*public Command RotateShooterDown(double motorRotateSpeed) {
+ /*public Command rotateShooterDown(double motorRotateSpeed) {
     pivotMotor.set(ControlMode.PercentOutput, -motorRotateSpeed);    
   }*/
-  public void StopRotation(){
+  public void stopRotation(){
     pivotMotor.stopMotor();
   }
   public static double counterValue() {

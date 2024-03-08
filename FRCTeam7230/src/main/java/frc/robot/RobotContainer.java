@@ -10,8 +10,10 @@ import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 // import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
+import frc.robot.subsystems.VisionSubsystem;
 
 // import static frc.robot.Constants.AutoConstants.*;
 // import static frc.robot.Constants.DriveConstants.*;
@@ -36,8 +39,11 @@ import static frc.robot.Constants.OperatorConstants.*;
         //Commented out imports for manual trajectory based auto
 
 import frc.robot.commands.ClimberSubsystemCommand;
-import frc.robot.commands.IntakeSubsystemCommand;
+import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.PivotingSubsystemCommand;
+import frc.robot.commands.SmartIntakeCommand;
+import frc.robot.commands.SmartShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 //import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -68,6 +74,7 @@ public class RobotContainer {
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
   private final PivotingSubsystem s_pivotingSubsystem = new PivotingSubsystem();
+  private final VisionSubsystem s_visionSubsystem = new VisionSubsystem();
   private final Limelight s_Limelight = new Limelight();
   private final Joystick m_mechanismsController = new Joystick(0);
   private final ClimberSubsystem s_ClimberSubsystem = new ClimberSubsystem();
@@ -76,12 +83,14 @@ public class RobotContainer {
   private final Joystick driveJoystick = Mechanisms.m_driverController;
   private final Joystick mechJoystick = Mechanisms.m_mechanismsController;
   private JoystickButton intakeButton = new JoystickButton(mechJoystick, INTAKE_BUTTON);//is it always going to be autnonmous?
+  private JoystickButton shooterButton = new JoystickButton(mechJoystick, SHOOT_BUTTON);
   private JoystickButton PivotUpButton = new JoystickButton(mechJoystick, PIVOT_UP_BUTTON);
   private JoystickButton PivotDownButton = new JoystickButton(mechJoystick,PIVOT_DOWN_BUTTON);//is it always going to be autnonmous?
   private JoystickButton ClimberUpButton = new JoystickButton(mechJoystick, CLIMBER_UP_BUTTON);
   private JoystickButton ClimberDownButton = new JoystickButton(mechJoystick, CLIMBER_DOWN_BUTTON);
   private JoystickButton FarPivotButton = new JoystickButton(mechJoystick, FAR_PIVOT_BUTTON);
   private JoystickButton ClosePivotButton = new JoystickButton(mechJoystick, CLOSE_PIVOT_BUTTON);
+  private JoystickButton SmartToggleButton = new JoystickButton(mechJoystick, SMART_TOGGLE_BUTTON);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -195,8 +204,15 @@ public class RobotContainer {
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
                 ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, -1));
-                intakeButton.whileTrue(new IntakeSubsystemCommand(s_intakeSubsystem));
-
+                if(manualLayout){
+                intakeButton.whileTrue(new RunIntakeCommand(s_intakeSubsystem));
+                shooterButton.whileTrue(new RunShooterCommand(s_shooterSubsystem));
+                }
+                else{
+                intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
+                shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
+                }
+                
         }
     }
 
@@ -208,7 +224,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         Autos auto = new Autos(m_robotDriveSim);
         return auto.getAutonomousCommand();
-        
+    }
          // Create config for trajectory
  /*         TrajectoryConfig config = new TrajectoryConfig(
          kAutoMaxSpeedMetersPerSecond,
@@ -261,11 +277,11 @@ public class RobotContainer {
          );
          
         
-
+        
         return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
         false, false)); */
     }
-}
+
 
 
 
