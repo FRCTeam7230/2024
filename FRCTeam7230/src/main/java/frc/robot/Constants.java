@@ -117,6 +117,10 @@ public final class Constants {
 
     public static final double kRotationalSpeed = 0.5;
     public static final double kDegreesPerStep = 1;
+    public static final double kPivotAngleMargin = 3;
+
+    public static final double kFarPivotAngle = 30;
+    public static final double kClosePivotAngle = 53;
 
     public static final double kSmartPivotSpeed = 0.5;
   }
@@ -206,6 +210,7 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
     public static final int kMotorVoltsToRPM = 917;
+    public static final double kDegreesPerEncoderCount = 360/8192;
     //assuming no load
   }
 

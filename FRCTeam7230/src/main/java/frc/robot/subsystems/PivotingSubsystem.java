@@ -4,12 +4,15 @@
 
 package frc.robot.subsystems;
 
+
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mechanisms;
+import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.NeoMotorConstants.*;
 
 public class PivotingSubsystem extends SubsystemBase {
   /** Creates a new PivotingSubsystem. */
@@ -25,6 +28,18 @@ public class PivotingSubsystem extends SubsystemBase {
 
   public void rotateShooter(double motorRotateSpeed) {
     pivotMotor.set(motorRotateSpeed);
+  }
+
+  public void rotateShooterToAngle(double angle){
+    if (counterValue()*kDegreesPerEncoderCount > angle + kPivotAngleMargin){
+      rotateShooter(-kSmartPivotSpeed);
+    }
+    else if (counterValue()*kDegreesPerEncoderCount < angle - kPivotAngleMargin){
+      rotateShooter(kSmartPivotSpeed);
+    }
+    else{
+      stopRotation();
+    }
   }
 
  /*public Command rotateShooterDown(double motorRotateSpeed) {

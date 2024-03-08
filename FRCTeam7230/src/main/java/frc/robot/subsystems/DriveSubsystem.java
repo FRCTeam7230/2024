@@ -47,8 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private double speedMultiplierCommanded = 0.0;
   
-  private Rotation2d angle = new Rotation2d(Math.PI/4); //vision gives us this angle
-  private Translation2d distanceAngle = new Translation2d(2, angle); //vision gives us distance
+
 
   private Translation2d frontrightWheelMeters = new Translation2d(0.3429,0.3429); 
   private Translation2d frontleftWheelMeters = new Translation2d(-0.3429,0.3429); 
@@ -253,8 +252,12 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.setDesiredState(desiredStates[3]);
   }
       
-  public void circlingDrive(boolean rotateMode, double rotateSpeed) {
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(rotateSpeed, rotateSpeed, 0);
+  public void circlingDrive(boolean circlingMode, double rotateSpeed, double distance, double visionAngle) {
+    rotateSpeed = rotateSpeed * speedMultiplierCommanded;
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(rotateSpeed, rotateSpeed, rotateSpeed);
+    Rotation2d angle = new Rotation2d(visionAngle); //vision gives us this angle
+    Translation2d distanceAngle = new Translation2d(distance, angle); //vision gives us distance
+    
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds, distanceAngle));
   }
   

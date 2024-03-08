@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 // import java.util.List;
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.CirclingDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
 import frc.robot.subsystems.VisionSubsystem;
@@ -30,8 +31,10 @@ import frc.robot.subsystems.VisionSubsystem;
 // import static frc.robot.Constants.AutoConstants.*;
 // import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.OperatorConstants.*;
+import static frc.robot.Constants.ShooterConstants.kClosePivotAngle;
+import static frc.robot.Constants.ShooterConstants.kFarPivotAngle;
 
-        //Commented out imports for manual trajectory based auto
+//Commented out imports for manual trajectory based auto
 
 import frc.robot.commands.ClimberSubsystemCommand;
 import frc.robot.commands.RunIntakeCommand;
@@ -119,10 +122,8 @@ public class RobotContainer {
                                     driveJoystick.getThrottle(),
                                     fieldRelative, true, circlingMode),
                             m_robotDrive));
-                    new RunCommand(
-                        () -> m_robotDrive.circlingDrive(
-                                circlingMode, driveJoystick.getX()), m_robotDrive);
-                    s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
+                m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
+                s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
         }
 
         // Configure the button bindings
@@ -170,6 +171,14 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> manualLayout = !manualLayout,
                                 m_robotDrive));
+                new JoystickButton(driveJoystick, FAR_PIVOT_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> s_pivotingSubsystem.rotateShooterToAngle(kFarPivotAngle),
+                                s_pivotingSubsystem));
+                new JoystickButton(driveJoystick, CLOSE_PIVOT_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> s_pivotingSubsystem.rotateShooterToAngle(kClosePivotAngle),
+                                s_pivotingSubsystem));
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
