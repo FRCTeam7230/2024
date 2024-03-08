@@ -223,6 +223,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+  public void testButton() {
+    System.out.println("the test button was pressed"); // i added logic just in case 
+  }
   /**
    * Sets the wheels into an X formation to prevent movement.
    */

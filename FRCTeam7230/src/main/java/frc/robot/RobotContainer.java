@@ -17,6 +17,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 // import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 // import java.util.List;
 
@@ -39,6 +44,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.PivotingSubsystem;
+
 
 
 /*
@@ -115,7 +121,26 @@ public class RobotContainer {
                                 circlingMode, driveJoystick.getX()), m_robotDrive);
                     s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
         }
-
+        CommandScheduler.getInstance()
+                .onCommandInitialize(
+                     command -> 
+                        Shuffleboard.addEventMarker(
+                                "Command initialized", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+                .onCommandExecute(
+                     command -> 
+                        Shuffleboard.addEventMarker(
+                                "Command executed", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+                .onCommandFinish(
+                     command -> 
+                        Shuffleboard.addEventMarker(
+                                "Command finished", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+                .onCommandInterrupt(
+                     command -> 
+                        Shuffleboard.addEventMarker(
+                                "Command interrupted", command.getName(), EventImportance.kNormal));
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -161,6 +186,11 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> manualLayout = !manualLayout,
                                 m_robotDrive));
+                new JoystickButton(driveJoystick, TEST_BUTTON)
+                        .whileTrue(new InstantCommand(
+                                () -> m_robotDrive.testButton(),
+                                m_robotDrive));
+
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
