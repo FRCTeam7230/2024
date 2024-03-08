@@ -30,13 +30,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.PivotingSubsystem;
+//import frc.robot.commands.IntakeSubsystemCommand;
+import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunShooterCommand;
+//import frc.robot.commands.PivotingSubsystemCommand;
+//import frc.robot.commands.ShooterSubsystemCommand;
+//import frc.robot.commands.SmartIntakeCommand;
+
 public class Autos {
     private final SendableChooser<Command> autoChooser;
+    private ShooterSubsystem shootersubsystem;
+    private IntakeSubsystem intakesubsystem;
 
     public Autos(SwerveSubsystemSim subsystem) {
-        NamedCommands.registerCommand("marker1", Commands.print("Passed marker 1"));
-        NamedCommands.registerCommand("marker2", Commands.print("Passed marker 2"));
-        NamedCommands.registerCommand("print hello", Commands.print("hello"));
+        NamedCommands.registerCommand("marker1", Commands.run(() -> new RunShooterCommand(shootersubsystem)));
+        NamedCommands.registerCommand("marker2", Commands.run(() ->new RunIntakeCommand(intakesubsystem)));
+        //after running the RunShooter and RunIntake, test out SmartShooter and SmartIntake
+        //*** 
+        //NamedCommands.registerCommand("print hello", Commands.print("hello"));
 
         // Configure AutoBuilder
         AutoBuilder.configureHolonomic(

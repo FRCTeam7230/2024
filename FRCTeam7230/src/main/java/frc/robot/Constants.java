@@ -46,6 +46,7 @@ public final class Constants {
     public static final int CIRCLING_TOGGLE_BUTTON = kButton3;
     public static final int DRIVE_CONTROL_TOGGLE_BUTTON = kButton5;
     public static final int SET_FORWARD_BUTTON = kButton6; //sets the shooter side to the robot as the forward direction
+    public static final int TEST_BUTTON = kButton10;
     
     //Mechansism Stick Buttons
     public static final int SHOOT_BUTTON = kButton1;
