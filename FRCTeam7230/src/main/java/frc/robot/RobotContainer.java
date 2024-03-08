@@ -194,7 +194,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         Autos auto = new Autos(m_robotDriveSim);
         return auto.getAutonomousCommand();
-        
+    }
          // Create config for trajectory
  /*         TrajectoryConfig config = new TrajectoryConfig(
          kAutoMaxSpeedMetersPerSecond,
@@ -251,7 +251,7 @@ public class RobotContainer {
         return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
         false, false)); */
     }
-}
+
 
 
 
