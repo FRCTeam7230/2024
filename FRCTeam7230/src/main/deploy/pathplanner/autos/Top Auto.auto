@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2,
+      "x": 1.4,
       "y": 7.0
     },
     "rotation": 0
@@ -14,7 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top Path"
+            "pathName": "Top to Speaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker to Centerline Note"
           }
         }
       ]

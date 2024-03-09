@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 1.41,
-        "y": 3.2
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.41,
-        "y": 3.496046425763342
+        "y": 6.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.4097,
-        "y": 5.5477664
+        "x": 1.41,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 1.4097,
-        "y": 5.493328334646629
+        "x": 1.41,
+        "y": 5.5
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,16 +32,16 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot loaded note",
-      "waypointRelativePos": 0.95,
+      "name": "Shoot Note",
+      "waypointRelativePos": 0.85,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "Shoot with preloaded note"
+                "name": "RunShooter"
               }
             }
           ]
@@ -57,11 +57,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

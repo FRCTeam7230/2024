@@ -22,6 +22,12 @@
           "data": {
             "waitTime": 1.0
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker to Centerline Note"
+          }
         }
       ]
     }
