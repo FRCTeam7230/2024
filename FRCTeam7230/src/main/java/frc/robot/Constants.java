@@ -93,14 +93,14 @@ public final class Constants {
     // public static final double kBackRightChassisAngularOffset = (Math.PI/2)  + Math.PI;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 5;
+    public static final int kFrontLeftDrivingCanId = 7;
     public static final int kRearLeftDrivingCanId = 3;
-    public static final int kFrontRightDrivingCanId = 7;
+    public static final int kFrontRightDrivingCanId = 5;
     public static final int kRearRightDrivingCanId = 1;
 
-    public static final int kFrontLeftTurningCanId = 6;
+    public static final int kFrontLeftTurningCanId = 8;
     public static final int kRearLeftTurningCanId = 4;
-    public static final int kFrontRightTurningCanId = 8;
+    public static final int kFrontRightTurningCanId = 6;
     public static final int kRearRightTurningCanId = 2;
 
     public static final boolean kGyroReversed = false;
@@ -111,9 +111,9 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int kRightShooterMotorId = 9;
     public static final int kLeftShooterMotorId = 10;
-    public static final int kShooterPivotMotorId = 11;
+    public static final int kShooterPivotMotorId = 14;
     public static final int kNoteBeamSensorId = 12;
-    public static final int kPivotEncoderId = 13;
+    public static final int kPivotEncoderId = 9;
     public static final int kUpperLimitSwitchId = 14;
 
     public static final double kRotationalSpeed = 0.5;
@@ -127,12 +127,12 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorId = 1;
-    public static final int kTransferToShooterMotorId = 1;
+    public static final int kIntakeMotorId = 12;
+    public static final int kShooterIntakeMotorId = 11;
   }
 
   public static final class ClimbingConstants {
-    public static final int kClimbingMotorId = 1;
+    public static final int kClimbingMotorId = 13;
     public static final int kClimbingEncoderId = 1;
   }
 

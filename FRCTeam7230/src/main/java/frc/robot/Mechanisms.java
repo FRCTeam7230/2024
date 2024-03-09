@@ -52,11 +52,11 @@ public static final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
 
     //Intake Subsystem
     public static final CANSparkMax m_intakeMotor = new CANSparkMax(kIntakeMotorId, kBrushless);
-    public static final CANSparkMax m_transferToShooterMotor = new CANSparkMax(kTransferToShooterMotorId, kBrushless);
+    public static final CANSparkMax m_ShooterIntakeMotor = new CANSparkMax(kShooterIntakeMotorId, kBrushless);
 
     //Climbing Subsystem
     public static final CANSparkMax m_climbingMotor = new CANSparkMax(kClimbingMotorId, kBrushless);
     public static final DutyCycleEncoder m_climberEncoder = new DutyCycleEncoder(kClimbingEncoderId);
 
-    public static AHRS gyro = new AHRS();
+    public static final AHRS m_gyro = new AHRS();
 }

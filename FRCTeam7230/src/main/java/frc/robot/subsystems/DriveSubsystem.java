@@ -37,7 +37,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS();
+  private final AHRS m_gyro = Mechanisms.m_gyro;
+  private double gyroAngle = 0.0;
   
 
   // Slew rate filter variables for controlling lateral acceleration
@@ -72,6 +73,11 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
 	SmartDashboard.putData("Field", m_field);
   }
+
+    public double fetchGyroData() {
+      gyroAngle = m_gyro.getYaw();
+        return gyroAngle;
+    }
 
   @Override
   public void periodic() {

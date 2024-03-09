@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     //intakeMotor.restoreFactoryDefaults();
-    //transferMotor.restoreFactoryDefaults();
+    //ShooterIntakeMotor.restoreFactoryDefaults();
   }
 
   /**
@@ -34,12 +34,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void startIntakeSystem() {
     intakeMotor.set(motorRotateSpeed);
-    //transferMotor.set(motorRotateSpeed);
+    //ShooterIntakeMotor.set(motorRotateSpeed);
   }
 
   public void stopIntakeSystem() {
     intakeMotor.stopMotor();
-    //transferMotor.stopMotor();
+    //ShooterIntakeMotor.stopMotor();
   }
 
   /**

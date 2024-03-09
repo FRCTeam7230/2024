@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PivotingSubsystem;
-import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+
 
 
 
@@ -30,10 +31,11 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private double angleX, angleY, tagDistance, tagID, gyroData;
-  public double shooterAngle;
+  private double shooterAngle;
   private boolean intakeSensor, isTargetFound;
 
   private RobotContainer m_robotContainer;
+
 
   private VisionSubsystem vision;
 
@@ -54,7 +56,7 @@ public class Robot extends TimedRobot {
     angleY = Limelight.getTargetAngleY();
     tagID = Limelight.getTargetID();
     tagDistance = Limelight.apriltagDistance();
-    gyroData = GyroSubsystem.FetchGyroData();
+    gyroData = m_robotContainer.getGyroAngle();
     intakeSensor = PivotingSubsystem.intakeSensor();
     shooterAngle = PivotingSubsystem.counterValue();
     vision = new VisionSubsystem();
