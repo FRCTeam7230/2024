@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.AutoConstants;
+
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PivotingSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
