@@ -19,7 +19,7 @@ public class ShooterSubsystem extends SubsystemBase{
   
   /** Variables */
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
-  private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch; //povit low
+  // private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch; //povit low
   private static CANSparkMax ShooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor;
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;
@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase{
   public void StartShooter(double motorRotateSpeed) {
     rightShooterMotor.set(motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
     leftShooterMotor.set(motorRotateSpeed);
-    if(rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity() == (917*motorRotateSpeed) 
+    if(rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity() == (kMotorVoltsToRPM*motorRotateSpeed) 
     && leftShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity()== (kMotorVoltsToRPM*motorRotateSpeed)){
       ShooterIntakeMotor.set(motorRotateSpeed);
     }

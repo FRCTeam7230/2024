@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.Constants.NeoMotorConstants;
 
 public class ClimberSubsystemCommand extends Command {
   /** Creates a new ClimberSubsystemCommand. */
@@ -29,17 +30,15 @@ public class ClimberSubsystemCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double current = s_ClimberSubsystem.getClimbEncoder();
-    if(rotationalCoefficient==-1){
-      while(s_ClimberSubsystem.getClimbEncoder() > current - 10){
-        s_ClimberSubsystem.startClimber(-0.5);
-      }
-    }else if(rotationalCoefficient==1){
-      while(s_ClimberSubsystem.getClimbEncoder() < current + 10){
-        s_ClimberSubsystem.startClimber(0.5);
-      }
+        
+        if(m_mechanismsController.getRawButtonReleased(11)||m_mechanismsController.getRawButtonReleased(12)){
+          s_ClimberSubsystem.stopClimber();
+        }
+        else{
+          s_ClimberSubsystem.startClimber(rotationalCoefficient*0.5);
+        }
     }
-  }
+  
 
   // Called once the command ends or is interrupted.
   @Override

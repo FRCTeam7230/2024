@@ -37,6 +37,7 @@ import frc.robot.subsystems.PivotingSubsystem;
 //import frc.robot.commands.IntakeSubsystemCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterCommand;
+import edu.wpi.first.wpilibj.Joystick;
 //import frc.robot.commands.PivotingSubsystemCommand;
 //import frc.robot.commands.ShooterSubsystemCommand;
 //import frc.robot.commands.SmartIntakeCommand;
@@ -45,10 +46,11 @@ public class Autos {
     private final SendableChooser<Command> autoChooser;
     private ShooterSubsystem shootersubsystem;
     private IntakeSubsystem intakesubsystem;
+    private Joystick m_mechanismsController;
 
     public Autos(SwerveSubsystemSim subsystem) {
         NamedCommands.registerCommand("marker1", Commands.run(() -> new RunShooterCommand(shootersubsystem)));
-        NamedCommands.registerCommand("marker2", Commands.run(() ->new RunIntakeCommand(intakesubsystem)));
+        NamedCommands.registerCommand("marker2", Commands.run(() ->new RunIntakeCommand(intakesubsystem, m_mechanismsController)));
         //after running the RunShooter and RunIntake, test out SmartShooter and SmartIntake
         //*** 
         //NamedCommands.registerCommand("print hello", Commands.print("hello"));

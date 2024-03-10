@@ -31,7 +31,7 @@ public class ClimberSubsystem extends SubsystemBase {
         
   }
   public void stopClimber() {
-    climberMotor.stopMotor();;
+    climberMotor.stopMotor();
   }
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -42,7 +42,9 @@ public class ClimberSubsystem extends SubsystemBase {
     return climberEncoder.getDistance();
   }
     // Query some boolean state, such as a digital sensor.
-    
+  public void resetEncoder(){
+    // climberMotor.reset
+  }
   
 
   @Override

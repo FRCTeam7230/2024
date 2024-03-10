@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.subsystems.VisionSubsystem;
+// import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PivotingSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
+
 
 
 
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
 
-  private VisionSubsystem vision;
+  // private VisionSubsystem vision;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     gyroData = m_robotContainer.getGyroAngle();
     intakeSensor = PivotingSubsystem.intakeSensor();
     shooterAngle = PivotingSubsystem.counterValue();
-    vision = new VisionSubsystem();
+    // vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle
   }
@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -169,6 +169,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
     SmartDashboard.putNumber("Gyro", gyroData);
     SmartDashboard.putNumber("Shooter Angle", shooterAngle);
+
+    if(Mechanisms.m_mechanismsController.getRawButton(4)){
+      Mechanisms.m_intakeMotor.set(0.5);
+    }
   }
 
   @Override

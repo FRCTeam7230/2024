@@ -27,7 +27,7 @@ public class RunShooterCommand extends Command {
   @Override
   public void execute() {
     s_shooterSubsystem.StartShooter(kRotationalSpeed);
-    new WaitCommand(2.0);
+    new WaitCommand(10.0);
     s_shooterSubsystem.StopShooter();
   }
 

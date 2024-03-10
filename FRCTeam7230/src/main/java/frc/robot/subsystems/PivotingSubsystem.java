@@ -19,7 +19,7 @@ public class PivotingSubsystem extends SubsystemBase {
   private static CANSparkMax pivotMotor = Mechanisms.m_shooterPivotMotor;
   private static DutyCycleEncoder pivotEncoder = Mechanisms.m_pivotEncoder;
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
-  private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch;
+  // private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch;
   
   public PivotingSubsystem() {
     //pivotMotor.restoreFactoryDefaults();

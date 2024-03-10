@@ -27,11 +27,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 // import java.util.List;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.CirclingDriveCommand;
+// import frc.robot.commands.Autos;
+// import frc.robot.commands.CirclingDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
-import frc.robot.subsystems.VisionSubsystem;
+// import frc.robot.subsystems.VisionSubsystem;
 
 // import static frc.robot.Constants.AutoConstants.*;
 // import static frc.robot.Constants.DriveConstants.*;
@@ -45,10 +45,10 @@ import frc.robot.commands.ClimberSubsystemCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.PivotingSubsystemCommand;
-import frc.robot.commands.SmartIntakeCommand;
-import frc.robot.commands.SmartShooterCommand;
+// import frc.robot.commands.SmartIntakeCommand;
+// import frc.robot.commands.SmartShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
-//import frc.robot.subsystems.AutosSubsystem;
+// import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -77,9 +77,9 @@ public class RobotContainer {
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
   private final PivotingSubsystem s_pivotingSubsystem = new PivotingSubsystem();
-  private final VisionSubsystem s_visionSubsystem = new VisionSubsystem();
+//   private final VisionSubsystem s_visionSubsystem = new VisionSubsystem();
   private final Limelight s_Limelight = new Limelight();
-  private final Joystick m_mechanismsController = new Joystick(0);
+
   private final ClimberSubsystem s_ClimberSubsystem = new ClimberSubsystem();
   //private final AutosSubsystem a_autos = new AutosSubsystem();
 
@@ -128,8 +128,8 @@ public class RobotContainer {
                                     driveJoystick.getThrottle(),
                                     fieldRelative, true, circlingMode),
                             m_robotDrive));
-                m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
-                s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
+                // m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
+                // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
         }
         CommandScheduler.getInstance()
                 .onCommandInitialize(
@@ -213,14 +213,14 @@ public class RobotContainer {
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
                 ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, -1));
-                if(manualLayout){
-                intakeButton.whileTrue(new RunIntakeCommand(s_intakeSubsystem));
+                // if(manualLayout){
+                intakeButton.whileTrue(new RunIntakeCommand(s_intakeSubsystem, mechJoystick));
                 shooterButton.whileTrue(new RunShooterCommand(s_shooterSubsystem));
-                }
-                else{
-                intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
-                shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
-                }
+                // }
+                // else{
+                // // intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
+                // // shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
+                // }
                 
         }
     }
@@ -233,10 +233,10 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        Autos auto = new Autos(m_robotDriveSim);
-        return auto.getAutonomousCommand();
-    }
+//     public Command getAutonomousCommand() {
+//         Autos auto = new Autos(m_robotDriveSim);
+//         return auto.getAutonomousCommand();
+//     }
          // Create config for trajectory
  /*         TrajectoryConfig config = new TrajectoryConfig(
          kAutoMaxSpeedMetersPerSecond,

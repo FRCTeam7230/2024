@@ -42,13 +42,13 @@ public static final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       kBackRightChassisAngularOffset);
 
     //Shooter Subsystem
-    public static final CANSparkMax m_rightShooterMotor = new CANSparkMax(kRightShooterMotorId, kBrushless);
-    public static final CANSparkMax m_leftShooterMotor = new CANSparkMax(kLeftShooterMotorId, kBrushless);
-    public static final DigitalInput m_noteBeamSensor = new DigitalInput(kNoteBeamSensorId);
+     public static final CANSparkMax m_rightShooterMotor = new CANSparkMax(kRightShooterMotorId, kBrushless);
+     public static final CANSparkMax m_leftShooterMotor = new CANSparkMax(kLeftShooterMotorId, kBrushless);
+     public static final DigitalInput m_noteBeamSensor = new DigitalInput(kNoteBeamSensorId);
 
     public static final CANSparkMax m_shooterPivotMotor = new CANSparkMax(kShooterPivotMotorId, kBrushless);
     public static final DutyCycleEncoder m_pivotEncoder = new DutyCycleEncoder(kPivotEncoderId);
-    public static final DigitalInput m_upperLimitSwitch = new DigitalInput(kUpperLimitSwitchId);    
+    // public static final DigitalInput m_upperLimitSwitch = new DigitalInput(kUpperLimitSwitchId);    
 
     //Intake Subsystem
     public static final CANSparkMax m_intakeMotor = new CANSparkMax(kIntakeMotorId, kBrushless);

@@ -26,7 +26,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kMechanismsControllerPort = 0;
+    public static final int kMechanismsControllerPort = 1;
 
     public static final int kButton1 = 1;
     public static final int kButton2 = 2;
@@ -85,7 +85,7 @@ public final class Constants {
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = (Math.PI/2) + Math.PI;
     public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = 5*(Math.PI/4);
+    public static final double kBackLeftChassisAngularOffset = (Math.PI);
     public static final double kBackRightChassisAngularOffset = (Math.PI/2);
     // public static final double kFrontLeftChassisAngularOffset = (Math.PI/2);
     // public static final double kFrontRightChassisAngularOffset = Math.PI;
@@ -112,9 +112,9 @@ public final class Constants {
     public static final int kRightShooterMotorId = 9;
     public static final int kLeftShooterMotorId = 10;
     public static final int kShooterPivotMotorId = 14;
-    public static final int kNoteBeamSensorId = 12;
+    public static final int kNoteBeamSensorId = 2;
     public static final int kPivotEncoderId = 9;
-    public static final int kUpperLimitSwitchId = 14;
+    public static final int kUpperLimitSwitchId = 1;
 
     public static final double kRotationalSpeed = 0.5;
     public static final double kDegreesPerStep = 1;
@@ -212,6 +212,8 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
     public static final int kMotorVoltsToRPM = 917;
     public static final double kDegreesPerEncoderCount = 360/8192;
+    //supposed to be encoder
+    public static final double kActualDegreesPerEncoderCount = 360/42;
     //assuming no load
   }
 
