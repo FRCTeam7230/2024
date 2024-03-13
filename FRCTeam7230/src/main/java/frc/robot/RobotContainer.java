@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -51,23 +52,23 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        if (RobotBase.isSimulation()) {
+        // if (RobotBase.isSimulation()) {
             // Configure default commands
-            m_robotDriveSim.setDefaultCommand(
-                    // The left stick controls translation of the robot.
-                    // Turning is controlled by the X axis of the right stick.
-                    new RunCommand(
-                            () -> m_robotDriveSim.drive(
-                                    // Multiply by max speed to map the joystick unitless inputs to actual units.
-                                    // This will map the [-1, 1] to [max speed backwards, max speed forwards],
-                                    // converting them to actual units.
-                                    -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
-                                    -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
-                                    false,
-                                    false),
-                            m_robotDriveSim));
-        } else {
+        //     m_robotDriveSim.setDefaultCommand(
+        //             // The left stick controls translation of the robot.
+        //             // Turning is controlled by the X axis of the right stick.
+        //             new RunCommand(
+        //                     () -> m_robotDriveSim.drive(
+        //                             // Multiply by max speed to map the joystick unitless inputs to actual units.
+        //                             // This will map the [-1, 1] to [max speed backwards, max speed forwards],
+        //                             // converting them to actual units.
+        //                             -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
+        //                             -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
+        //                             -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
+        //                             false,
+        //                             false),
+        //                     m_robotDriveSim));
+        // } else {
             // Configure default commands
             m_robotDrive.setDefaultCommand(
                     // The left stick controls translation of the robot.
@@ -79,11 +80,12 @@ public class RobotContainer {
                                     -MathUtil.applyDeadband(m_driverController.getZ(), OIConstants.kDriveDeadband),
                                     true, true),
                             m_robotDrive));
+                            configureButtonBindings();
         }
 
         // Configure the button bindings
-        configureButtonBindings();
-    }
+        
+    
 
     /**
      * Use this method to define your button->command mappings. Buttons can be
