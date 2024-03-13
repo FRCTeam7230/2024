@@ -39,6 +39,8 @@ import com.revrobotics.CANSparkMax;
  */
 public class RobotContainer {
     // The robot's subsystems
+        private boolean fieldRelative = true;
+
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
     // The driver's controller
@@ -120,9 +122,9 @@ public class RobotContainer {
                     .whileTrue(new RunCommand(
                             () -> m_robotDrive.printModulePositions(),
                             m_robotDrive));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton5)
                     .whileTrue(new InstantCommand(
-                            () -> m_robotDrive.setZero(),
+                            () -> fieldRelative = !fieldRelative,
                             m_robotDrive));
         // }
     }  
