@@ -45,8 +45,8 @@ public class RobotContainer {
     Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
 
     // Only used for testing simulation with an XBox controller.
-    XboxController m_driverControllerSim = new XboxController(Constants.OIConstants.kDriverControllerPort);
-    private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
+//     XboxController m_driverControllerSim = new XboxController(Constants.OIConstants.kDriverControllerPort);
+//     private final SwerveSubsystemSim m_robotDriveSim = new SwerveSubsystemSim();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -97,21 +97,21 @@ public class RobotContainer {
      * {@link JoystickButton}.
      */
     private void configureButtonBindings() {
-        if (RobotBase.isSimulation()) {
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDriveSim.setX(),
-                            m_robotDriveSim));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
-                    .whileTrue(new RunCommand(
-                            () -> m_robotDriveSim.printModulePositions(),
-                            m_robotDriveSim));
-            new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
-                    .whileTrue(new InstantCommand(
-                            () -> m_robotDriveSim.setZero(),
-                            m_robotDriveSim));
-        }
-        else {
+        // if (RobotBase.isSimulation()) {
+        //     new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
+        //             .whileTrue(new RunCommand(
+        //                     () -> m_robotDriveSim.setX(),
+        //                     m_robotDriveSim));
+        //     new JoystickButton(m_driverController, Constants.JoystickButtons.kButton2)
+        //             .whileTrue(new RunCommand(
+        //                     () -> m_robotDriveSim.printModulePositions(),
+        //                     m_robotDriveSim));
+        //     new JoystickButton(m_driverController, Constants.JoystickButtons.kButton3)
+        //             .whileTrue(new InstantCommand(
+        //                     () -> m_robotDriveSim.setZero(),
+        //                     m_robotDriveSim));
+        // }
+        // else {
             new JoystickButton(m_driverController, Constants.JoystickButtons.kButton1)
                     .whileTrue(new RunCommand(
                             () -> m_robotDrive.setX(),
@@ -124,15 +124,17 @@ public class RobotContainer {
                     .whileTrue(new InstantCommand(
                             () -> m_robotDrive.setZero(),
                             m_robotDrive));
-        }
-    }
+        // }
+    }  
+}
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+   /* 
+     public Command getAutonomousCommand() {
         Autos auto = new Autos(m_robotDriveSim);
         return auto.getAutonomousCommand();
         /*
@@ -186,5 +188,4 @@ public class RobotContainer {
 
         // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
         // false, false));
-    }
-}
+    
