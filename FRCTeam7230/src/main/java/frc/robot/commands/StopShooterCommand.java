@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import static frc.robot.Constants.ShooterConstants.*;
 
-public class RunShooterCommand extends Command {
+public class StopShooterCommand extends Command {
   /** Creates a new RunShooterCommand. */
   private ShooterSubsystem s_shooterSubsystem;
 
-  public RunShooterCommand(ShooterSubsystem shoot) {
+  public StopShooterCommand(ShooterSubsystem shoot) {
     // Use addRequirements() here to declare subsystem dependencies.
     s_shooterSubsystem = shoot;
     addRequirements(s_shooterSubsystem);
@@ -26,9 +26,7 @@ public class RunShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    s_shooterSubsystem.StartShooter(kRotationalSpeed);
-    // new WaitCommand(10.0);
-    // s_shooterSubsystem.StopShooter();
+    s_shooterSubsystem.StopShooter();
   }
 
   // Called once the command ends or is interrupted.

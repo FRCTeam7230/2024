@@ -5,14 +5,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class RunIntakeCommand extends Command {
   /** Creates a new IntakeSubsystemCommand. */
   private IntakeSubsystem s_intakeSubsystem;
+  private Joystick m_mechanismsController;
   public RunIntakeCommand(IntakeSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.s_intakeSubsystem = intake;
+    // m_mechanismsController = controller;
+    s_intakeSubsystem = intake;
     addRequirements(s_intakeSubsystem);
   }
 
@@ -25,6 +29,12 @@ public class RunIntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // if(m_mechanismsController.getRawButtonReleased(4)||m_mechanismsController.getRawButtonReleased(4)){
+    //   s_intakeSubsystem.stopIntakeSystem();
+    // }
+    // else{
+    //   s_intakeSubsystem.startIntakeSystem();
+    // }
     s_intakeSubsystem.startIntakeSystem();
     
   }
@@ -38,6 +48,7 @@ public class RunIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return IntakeSubsystem.checkSensor();
+    return !IntakeSubsystem.checkSensor();
+    // return false;
   }
 }
