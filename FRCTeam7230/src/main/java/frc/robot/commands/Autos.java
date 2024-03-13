@@ -50,7 +50,7 @@ public class Autos {
 
     public Autos(SwerveSubsystemSim subsystem) {
         NamedCommands.registerCommand("marker1", Commands.run(() -> new RunShooterCommand(shootersubsystem)));
-        NamedCommands.registerCommand("marker2", Commands.run(() ->new RunIntakeCommand(intakesubsystem, m_mechanismsController)));
+        NamedCommands.registerCommand("marker2", Commands.run(() ->new RunIntakeCommand(intakesubsystem)));
         //after running the RunShooter and RunIntake, test out SmartShooter and SmartIntake
         //*** 
         //NamedCommands.registerCommand("print hello", Commands.print("hello"));

@@ -81,7 +81,7 @@ public class RobotContainer {
   private final Limelight s_Limelight = new Limelight();
 
   private final ClimberSubsystem s_ClimberSubsystem = new ClimberSubsystem();
-  //private final AutosSubsystem a_autos = new AutosSubsystem();
+
 
   private final Joystick driveJoystick = Mechanisms.m_driverController;
   private final Joystick mechJoystick = Mechanisms.m_mechanismsController;
@@ -125,8 +125,8 @@ public class RobotContainer {
                                     -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
                                     -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
                                     -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
-                                    driveJoystick.getThrottle(),
-                                    fieldRelative, true, circlingMode),
+                                    0,
+                                    false, false, false),
                             m_robotDrive));
                 // m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
                 // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
@@ -208,18 +208,22 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.testButton(),
                                 m_robotDrive));
+                new JoystickButton(mechJoystick, kButton8)
+                        .whileTrue(new InstantCommand(
+                                () -> s_shooterSubsystem.StopShooter(),
+                                s_shooterSubsystem));
 
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
                 ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, -1));
                 // if(manualLayout){
-                intakeButton.whileTrue(new RunIntakeCommand(s_intakeSubsystem, mechJoystick));
+                intakeButton.whileTrue(new RunIntakeCommand(s_intakeSubsystem));
                 shooterButton.whileTrue(new RunShooterCommand(s_shooterSubsystem));
                 // }
                 // else{
-                // // intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
-                // // shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
+                // intakeButton.whileTrue(new SmartIntakeCommand(m_robotDrive,s_visionSubsystem,s_intakeSubsystem));
+                // shooterButton.whileTrue(new SmartShooterCommand(m_robotDrive,s_visionSubsystem,s_shooterSubsystem,s_pivotingSubsystem));
                 // }
                 
         }

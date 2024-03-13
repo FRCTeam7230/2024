@@ -125,13 +125,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous every 20 ms. */
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putNumber("X offset", angleX);
-    SmartDashboard.putNumber("Y offset", angleY);
-    SmartDashboard.putNumber("Tag ID", tagID);
-    SmartDashboard.putNumber("Tag Distance", tagDistance);   
-    SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
-    SmartDashboard.putNumber("Gyro", gyroData);
-    SmartDashboard.putNumber("Shooter Angle", shooterAngle);
+
 
     //autonomous 15 seconddddddd wooooooooo
       //AUTONOMOUS LEVEL 2
@@ -162,17 +156,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("X offset", angleX);
-    SmartDashboard.putNumber("Y offset", angleY);
-    SmartDashboard.putNumber("Tag ID", tagID);
-    SmartDashboard.putNumber("Tag Distance", tagDistance);   
-    SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
-    SmartDashboard.putNumber("Gyro", gyroData);
-    SmartDashboard.putNumber("Shooter Angle", shooterAngle);
 
-    if(Mechanisms.m_mechanismsController.getRawButton(4)){
-      Mechanisms.m_intakeMotor.set(0.5);
-    }
   }
 
   @Override

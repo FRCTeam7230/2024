@@ -13,10 +13,10 @@ public class RunIntakeCommand extends Command {
   /** Creates a new IntakeSubsystemCommand. */
   private IntakeSubsystem s_intakeSubsystem;
   private Joystick m_mechanismsController;
-  public RunIntakeCommand(IntakeSubsystem intake, Joystick controller) {
+  public RunIntakeCommand(IntakeSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_mechanismsController = controller;
-    this.s_intakeSubsystem = intake;
+    // m_mechanismsController = controller;
+    s_intakeSubsystem = intake;
     addRequirements(s_intakeSubsystem);
   }
 
@@ -29,13 +29,13 @@ public class RunIntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_mechanismsController.getRawButtonReleased(4)||m_mechanismsController.getRawButtonReleased(4)){
-      s_intakeSubsystem.stopIntakeSystem();
-    }
-    else{
-      s_intakeSubsystem.startIntakeSystem();
-    }
-    //s_intakeSubsystem.startIntakeSystem();
+    // if(m_mechanismsController.getRawButtonReleased(4)||m_mechanismsController.getRawButtonReleased(4)){
+    //   s_intakeSubsystem.stopIntakeSystem();
+    // }
+    // else{
+    //   s_intakeSubsystem.startIntakeSystem();
+    // }
+    s_intakeSubsystem.startIntakeSystem();
     
   }
 
@@ -48,7 +48,7 @@ public class RunIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return IntakeSubsystem.checkSensor();
-    return false;
+    return !IntakeSubsystem.checkSensor();
+    // return false;
   }
 }
