@@ -272,6 +272,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
   
 
+  //input directionToRotate as negative for left, positive for right
+  public void rotateUntil(int directionToRotate){
+      setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        new ChassisSpeeds(0,0,DriveConstants.kSmartIntakeSpeed*directionToRotate)));
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *
