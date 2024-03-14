@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot loaded note",
+      "name": "Shoot Note",
       "waypointRelativePos": 0.95,
       "command": {
         "type": "sequential",
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Shoot with preloaded note"
+                "name": "RunShooter"
               }
             }
           ]
