@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Mechanisms;
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.NeoMotorConstants.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -21,7 +23,7 @@ public class ShooterSubsystem extends SubsystemBase{
   /** Variables */
   private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
   // private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch; //povit low
-  private CANSparkMax ShooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor;
+  private CANSparkMax shooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor;
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;
   private static CANSparkMax leftShooterMotor = Mechanisms.m_leftShooterMotor;
@@ -39,23 +41,45 @@ public class ShooterSubsystem extends SubsystemBase{
    */
  
 
-
+  public void initShooting(double rotSpeed){
+    rightShooterMotor.set(-rotSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
+    leftShooterMotor.set(rotSpeed);
+    shooterIntakeMotor.set(rotSpeed);
+    Commands.waitSeconds(5);
+    System.out.println("waited");
+    shooterIntakeMotor.set(0);
+    shooterIntakeMotor.stopMotor();
+    rightShooterMotor.set(-rotSpeed);
+    leftShooterMotor.set(rotSpeed);
+    Commands.waitSeconds(5);
+    shooterIntakeMotor.set(-rotSpeed);
+  }
   
 
   public void StartShooter(double motorRotateSpeed) {
+    
+
+
+    
     rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
-    leftShooterMotor.set(-motorRotateSpeed);
+    leftShooterMotor.set(motorRotateSpeed);
     // if(rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity() == (kMotorVoltsToRPM*motorRotateSpeed) 
     // && leftShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity()== (kMotorVoltsToRPM*motorRotateSpeed)){
     //   ShooterIntakeMotor.set(motorRotateSpeed);
     // }
   }
   
+  public void StartShooterIntake(double rotSpeed){
+    shooterIntakeMotor.set(-rotSpeed);
+  }
 
   public void StopShooter() {
     rightShooterMotor.stopMotor();
     leftShooterMotor.stopMotor();
-    ShooterIntakeMotor.stopMotor();
+  }
+
+  public void StopShooterIntake(){
+    shooterIntakeMotor.stopMotor();
   }
 
   /**

@@ -51,7 +51,7 @@ public static final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
     // public static final DigitalInput m_upperLimitSwitch = new DigitalInput(kUpperLimitSwitchId);    
 
     //Intake Subsystem
-    public static final CANSparkMax m_intakeMotor = new CANSparkMax(kIntakeMotorId, kBrushless);
+    public static final CANSparkMax m_intakeMotor = new CANSparkMax(kIntakeMotorId, kBrushed);
     public static final CANSparkMax m_ShooterIntakeMotor = new CANSparkMax(kShooterIntakeMotorId, kBrushless);
 
     //Climbing Subsystem

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Mechanisms;
 import frc.robot.Constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
@@ -36,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void startIntakeSystem() {
     intakeMotor.set(motorRotateSpeed);
     
-    shooterIntakeMotor.set(motorRotateSpeed);
+    shooterIntakeMotor.set(-motorRotateSpeed);
   }
 
   public void stopIntakeSystem() {
@@ -52,6 +53,9 @@ public class IntakeSubsystem extends SubsystemBase {
    */
 
   public static boolean checkSensor() {
+    System.out.println(intakeSensor.get());
+    Commands.waitSeconds(5);
+    System.out.println("Wait ran");
     return intakeSensor.get();
   }
 

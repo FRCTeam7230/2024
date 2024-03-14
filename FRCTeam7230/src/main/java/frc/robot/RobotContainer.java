@@ -53,6 +53,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.PivotingSubsystem;
+import frc.robot.commands.InitShooterCommand;
 
 
 
@@ -94,7 +95,7 @@ public class RobotContainer {
   private JoystickButton FarPivotButton = new JoystickButton(mechJoystick, FAR_PIVOT_BUTTON);
   private JoystickButton ClosePivotButton = new JoystickButton(mechJoystick, CLOSE_PIVOT_BUTTON);
   private JoystickButton SmartToggleButton = new JoystickButton(mechJoystick, SMART_TOGGLE_BUTTON);
-
+        private JoystickButton initShooterButton = new JoystickButton(mechJoystick, kButton7);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -208,11 +209,7 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.testButton(),
                                 m_robotDrive));
-                new JoystickButton(mechJoystick, kButton8)
-                        .whileTrue(new InstantCommand(
-                                () -> s_shooterSubsystem.StopShooter(),
-                                s_shooterSubsystem));
-
+                initShooterButton.whileTrue(new InitShooterCommand(s_shooterSubsystem));
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));

@@ -21,12 +21,14 @@ public class RunShooterCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    s_shooterSubsystem.StartShooter(kRotationalSpeed);
+    
+    s_shooterSubsystem.StartShooterIntake(0.8);
     // new WaitCommand(10.0);
     // s_shooterSubsystem.StopShooter();
   }
@@ -35,6 +37,7 @@ public class RunShooterCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     s_shooterSubsystem.StopShooter();
+    s_shooterSubsystem.StopShooterIntake();
   }
 
   // Returns true when the command should end.

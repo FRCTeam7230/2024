@@ -116,7 +116,7 @@ public final class Constants {
     public static final int kPivotEncoderId = 9;
     public static final int kUpperLimitSwitchId = 1;
 
-    public static final double kRotationalSpeed = 0.5;
+    public static final double kRotationalSpeed = 1;
     public static final double kDegreesPerStep = 1;
     public static final double kPivotAngleMargin = 3;
 

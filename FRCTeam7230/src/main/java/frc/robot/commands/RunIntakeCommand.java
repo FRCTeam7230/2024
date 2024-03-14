@@ -35,7 +35,10 @@ public class RunIntakeCommand extends Command {
     // else{
     //   s_intakeSubsystem.startIntakeSystem();
     // }
+
+
     s_intakeSubsystem.startIntakeSystem();
+    
     
   }
 
@@ -48,6 +51,7 @@ public class RunIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("isFinished is running");
     return !IntakeSubsystem.checkSensor();
     // return false;
   }
