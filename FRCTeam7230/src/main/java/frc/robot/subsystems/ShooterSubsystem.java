@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -13,7 +13,7 @@ import static frc.robot.Constants.NeoMotorConstants.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
@@ -63,12 +63,24 @@ public class ShooterSubsystem extends SubsystemBase{
     
     rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
     leftShooterMotor.set(motorRotateSpeed);
-    // if(rightShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity() == (kMotorVoltsToRPM*motorRotateSpeed) 
-    // && leftShooterMotor.getAbsoluteEncoder(Type.kDutyCycle).getVelocity()== (kMotorVoltsToRPM*motorRotateSpeed)){
-    //   ShooterIntakeMotor.set(motorRotateSpeed);
-    // }
+
   }
   
+  public boolean checkShooterAtMaxSpeed(){
+        if(rightShooterMotor.getEncoder().getVelocity() == (kMotorVoltsToRPM) 
+    && leftShooterMotor.getEncoder().getVelocity()== (kMotorVoltsToRPM)){
+     return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public void printMotorEncoder(){
+    System.out.println(rightShooterMotor.getEncoder().getVelocity());
+    System.out.println(leftShooterMotor.getEncoder().getVelocity());
+  }
+
   public void StartShooterIntake(double rotSpeed){
     shooterIntakeMotor.set(-rotSpeed);
   }

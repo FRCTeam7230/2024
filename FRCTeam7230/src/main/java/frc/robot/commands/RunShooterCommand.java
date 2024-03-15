@@ -12,7 +12,7 @@ import static frc.robot.Constants.ShooterConstants.*;
 public class RunShooterCommand extends Command {
   /** Creates a new RunShooterCommand. */
   private ShooterSubsystem s_shooterSubsystem;
-
+  
   public RunShooterCommand(ShooterSubsystem shoot) {
     // Use addRequirements() here to declare subsystem dependencies.
     s_shooterSubsystem = shoot;
@@ -27,8 +27,10 @@ public class RunShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    s_shooterSubsystem.StartShooterIntake(0.8);
+    if(s_shooterSubsystem.checkShooterAtMaxSpeed()){
+      s_shooterSubsystem.StartShooterIntake(0.5);
+    }
+    s_shooterSubsystem.printMotorEncoder();
     // new WaitCommand(10.0);
     // s_shooterSubsystem.StopShooter();
   }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class InitShooterCommand extends Command {
   /** Creates a new RunShooterCommand. */
   private ShooterSubsystem s_shooterSubsystem;
+  //private IntakeSubsystem s_IntakeSubsystem;
   private double testSpeed;
 
   Timer timer = new Timer();
@@ -33,16 +34,21 @@ public class InitShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    s_shooterSubsystem.StartShooter(-0.4);
-    s_shooterSubsystem.StartShooterIntake(-0.4);
-  }
+    s_shooterSubsystem.StartShooter(1);
+    s_shooterSubsystem.printMotorEncoder();
+    //s_IntakeSubsystem.startIntakeSystem();
+   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // s_shooterSubsystem.StopShooterIntake();
-    s_shooterSubsystem.StartShooter(1);
+    // s_shooterSubsystem.StartShooter(1);
+    s_shooterSubsystem.StopShooter();
+    //s_IntakeSubsystem.startIntakeSystem();
+  
     // s_shooterSubsystem.StopShooter();
+    //
     // s_shooterSubsystem.StopShooterIntake();
   }
 
@@ -53,6 +59,6 @@ public class InitShooterCommand extends Command {
     if(timer.get() > 5){
       timefinished = true;
     }
-    return IntakeSubsystem.checkSensor();
+    return false;
   }
 }

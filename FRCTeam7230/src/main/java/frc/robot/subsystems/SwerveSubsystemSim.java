@@ -89,8 +89,8 @@ public class SwerveSubsystemSim extends SubsystemBase {
         publisher3d.set(poseA);
         arrayPublisher3d.set(new Pose3d[] {poseA, poseB});
 
-        // SmartDashboard.putNumber("Speed Multiplier", speedMultiplier);
-        // SmartDashboard.putNumber("Angle Multiplier", angleMultiplier);
+        SmartDashboard.putNumber("Speed Multiplier", speedMultiplier);
+        SmartDashboard.putNumber("Angle Multiplier", angleMultiplier);
     }
 
     /**
@@ -267,7 +267,7 @@ public class SwerveSubsystemSim extends SubsystemBase {
                         0.02));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, (DriveConstants.kMaxSpeedMetersPerSecond * newthrottleValue));
+                swerveModuleStates, (DriveConstants.kMaxSpeedMetersPerSecond));
 
         setModuleStates(swerveModuleStates);
     }
