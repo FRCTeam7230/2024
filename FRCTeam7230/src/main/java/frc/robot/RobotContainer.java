@@ -45,15 +45,15 @@ import frc.robot.commands.ClimberSubsystemCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.PivotingSubsystemCommand;
+import frc.robot.commands.Autos;
 // import frc.robot.commands.SmartIntakeCommand;
 // import frc.robot.commands.SmartShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
-// import frc.robot.subsystems.AutosSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.PivotingSubsystem;
-import frc.robot.commands.InitShooterCommand;
+
 
 
 
@@ -209,7 +209,6 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.testButton(),
                                 m_robotDrive));
-                initShooterButton.whileTrue(new InitShooterCommand(s_shooterSubsystem));
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
@@ -234,66 +233,12 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-//     public Command getAutonomousCommand() {
-//         Autos auto = new Autos(m_robotDriveSim);
-//         return auto.getAutonomousCommand();
-//     }
-         // Create config for trajectory
- /*         TrajectoryConfig config = new TrajectoryConfig(
-         kAutoMaxSpeedMetersPerSecond,
-         kMaxAccelerationMetersPerSecondSquared)
-         // Add kinematics to ensure max speed is actually obeyed
-         .setKinematics(kDriveKinematics);
-         
-         // An example trajectory to follow. All units in meters.
-         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-         // Start at the origin facing the +X direction
-         new Pose2d(0, 0, new Rotation2d(0)),
-         // Pass through these two interior waypoints, making an 's' curve path
-         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-         // End 3 meters straight ahead of where we started, facing forward
-         new Pose2d(3, 0, new Rotation2d(0)),
-         config);
-         
-         var thetaController = new ProfiledPIDController(
-         kPThetaController, 0, 0,
-         kThetaControllerConstraints);
-         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-         
-         SwerveControllerCommand swerveControllerCommand = new
-         SwerveControllerCommand(
-         exampleTrajectory,
-         m_robotDrive::getPose, // Functional interface to feed supplier
-         kDriveKinematics,
-         
-         // Position controllers
-         new PIDController(kPXController, 0, 0),
-         new PIDController(kPYController, 0, 0),
-         thetaController,
-         m_robotDrive::setModuleStates,
-         m_robotDrive);
-         new TrajectoryConfig(
-         kAutoMaxSpeedMetersPerSecond,
-         kMaxAccelerationMetersPerSecondSquared)
-         // Add kinematics to ensure max speed is actually obeyed
-         .setKinematics(kDriveKinematics);
-         // Reset odometry to the starting pose of the trajectory.
-
-         
-         
-         // Run path following command, then stop at the end.
-         return Commands.sequence(
-         new InstantCommand(() ->
-         m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())),
-         swerveControllerCommand,
-         new InstantCommand(() -> m_robotDrive.drive(0,0,0,false,false))
-         );
-         
-        
-        
-        return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-        false, false)); */
+    public Command getAutonomousCommand() {
+        Autos auto = new Autos(m_robotDrive, s_shooterSubsystem, s_intakeSubsystem);
+        return auto.getAutonomousCommand();
     }
+}
+
 
 
 

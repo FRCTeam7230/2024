@@ -57,6 +57,12 @@ public class DriveSubsystem extends SubsystemBase {
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontrightWheelMeters,frontleftWheelMeters,rearrightWheelMeters,rearleftWheelMeters);
   
+  private MAXSwerveModule[] modules = new MAXSwerveModule[]{
+  frontRight,
+  frontLeft,
+  rearLeft,
+  rearRight
+  };
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -69,6 +75,10 @@ public class DriveSubsystem extends SubsystemBase {
           rearRight.getPosition()
       });
 
+    
+  
+
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 	SmartDashboard.putData("Field", m_field);
@@ -78,6 +88,97 @@ public class DriveSubsystem extends SubsystemBase {
       gyroAngle = m_gyro.getYaw();
         return gyroAngle;
     }
+
+
+    /**
+     * Update the current pose of the swerve modules.
+     * 
+     * @param pose The pose to set to.
+     */
+    public void resetPose(Pose2d pose) {
+      m_odometry.resetPosition(m_gyro.getRotation2d(), getModulePositions(), pose);
+  }
+
+  /**
+   * Get the current chassis speed.
+   * 
+   * @return The current chassis speed.
+   */
+  public ChassisSpeeds getSpeeds() {
+      return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+    /**
+     * Get the states of each swerve module.
+     * 
+     * @return The state of each swerve module.
+     */
+    public SwerveModuleState[] getModuleStates() {
+      SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+      for (int i = 0; i < modules.length; i++) {
+          states[i] = modules[i].getState();
+      }
+
+      return states;
+  }
+
+  /**
+   * Get the position of each swerve module.
+   * 
+   * @return The position of each swerve module.
+   */
+  public SwerveModulePosition[] getModulePositions() {
+      SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+
+      for (int i = 0; i < modules.length; i++) {
+          positions[i] = modules[i].getPosition();
+      }
+
+      return positions;
+  }
+
+      /**
+     * Update the swerve modules based on the current chassis speed.
+     * 
+     * @param fieldRelativeSpeeds The current chassis speed to update the swerve
+     *                            modules to.
+     */
+    public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
+      driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
+  }
+
+  /**
+   * Update the swerve modules based on the current chassis speed.
+   * 
+   * @param robotRelativeSpeeds The current chassis speed to update the swerve
+   *                            modules to.
+   */
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+      ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+      SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+
+      setModuleStates(targetStates);
+  }
+
+  /**
+   * Get the norm, or distance from the origin to the translation.
+   * 
+   * @return The norm, or distance from the origin to the translation.
+   */
+  public double getNorm() {
+    return frontrightWheelMeters.getNorm();
+  }
+
+  /**
+   * Get the maximum speed of the swerve modules.
+   *
+   * @return The maximum speed of the swerve module.
+   */
+  public double getMaxModuleSpeed() {
+      return kMaxSpeedMetersPerSecond;
+  }
 
   @Override
   public void periodic() {
