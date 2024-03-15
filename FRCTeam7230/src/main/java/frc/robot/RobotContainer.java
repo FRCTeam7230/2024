@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -118,17 +119,17 @@ public class RobotContainer {
                             m_robotDriveSim));
         } else {
             // Configure default commands
-            m_robotDrive.setDefaultCommand(
-                    // The left stick controls translation of the robot.
-                    // Turning is controlled by the X axis of the right stick.
-                    new RunCommand(
-                            () -> m_robotDrive.drive(
-                                    -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
-                                    -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
-                                    -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
-                                    0,
-                                    false, false, false),
-                            m_robotDrive));
+        //     m_robotDrive.setDefaultCommand(
+        //             // The left stick controls translation of the robot.
+        //             // Turning is controlled by the X axis of the right stick.
+        //             new RunCommand(
+        //                     () -> m_robotDrive.drive(
+        //                             -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
+        //                             -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
+        //                             -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
+        //                             0,
+        //                             false, false, false),
+        //                     m_robotDrive));
                 // m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
                 // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
         }
@@ -209,6 +210,7 @@ public class RobotContainer {
                         .whileTrue(new InstantCommand(
                                 () -> m_robotDrive.testButton(),
                                 m_robotDrive));
+                // initShooterButton.whileTrue(Commands.parallel(new InitShooterCommand(s_shooterSubsystem),(new RunIntakeCommand(s_intakeSubsystem))));
                 PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
                 PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));

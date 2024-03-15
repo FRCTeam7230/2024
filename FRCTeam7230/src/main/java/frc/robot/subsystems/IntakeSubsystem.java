@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Mechanisms;
 import frc.robot.Constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
@@ -14,16 +16,16 @@ import com.revrobotics.CANSparkMax;
 public class IntakeSubsystem extends SubsystemBase {
 
   /** Variables */
-  private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
-  private static CANSparkMax shooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor;
+  private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor; // Motor for the main intake
+  private static CANSparkMax shooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor; // Motor for the shooter intake
  
-  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;
+  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;      // Digital input for the intake sensor
 
   //public static boolean intakeSystemOn = false;
-  private double motorRotateSpeed = 0.5;
+  private double motorRotateSpeed = 0.5; // Speed for the intake motor
 
 
-  public IntakeSubsystem() {
+  public IntakeSubsystem() { // Constructor
     //intakeMotor.restoreFactoryDefaults();
     //ShooterIntakeMotor.restoreFactoryDefaults();
   }
@@ -35,12 +37,15 @@ public class IntakeSubsystem extends SubsystemBase {
    */
 
   public void startIntakeSystem() {
-    intakeMotor.set(motorRotateSpeed);
+    intakeMotor.set(motorRotateSpeed); // Starts the intake system
     
-    shooterIntakeMotor.set(-motorRotateSpeed);
-  }
+    shooterIntakeMotor.set(motorRotateSpeed);
 
-  public void stopIntakeSystem() {
+  }
+   
+  
+
+  public void stopIntakeSystem() { // Stops the intake system
     intakeMotor.stopMotor();
     shooterIntakeMotor.stopMotor();
   }
@@ -52,10 +57,9 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-  public static boolean checkSensor() {
-    System.out.println(intakeSensor.get());
-    Commands.waitSeconds(5);
-    System.out.println("Wait ran");
+  public static boolean checkSensor() { // Checks if the sensor is triggered
+    // System.out.println(intakeSensor.get());
+    
     return intakeSensor.get();
   }
 

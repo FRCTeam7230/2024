@@ -65,9 +65,9 @@ public class DriveSubsystem extends SubsystemBase {
   };
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-      kDriveKinematics,
-      Rotation2d.fromDegrees(m_gyro.getPitch()),
+  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry( 
+      kDriveKinematics, 
+      Rotation2d.fromDegrees(m_gyro.getPitch()), 
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -316,9 +316,10 @@ public class DriveSubsystem extends SubsystemBase {
       double ySpeedDelivered = ySpeedCommanded * kMaxSpeedMetersPerSecond /* * speedMultiplierCommanded */;
       double rotDelivered = m_currentRotation * kMaxAngularSpeed /* * speedMultiplierCommanded */;
 
-      System.out.println(xSpeed);
-      System.out.println(ySpeed);
-      System.out.println(rot);
+      // System.out.println(xSpeed);//logging inputs
+      // System.out.println(ySpeed);
+      // System.out.println(rot);
+      
 
       var swerveModuleStates = kDriveKinematics.toSwerveModuleStates(
         fieldRelative
@@ -334,7 +335,8 @@ public class DriveSubsystem extends SubsystemBase {
   // }
 
   public void testButton() {
-    System.out.println("the test button was pressed"); // i added logic just in case 
+    // System.out.println("the test button was pressed"); // i added logic just in case 
+    System.out.println(m_gyro.getAngle());
   }
   /**
    * Sets the wheels into an X formation to prevent movement.

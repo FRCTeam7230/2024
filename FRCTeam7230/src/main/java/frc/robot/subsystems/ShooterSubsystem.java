@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
@@ -87,8 +88,30 @@ public class ShooterSubsystem extends SubsystemBase{
   }
   
 
-  public Command startShooterIntake(double rotSpeed){
-    return this.runOnce(() -> shooterIntakeMotor.set(rotSpeed));
+  // public Command startShooterIntake(double rotSpeed){
+  //   return this.runOnce(() -> shooterIntakeMotor.set(rotSpeed));
+  //   rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
+  //   leftShooterMotor.set(motorRotateSpeed);
+
+  // }
+  
+  // public boolean checkShooterAtMaxSpeed(){
+  //       if(rightShooterMotor.getEncoder().getVelocity() == (kMotorVoltsToRPM) 
+  //   && leftShooterMotor.getEncoder().getVelocity()== (kMotorVoltsToRPM)){
+  //    return true;
+  //   }
+  //   else{
+  //     return false;
+  //   }
+  // }
+
+  public void printMotorEncoder(){
+    System.out.println(rightShooterMotor.getEncoder().getVelocity());
+    System.out.println(leftShooterMotor.getEncoder().getVelocity());
+  }
+
+  public void StartShooterIntake(double rotSpeed){
+    shooterIntakeMotor.set(-rotSpeed);
   }
 
 

@@ -212,7 +212,7 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
     public static final int kMotorVoltsToRPM = 917;
     public static final double kDegreesPerEncoderCount = 360/8192;
-    //supposed to be encoder
+    //supposed to be through bore encoder
     public static final double kActualDegreesPerEncoderCount = 360/42;
     //assuming no load
   }
