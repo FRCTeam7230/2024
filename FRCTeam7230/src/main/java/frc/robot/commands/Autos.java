@@ -83,10 +83,9 @@ public class Autos {
 
         // Add a button to run the example auto to SmartDashboard, this will also be in
         // the auto chooser built above
-        SmartDashboard.putData("Autonomous Path Middle", new PathPlannerAuto("Example Auto"));
-        SmartDashboard.putData("Autonomous Path Left", new PathPlannerAuto("New New Auto"));
-        SmartDashboard.putData("Autonomous Path Right", new PathPlannerAuto("New Auto"));
-
+        SmartDashboard.putData("Bottom Auto", new PathPlannerAuto("Bottom Auto"));
+        SmartDashboard.putData("Mid Auto", new PathPlannerAuto("Mid Auto"));
+        SmartDashboard.putData("Top Auto", new PathPlannerAuto("Top Auto"));
 
         // Add a button to run pathfinding commands to SmartDashboard
         SmartDashboard.putData("Pathfind to Pickup Pos", AutoBuilder.pathfindToPose(
