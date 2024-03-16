@@ -56,9 +56,9 @@ public class Robot extends TimedRobot {
     angleY = Limelight.getTargetAngleY();
     tagID = Limelight.getTargetID();
     tagDistance = Limelight.apriltagDistance();
-    gyroData = m_robotContainer.getGyroAngle();
+    gyroData = 1;//m_robotContainer.getGyroAngle();
     intakeSensor = PivotingSubsystem.intakeSensor();
-    shooterAngle = PivotingSubsystem.counterValue();
+    shooterAngle = PivotingSubsystem.getPivotAngle();
     // vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle

@@ -26,6 +26,7 @@ public class ShooterSubsystem extends SubsystemBase{
   private static DigitalInput noteSensor = Mechanisms.m_noteBeamSensor;
   // private static DigitalInput limitSwitch = Mechanisms.m_upperLimitSwitch; //povit low
   private CANSparkMax shooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor;
+  private CANSparkMax intakeMotor = Mechanisms.m_intakeMotor;
 
   private static CANSparkMax rightShooterMotor = Mechanisms.m_rightShooterMotor;
   private static CANSparkMax leftShooterMotor = Mechanisms.m_leftShooterMotor;
@@ -58,42 +59,39 @@ public class ShooterSubsystem extends SubsystemBase{
   
 
   public void StartShooter(double motorRotateSpeed) {
-    
-
-
-    
-  //   rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
-  //   leftShooterMotor.set(motorRotateSpeed);
+    rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
+    leftShooterMotor.set(motorRotateSpeed);
     
   }
   
-  // public void StartShooterIntake(double rotSpeed){
-  //   shooterIntakeMotor.set(-rotSpeed);
-  // }
-
-  // public void StopShooter() {
-  //   rightShooterMotor.stopMotor();
-  //   leftShooterMotor.stopMotor();
-  // }
-
-  // public void StopShooterIntake(){
-  //   shooterIntakeMotor.stopMotor();
-  // }
-
-  public Command startShooter(double rotSpeed) {
-    return Commands.parallel(
-      this.runOnce(() -> rightShooterMotor.set(rotSpeed)),
-      this.runOnce(() -> leftShooterMotor.set(rotSpeed))
-    );
+  public void StartShooterIntake(double rotSpeed){
+    shooterIntakeMotor.set(rotSpeed);
+    // intakeMotor.set(rotSpeed);
   }
+
+  public void StopShooter() {
+    rightShooterMotor.stopMotor();
+    leftShooterMotor.stopMotor();
+  }
+
+  public void StopShooterIntake(){
+    shooterIntakeMotor.stopMotor();
+  }
+
+  // public Command startShooter(double rotSpeed) {
+  //   return Commands.parallel(
+  //     this.runOnce(() -> rightShooterMotor.set(rotSpeed)),
+  //     this.runOnce(() -> leftShooterMotor.set(rotSpeed))
+  //   );
+  // }
   
 
-  // public Command startShooterIntake(double rotSpeed){
-  //   return this.runOnce(() -> shooterIntakeMotor.set(rotSpeed));
-  //   rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
-  //   leftShooterMotor.set(motorRotateSpeed);
+  public Command startShooterIntake(double rotSpeed){
+    return this.runOnce(() -> shooterIntakeMotor.set(rotSpeed));
+    // rightShooterMotor.set(-motorRotateSpeed);//check experimentally what the velocity is at a motorRotateSpeed Voltage
+    // leftShooterMotor.set(motorRotateSpeed);
 
-  // }
+  }
   
   // public boolean checkShooterAtMaxSpeed(){
   //       if(rightShooterMotor.getEncoder().getVelocity() == (kMotorVoltsToRPM) 
@@ -108,10 +106,6 @@ public class ShooterSubsystem extends SubsystemBase{
   public void printMotorEncoder(){
     System.out.println(rightShooterMotor.getEncoder().getVelocity());
     System.out.println(leftShooterMotor.getEncoder().getVelocity());
-  }
-
-  public void StartShooterIntake(double rotSpeed){
-    shooterIntakeMotor.set(-rotSpeed);
   }
 
 
@@ -153,7 +147,7 @@ public class ShooterSubsystem extends SubsystemBase{
    */
 
     public static boolean checkSensor(){
-      return noteSensor.get();
+      return !noteSensor.get();
     }
 
   @Override

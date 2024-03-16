@@ -31,10 +31,10 @@ public class PivotingSubsystem extends SubsystemBase {
   }
 
   public void rotateShooterToAngle(double angle){
-    if (counterValue()*kDegreesPerEncoderCount > angle + kPivotAngleMargin){
+    if (getPivotAngle() > angle + kPivotAngleMargin){
       rotateShooter(-kSmartPivotSpeed);
     }
-    else if (counterValue()*kDegreesPerEncoderCount < angle - kPivotAngleMargin){
+    else if (getPivotAngle() < angle - kPivotAngleMargin){
       rotateShooter(kSmartPivotSpeed);
     }
     else{
@@ -48,8 +48,9 @@ public class PivotingSubsystem extends SubsystemBase {
   public void stopRotation(){
     pivotMotor.stopMotor();
   }
-  public static double counterValue() {
-    return pivotEncoder.getDistance();
+  public static double getPivotAngle() {
+    System.out.println(pivotEncoder.getAbsolutePosition()/* *kDegreesPerEncoderCount */);
+    return pivotEncoder.getAbsolutePosition()*kDegreesPerEncoderCount;
   }
   
   @Override

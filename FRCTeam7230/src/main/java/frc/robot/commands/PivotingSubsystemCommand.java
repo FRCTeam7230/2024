@@ -12,16 +12,16 @@ import frc.robot.subsystems.PivotingSubsystem;
 public class PivotingSubsystemCommand extends Command {
   /** Creates a new RunShooterCommand. */
   private PivotingSubsystem s_pivotingSubsystem;
-  private Joystick m_mechanismsController;
+  // private Joystick m_mechanismsController;
 
   SlewRateLimiter pivot_limit = new SlewRateLimiter(0.5);//use this if we need to regulate signal for joystick
   double pivot;
   double rotationalCoefficient;
-  public PivotingSubsystemCommand(PivotingSubsystem rotate, Joystick control, int direction) {
+  public PivotingSubsystemCommand(PivotingSubsystem rotate, double direction) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.s_pivotingSubsystem = rotate;
-    this.m_mechanismsController = control;
-    this.rotationalCoefficient = direction;
+    s_pivotingSubsystem = rotate;
+    // m_mechanismsController = control;
+    rotationalCoefficient = direction;
 
     addRequirements(s_pivotingSubsystem);
   }
@@ -29,26 +29,26 @@ public class PivotingSubsystemCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pivot = 0;
+    // pivot = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double current;
-    pivot = m_mechanismsController.getY();
-    if(pivot != 0){//joystick no button
-      s_pivotingSubsystem.rotateShooter(pivot_limit.calculate(pivot));//does this account for both up and down?
-    }else if(rotationalCoefficient==-1){
-      current = s_pivotingSubsystem.counterValue();
-      while(s_pivotingSubsystem.counterValue() > current - 10){
-        s_pivotingSubsystem.rotateShooter(-0.5);
-      }
-    }else if(rotationalCoefficient==1){
-      current = s_pivotingSubsystem.counterValue();
-      while(s_pivotingSubsystem.counterValue() < current + 10){
-        s_pivotingSubsystem.rotateShooter(0.5);
-      }
+    // double current;
+
+    if(rotationalCoefficient > 0){
+      // current = PivotingSubsystem.getPivotAngle();
+      
+      s_pivotingSubsystem.rotateShooter(-0.1);
+    }
+    else if (rotationalCoefficient < 0) {
+      s_pivotingSubsystem.rotateShooter(0.1);
+    }
+    else {
+      // current = PivotingSubsystem.getPivotAngle();
+      
+        s_pivotingSubsystem.stopRotation();
     }
   }
 

@@ -47,6 +47,7 @@ import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.PivotingSubsystemCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BackupShooterCommand;
 // import frc.robot.commands.SmartIntakeCommand;
 // import frc.robot.commands.SmartShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -101,38 +102,38 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        if (RobotBase.isSimulation()) {
-            // Configure default commands
-            m_robotDriveSim.setDefaultCommand(
-                    // The left stick controls translation of the robot.
-                    // Turning is controlled by the X axis of the right stick.
-                    new RunCommand(
-                            () -> m_robotDriveSim.drive(
-                                    // Multiply by max speed to map the joystick unitless inputs to actual units.
-                                    // This will map the [-1, 1] to [max speed backwards, max speed forwards],
-                                    // converting them to actual units.
-                                    -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
-                                    -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
-                                    -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
-                                    false,
-                                    false),
-                            m_robotDriveSim));
-        } else {
-            // Configure default commands
-        //     m_robotDrive.setDefaultCommand(
+        // if (RobotBase.isSimulation()) {
+        //     // Configure default commands
+        //     m_robotDriveSim.setDefaultCommand(
         //             // The left stick controls translation of the robot.
         //             // Turning is controlled by the X axis of the right stick.
         //             new RunCommand(
-        //                     () -> m_robotDrive.drive(
+        //                     () -> m_robotDriveSim.drive(
+        //                             // Multiply by max speed to map the joystick unitless inputs to actual units.
+        //                             // This will map the [-1, 1] to [max speed backwards, max speed forwards],
+        //                             // converting them to actual units.
         //                             -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
         //                             -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
         //                             -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
-        //                             0,
-        //                             false, false, false),
-        //                     m_robotDrive));
+        //                             false,
+        //                             false),
+        //                     m_robotDriveSim));
+        // } else {
+            // Configure default commands
+            m_robotDrive.setDefaultCommand(
+                    // The left stick controls translation of the robot.
+                    // Turning is controlled by the X axis of the right stick.
+                    new RunCommand(
+                            () -> m_robotDrive.drive(
+                                    -MathUtil.applyDeadband(driveJoystick.getY(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
+                                    -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
+                                    driveJoystick.getThrottle(),
+                                    false, false, false),
+                            m_robotDrive));
                 // m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
-                // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, m_mechanismsController,1));
-        }
+                // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick.getY()));
+        // }
         CommandScheduler.getInstance()
                 .onCommandInitialize(
                      command -> 
@@ -208,11 +209,18 @@ public class RobotContainer {
                                 s_pivotingSubsystem));
                 new JoystickButton(driveJoystick, TEST_BUTTON)
                         .whileTrue(new InstantCommand(
-                                () -> m_robotDrive.testButton(),
-                                m_robotDrive));
-                // initShooterButton.whileTrue(Commands.parallel(new InitShooterCommand(s_shooterSubsystem),(new RunIntakeCommand(s_intakeSubsystem))));
-                PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, 1));
-                PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick, -1));
+                                () -> m_robotDrive.getHeading()
+                                ));
+                // new JoystickButton(driveJoystick, kButton7)
+                //         .whileTrue(new InstantCommand(
+                //                 () -> m_robotDrive.()
+                //                 ));
+                //  new JoystickButton(driveJoystick, TEST_BUTTON)
+                //         .whileTrue(new InstantCommand(
+                //                 () -> s_shooterSubsystem.stopShooter()));
+                initShooterButton.whileTrue(new BackupShooterCommand(s_shooterSubsystem));
+                // PivotUpButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, 1));
+                // PivotDownButton.whileTrue(new PivotingSubsystemCommand(s_pivotingSubsystem, -1));
                 ClimberUpButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, 1));
                 ClimberDownButton.whileTrue(new ClimberSubsystemCommand(s_ClimberSubsystem, mechJoystick, -1));
                 // if(manualLayout){
@@ -227,9 +235,9 @@ public class RobotContainer {
         }
     }
 
-    public double getGyroAngle(){
-        return m_robotDrive.fetchGyroData();
-    }
+//     public double getGyroAngle(){
+//         return m_robotDrive.fetchGyroData();
+//     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

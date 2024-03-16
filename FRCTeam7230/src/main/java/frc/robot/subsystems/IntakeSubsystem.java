@@ -19,10 +19,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private static CANSparkMax intakeMotor = Mechanisms.m_intakeMotor; // Motor for the main intake
   private static CANSparkMax shooterIntakeMotor = Mechanisms.m_ShooterIntakeMotor; // Motor for the shooter intake
  
-  private static DigitalInput intakeSensor = Mechanisms.m_noteBeamSensor;      // Digital input for the intake sensor
+  private static DigitalInput noteSensor = Mechanisms.m_noteBeamSensor;      // Digital input for the intake sensor
 
   //public static boolean intakeSystemOn = false;
-  private double motorRotateSpeed = 0.5; // Speed for the intake motor
+  private double motorRotateSpeed = 1; // Speed for the intake motor
 
 
   public IntakeSubsystem() { // Constructor
@@ -50,6 +50,20 @@ public class IntakeSubsystem extends SubsystemBase {
     shooterIntakeMotor.stopMotor();
   }
 
+  public Command startIntake(double rotSpeed){
+    return Commands.parallel(
+      this.runOnce(() -> intakeMotor.set(rotSpeed)),
+      this.runOnce(() -> shooterIntakeMotor.set(rotSpeed))
+    );
+  }
+
+  public Command stopIntake(){
+    return Commands.parallel(
+      this.runOnce(() -> intakeMotor.stopMotor()),
+      this.runOnce(() -> shooterIntakeMotor.stopMotor())
+      );
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a
    * digital sensor).
@@ -57,10 +71,12 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
+
+   //returns true if note is detected
   public static boolean checkSensor() { // Checks if the sensor is triggered
     // System.out.println(intakeSensor.get());
+    return !noteSensor.get();
     
-    return intakeSensor.get();
   }
 
 @Override

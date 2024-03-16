@@ -14,13 +14,13 @@ import static frc.robot.Constants.ShooterConstants.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class RunShooterCommand extends Command {
+public class BackupShooterCommand extends Command {
   /** Creates a new RunShooterCommand. */
   private ShooterSubsystem s_shooterSubsystem;
   
   private Timer timer = new Timer();
 
-  public RunShooterCommand(ShooterSubsystem shoot) {
+  public BackupShooterCommand(ShooterSubsystem shoot) {
     // Use addRequirements() here to declare subsystem dependencies.
     s_shooterSubsystem = shoot;
     addRequirements(s_shooterSubsystem);
@@ -47,17 +47,12 @@ public class RunShooterCommand extends Command {
    // Called when the command is initially scheduled.
    @Override
    public void initialize() {
-    timer.stop();
-    timer.reset();
-    
     // if (ShooterSubsystem.checkSensor()){
     //   s_shooterSubsystem.StartShooter(kRotationalSpeed);
-      
-      
+    //   timer.reset();
+    //   timer.start();
     // }
-    // else{
-    //   s_shooterSubsystem.StartShooterIntake(-kRotationalSpeed);
-    // }
+    
     
    }
 
@@ -68,23 +63,15 @@ public class RunShooterCommand extends Command {
     // if(ShooterSubsystem.checkShooter()){
     //   s_shooterSubsystem.StartShooterIntake(kRotationalSpeed);
     // }
-    if(ShooterSubsystem.checkSensor()){
-      s_shooterSubsystem.StartShooter(kRotationalSpeed);
-      timer.start();
-    }
-    else{
+    // while(!ShooterSubsystem.checkSensor()){
       s_shooterSubsystem.StartShooterIntake(-kRotationalSpeed);
-    }
-    
-    if(timer.get() > 1){
-      s_shooterSubsystem.StartShooterIntake(kRotationalSpeed);
-      
-    }
+    // }
+  }
     
     // s_shooterSubsystem.printMotorEncoder();
     // new WaitCommand(10.0);
     // s_shooterSubsystem.StopShooter();
-  }
+  // }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -96,6 +83,7 @@ public class RunShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > 3;
+    // return ShooterSubsystem.checkSensor();
+    return false;
   }
 }

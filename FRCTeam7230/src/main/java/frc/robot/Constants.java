@@ -58,7 +58,7 @@ public final class Constants {
     public static final int PIVOT_DOWN_BUTTON = kButton10;
     public static final int CLIMBER_DOWN_BUTTON = kButton11;
     public static final int CLIMBER_UP_BUTTON = kButton12;
-    public static final double kDriveDeadband = 0.1;
+    public static final double kDriveDeadband = 0.3;
   }
 
   public static final class DriveConstants {
@@ -211,9 +211,9 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
     public static final int kMotorVoltsToRPM = 917;
-    public static final double kDegreesPerEncoderCount = 360/8192;
+    public static final double kDegreesPerEncoderCount = (0.04395);
     //supposed to be through bore encoder
-    public static final double kActualDegreesPerEncoderCount = 360/42;
+    public static final double kActualDegreesPerEncoderCount = 8.57143;
     //assuming no load
   }
 

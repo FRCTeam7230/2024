@@ -46,7 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-  // private double speedMultiplierCommanded = 0.0;
+  private double speedMultiplierCommanded = 0.0;
   
 
 
@@ -67,7 +67,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry( 
       kDriveKinematics, 
-      Rotation2d.fromDegrees(m_gyro.getPitch()), 
+      Rotation2d.fromDegrees(m_gyro.getAngle()), 
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -84,9 +84,11 @@ public class DriveSubsystem extends SubsystemBase {
 	SmartDashboard.putData("Field", m_field);
   }
 
-    public double fetchGyroData() {
-      gyroAngle = m_gyro.getYaw();
-        return gyroAngle;
+    public void fetchGyroData() {
+      System.out.println("Angle: " + m_gyro.getAngle());
+      System.out.println("Yaw: " + m_gyro.getYaw());
+      System.out.println("Pitch: " + m_gyro.getPitch());
+      System.out.println("Roll: " + m_gyro.getRoll());
     }
 
 
@@ -184,7 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getPitch()),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -211,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getPitch()),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -253,15 +255,15 @@ public class DriveSubsystem extends SubsystemBase {
     SlewRateLimiter m_rotLimiter;
     
     // if (!circlingMode){
-    //   if (speedMultiplier >= 0){
-    //       speedMultiplierCommanded = Math.pow(speedMultiplier, 2) + 1;
-    //     }
-    //   else{
-    //     speedMultiplierCommanded = -0.5*Math.pow(speedMultiplier, 2) + 1;
-    //   }
+      if (speedMultiplier >= 0){
+          speedMultiplierCommanded = Math.pow(speedMultiplier, 2) + 1;
+        }
+      else{
+        speedMultiplierCommanded = -0.5*Math.pow(speedMultiplier, 2) + 1;
+      }
 
-      m_magLimiter = new SlewRateLimiter(kMagnitudeSlewRate /* * speedMultiplierCommanded */);
-      m_rotLimiter = new SlewRateLimiter(kRotationalSlewRate /* * speedMultiplierCommanded */);
+      m_magLimiter = new SlewRateLimiter(kMagnitudeSlewRate * speedMultiplierCommanded);
+      m_rotLimiter = new SlewRateLimiter(kRotationalSlewRate * speedMultiplierCommanded);
 
       if (rateLimit) {
         // Convert XY to polar for rate limiting
@@ -271,7 +273,7 @@ public class DriveSubsystem extends SubsystemBase {
         // Calculate the direction slew rate based on an estimate of the lateral acceleration
         double directionSlewRate;
         if (m_currentTranslationMag != 0.0) {
-          directionSlewRate = Math.abs(kDirectionSlewRate /* * speedMultiplierCommanded */ / m_currentTranslationMag);
+          directionSlewRate = Math.abs(kDirectionSlewRate * speedMultiplierCommanded / m_currentTranslationMag);
         } else {
           directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
         }
@@ -312,9 +314,9 @@ public class DriveSubsystem extends SubsystemBase {
       }
 
       // Convert the commanded speeds into the correct units for the drivetrain
-      double xSpeedDelivered = xSpeedCommanded * kMaxSpeedMetersPerSecond /* * speedMultiplierCommanded */;
-      double ySpeedDelivered = ySpeedCommanded * kMaxSpeedMetersPerSecond /* * speedMultiplierCommanded */;
-      double rotDelivered = m_currentRotation * kMaxAngularSpeed /* * speedMultiplierCommanded */;
+      double xSpeedDelivered = xSpeedCommanded * kMaxSpeedMetersPerSecond * speedMultiplierCommanded;
+      double ySpeedDelivered = ySpeedCommanded * kMaxSpeedMetersPerSecond * speedMultiplierCommanded;
+      double rotDelivered = m_currentRotation * kMaxAngularSpeed * speedMultiplierCommanded;
 
       // System.out.println(xSpeed);//logging inputs
       // System.out.println(ySpeed);
@@ -323,10 +325,10 @@ public class DriveSubsystem extends SubsystemBase {
 
       var swerveModuleStates = kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-              ? ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getPitch()))
+              ? ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
               : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
       SwerveDriveKinematics.desaturateWheelSpeeds(
-          swerveModuleStates, kMaxSpeedMetersPerSecond /* * speedMultiplierCommanded */);
+          swerveModuleStates, kMaxSpeedMetersPerSecond * speedMultiplierCommanded);
       frontLeft.setDesiredState(swerveModuleStates[0]);
       frontRight.setDesiredState(swerveModuleStates[1]);
       rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -351,7 +353,7 @@ public class DriveSubsystem extends SubsystemBase {
   //input directionToRotate as negative one for left, positive one for right
   public void rotateUntil(double rotateSpeed){
       setModuleStates(kDriveKinematics.toSwerveModuleStates(
-        new ChassisSpeeds(0,0,rotateSpeed /* * speedMultiplierCommanded */)));
+        new ChassisSpeeds(0,0,rotateSpeed * speedMultiplierCommanded)));
   }
 
   /**
@@ -361,7 +363,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, kMaxSpeedMetersPerSecond /* * speedMultiplierCommanded */);
+        desiredStates, kMaxSpeedMetersPerSecond * speedMultiplierCommanded);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     rearLeft.setDesiredState(desiredStates[2]);
@@ -369,7 +371,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
       
   public void circlingDrive(boolean circlingMode, double rotateSpeed, double distance, double visionAngle) {
-    rotateSpeed = rotateSpeed /* * speedMultiplierCommanded */;
+    rotateSpeed = rotateSpeed * speedMultiplierCommanded;
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(rotateSpeed, rotateSpeed, rotateSpeed);
     Rotation2d angle = new Rotation2d(visionAngle); //vision gives us this angle
     Translation2d distanceAngle = new Translation2d(distance, angle); //vision gives us distance
@@ -398,7 +400,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getPitch()).getDegrees();
+    System.out.println(Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees());
+    return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
   }
 
   /**

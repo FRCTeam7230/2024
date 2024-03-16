@@ -7,6 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import static frc.robot.Constants.ShooterConstants.kRotationalSpeed;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,13 +25,20 @@ public class RunIntakeCommand extends Command {
     // m_mechanismsController = controller;
     s_intakeSubsystem = intake;
     addRequirements(s_intakeSubsystem);
-   
+    
+    // addCommands(
+    //   s_intakeSubsystem.startIntake(kRotationalSpeed).withTimeout(5)
+    //   .until(() -> IntakeSubsystem.checkSensor()),
+    //   // ,Commands.waitUntil(() -> IntakeSubsystem.checkSensor()),
+    //   // ,Commands.waitSeconds(4),
+    //   s_intakeSubsystem.stopIntake()
+    // );
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    s_intakeSubsystem.startIntakeSystem();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,12 +48,12 @@ public class RunIntakeCommand extends Command {
     //   s_intakeSubsystem.stopIntakeSystem();
     // }
     // else{
-    //   s_intakeSubsystem.startIntakeSystem();
+      
     // }
 
 
     // s_intakeSubsystem.startIntakeSystem();
-    System.out.println(!IntakeSubsystem.checkSensor());
+    // System.out.println(!IntakeSubsystem.checkSensor());
     // Commands.sequence(
       // new InstantCommand(() -> System.out.println(!IntakeSubsystem.checkSensor())),
       // new WaitCommand(1)
@@ -62,7 +72,7 @@ public class RunIntakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // System.out.println("isFinished is running");
-    // return !IntakeSubsystem.checkSensor();
-    return false;
+    return IntakeSubsystem.checkSensor();
+    // return false;
   }
 }
