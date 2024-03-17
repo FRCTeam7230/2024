@@ -43,23 +43,14 @@ import edu.wpi.first.wpilibj.Joystick;
 //import frc.robot.commands.SmartIntakeCommand;
 
 public class Autos {
-    public final SendableChooser<Command> autoChooser;
-    private DriveSubsystem driveSubsystem;
-    private ShooterSubsystem shootySubsystem;
-    private IntakeSubsystem intakeySubsystem;
-
+    private final SendableChooser<Command> autoChooser;
 
     public Autos(DriveSubsystem subsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
-        NamedCommands.registerCommand("RunShooter", Commands.runOnce(() -> new RunShooterCommand(shooterSubsystem)));
-        NamedCommands.registerCommand("RunIntake", Commands.runOnce(() ->new RunIntakeCommand(intakeSubsystem)));
+        NamedCommands.registerCommand("RunShooter", Commands.run(() -> new RunShooterCommand(shooterSubsystem)));
+        NamedCommands.registerCommand("RunIntake", Commands.run(() ->new RunIntakeCommand(intakeSubsystem)));
         //after running the RunShooter and RunIntake, test out SmartShooter and SmartIntake
         //*** 
         //NamedCommands.registerCommand("print hello", Commands.print("hello"));
-        driveSubsystem = subsystem;
-        shootySubsystem = shooterSubsystem;
-        intakeySubsystem = intakeSubsystem;
-
-        // driveSubsystem.zeroHeading();
 
         // Configure AutoBuilder
         AutoBuilder.configureHolonomic(
@@ -82,7 +73,7 @@ public class Autos {
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                         //System.out.println("Alliance is present: " + alliance.get());
-                        return alliance.get() == DriverStation.Alliance.Blue;
+                        return alliance.get() == DriverStation.Alliance.Red;
                     } else {
                         //System.out.println("No alliance.");
                         return false;
@@ -92,10 +83,9 @@ public class Autos {
 
         // Add a button to run the example auto to SmartDashboard, this will also be in
         // the auto chooser built above
-        SmartDashboard.putData("Autonomous Path Middle", new PathPlannerAuto("Mid Auto"));
-        SmartDashboard.putData("Autonomous Path Bottom", new PathPlannerAuto("Bottom Auto"));
-        SmartDashboard.putData("Autonomous Path Top", new PathPlannerAuto("Top Auto"));
-        
+        SmartDashboard.putData("Bottom Auto", new PathPlannerAuto("Bottom Auto"));
+        SmartDashboard.putData("Mid Auto", new PathPlannerAuto("Mid Auto"));
+        SmartDashboard.putData("Top Auto", new PathPlannerAuto("Top Auto"));
 
         // Add a button to run pathfinding commands to SmartDashboard
         SmartDashboard.putData("Pathfind to Pickup Pos", AutoBuilder.pathfindToPose(
@@ -115,30 +105,28 @@ public class Autos {
 
         // Add a button to SmartDashboard that will create and follow an on-the-fly path
         // This example will simply move the robot 2m in the +X field direction
-        // SmartDashboard.putData("On-the-fly path", Commands.runOnce(() -> {
-        //     Pose2d currentPose = subsystem.getPose();
+        SmartDashboard.putData("On-the-fly path", Commands.runOnce(() -> {
+            Pose2d currentPose = subsystem.getPose();
 
-        //     // The rotation component in these poses represents the direction of travel
-        //     Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-        //     Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(2.0, 0.0)),
-        //             new Rotation2d());
+            // The rotation component in these poses represents the direction of travel
+            Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
+            Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(2.0, 0.0)),
+                    new Rotation2d());
 
-        //     List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
-        //     PathPlannerPath path = new PathPlannerPath(
-        //             bezierPoints,
-        //             new PathConstraints(
-        //                     4.0, 4.0,
-        //                     Units.degreesToRadians(360), Units.degreesToRadians(540)),
-        //             new GoalEndState(0.0, currentPose.getRotation()));
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
+            PathPlannerPath path = new PathPlannerPath(
+                    bezierPoints,
+                    new PathConstraints(
+                            4.0, 4.0,
+                            Units.degreesToRadians(360), Units.degreesToRadians(540)),
+                    new GoalEndState(0.0, currentPose.getRotation()));
 
-        //     // Prevent this path from being flipped on the red alliance, since the given
-        //     // positions are already correct
-        //     path.preventFlipping = true;
+            // Prevent this path from being flipped on the red alliance, since the given
+            // positions are already correct
+            path.preventFlipping = true;
 
-        //     AutoBuilder.followPath(path).schedule();
-        // }));
-
-
+            AutoBuilder.followPath(path).schedule();
+        }));
 
         // Logging callback for current robot pose
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
@@ -160,72 +148,9 @@ public class Autos {
 
         autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
         SmartDashboard.putData("Auto Mode", autoChooser);
-        autoChooser.setDefaultOption("Autonomous Path Middle", new PathPlannerAuto("Mid Auto"));
-    }
-
-    public void putChoosertoDashboard() {
-        SmartDashboard.putData("Auto Mode", autoChooser);
     }
 
     public Command getAutonomousCommand() {
-        // // autoChooser = AutoBuilder.buildAuto("Mid Auto");
-        // // return autoChooser.getSelected();
-        return new PathPlannerAuto("Mid Auto");
-
-            /* Command manual = Commands.sequence(Commands.runOnce(() -> {
-            Pose2d currentPose = driveSubsystem.getPose();
-
-            // The rotation component in these poses represents the direction of travel
-            Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-            Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(5.0, 0.0)),
-                    new Rotation2d());
-
-            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
-            PathPlannerPath path = new PathPlannerPath(
-                    bezierPoints,
-                    new PathConstraints(
-                            4.0, 4.0,
-                            Units.degreesToRadians(360), Units.degreesToRadians(540)),
-                    new GoalEndState(0.0, currentPose.getRotation()));
-
-            // Prevent this path from being flipped on the red alliance, since the given
-            // positions are already correct
-            path.preventFlipping = true;
-
-            AutoBuilder.followPath(path).schedule();
-        }),
-        Commands.runOnce(() -> intakeySubsystem.startIntakeSystem()),
-        Commands.waitUntil(() -> IntakeSubsystem.checkSensor()),
-        Commands.runOnce(() -> intakeySubsystem.stopIntakeSystem()),
-        Commands.runOnce(() -> {
-            Pose2d currentPose = driveSubsystem.getPose();
-
-            // The rotation component in these poses represents the direction of travel
-            Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-            Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(0.0, 5.0)),
-                    new Rotation2d());
-
-            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
-            PathPlannerPath path = new PathPlannerPath(
-                    bezierPoints,
-                    new PathConstraints(
-                            4.0, 4.0,
-                            Units.degreesToRadians(360), Units.degreesToRadians(540)),
-                    new GoalEndState(0.0, currentPose.getRotation()));
-
-            // Prevent this path from being flipped on the red alliance, since the given
-            // positions are already correct
-            path.preventFlipping = true;
-
-            AutoBuilder.followPath(path).schedule();
-        })
-        );
-
-        return manual; */
-
-        // return AutoBuilder.buildAuto("Mid Auto");
-        // return AutoBuilder.buildAuto("Top Auto");
-        // return AutoBuilder.buildAuto("Bottom Auto");
+        return autoChooser.getSelected();
     }
-    
 }
