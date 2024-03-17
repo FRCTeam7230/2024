@@ -6,15 +6,20 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mechanisms;
+
+import static frc.robot.Constants.NeoMotorConstants.kDegreesPerRotation;
+
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class ClimberSubsystem extends SubsystemBase {
   /** Variables */
   private static CANSparkMax climberMotor = Mechanisms.m_climbingMotor;
-  private static DutyCycleEncoder climberEncoder = Mechanisms.m_climberEncoder;
+  // private static DutyCycleEncoder climberEncoder = Mechanisms.m_climberEncoder;
   //private double motorRotateSpeed = 0.5;
-
+  private static RelativeEncoder climberEncoder = climberMotor.getEncoder();
 
   /** Creates a new ExampleSubsystem. */
   public ClimberSubsystem() {}
@@ -38,14 +43,16 @@ public class ClimberSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public double getClimbEncoder(){
-    return climberEncoder.getDistance();
+  public double getClimbEncoderPos(){
+    return climberEncoder.getPosition();
   }
     // Query some boolean state, such as a digital sensor.
   public void resetEncoder(){
-    // climberMotor.reset
+    climberEncoder.setPosition(0);
   }
-  
+  // public boolean checkPassedLimits() {
+  //   if 
+  // }
 
   @Override
   public void periodic() {

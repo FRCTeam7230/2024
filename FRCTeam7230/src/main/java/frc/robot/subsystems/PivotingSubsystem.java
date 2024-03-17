@@ -49,8 +49,9 @@ public class PivotingSubsystem extends SubsystemBase {
     pivotMotor.stopMotor();
   }
   public static double getPivotAngle() {
-    System.out.println(pivotEncoder.getAbsolutePosition()/* *kDegreesPerEncoderCount */);
-    return pivotEncoder.getAbsolutePosition()*kDegreesPerEncoderCount;
+    System.out.println(pivotEncoder.get()*kDegreesPerRotation);
+    return pivotEncoder.get()*kDegreesPerRotation;
+    // return pivotEncoder.getAbsolutePosition()*kDegreesPerEncoderCount;
   }
   
   @Override
@@ -58,6 +59,6 @@ public class PivotingSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public static boolean intakeSensor() {
-    return intakeSensor.get();
+    return !intakeSensor.get();
   }
 }

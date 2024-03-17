@@ -72,7 +72,7 @@ public class RunIntakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // System.out.println("isFinished is running");
-    return IntakeSubsystem.checkSensor();
-    // return false;
+    // return IntakeSubsystem.checkSensor();
+    return false;
   }
 }

@@ -64,6 +64,7 @@ public class BackupShooterCommand extends Command {
     //   s_shooterSubsystem.StartShooterIntake(kRotationalSpeed);
     // }
     // while(!ShooterSubsystem.checkSensor()){
+      s_shooterSubsystem.StartShooter(-0.6);
       s_shooterSubsystem.StartShooterIntake(-kRotationalSpeed);
     // }
   }

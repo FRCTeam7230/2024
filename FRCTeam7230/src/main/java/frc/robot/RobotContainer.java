@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import frc.robot.commands.CirclingDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveSubsystemSim;
-// import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 // import static frc.robot.Constants.AutoConstants.*;
 // import static frc.robot.Constants.DriveConstants.*;
@@ -80,7 +80,7 @@ public class RobotContainer {
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
   private final PivotingSubsystem s_pivotingSubsystem = new PivotingSubsystem();
-//   private final VisionSubsystem s_visionSubsystem = new VisionSubsystem();
+  private final VisionSubsystem s_visionSubsystem = new VisionSubsystem();
   private final Limelight s_Limelight = new Limelight();
 
   private final ClimberSubsystem s_ClimberSubsystem = new ClimberSubsystem();
@@ -97,7 +97,7 @@ public class RobotContainer {
   private JoystickButton FarPivotButton = new JoystickButton(mechJoystick, FAR_PIVOT_BUTTON);
   private JoystickButton ClosePivotButton = new JoystickButton(mechJoystick, CLOSE_PIVOT_BUTTON);
   private JoystickButton SmartToggleButton = new JoystickButton(mechJoystick, SMART_TOGGLE_BUTTON);
-        private JoystickButton initShooterButton = new JoystickButton(mechJoystick, kButton7);
+        private JoystickButton initShooterButton = new JoystickButton(mechJoystick, kButton3);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -129,11 +129,14 @@ public class RobotContainer {
                                     -MathUtil.applyDeadband(driveJoystick.getX(), kDriveDeadband),
                                     -MathUtil.applyDeadband(driveJoystick.getZ(), kDriveDeadband),
                                     driveJoystick.getThrottle(),
-                                    false, false, false),
+                                    true, false, false),
                             m_robotDrive));
                 // m_robotDrive.setDefaultCommand(new CirclingDriveCommand(m_robotDrive, s_visionSubsystem, driveJoystick, circlingMode));
                 // s_pivotingSubsystem.setDefaultCommand(new PivotingSubsystemCommand(s_pivotingSubsystem, mechJoystick.getY()));
         // }
+        // s_visionSubsystem.setDefaultCommand(new RunCommand(
+        //         () -> s_visionSubsystem.captureTask()
+        // ));
         CommandScheduler.getInstance()
                 .onCommandInitialize(
                      command -> 
@@ -156,6 +159,7 @@ public class RobotContainer {
                                 "Command interrupted", command.getName(), EventImportance.kNormal));
         // Configure the button bindings
         configureButtonBindings();
+        
     }
 
     /**
@@ -209,8 +213,13 @@ public class RobotContainer {
                                 s_pivotingSubsystem));
                 new JoystickButton(driveJoystick, TEST_BUTTON)
                         .whileTrue(new InstantCommand(
-                                () -> m_robotDrive.getHeading()
+                                () -> System.out.println()
                                 ));
+                // new JoystickButton(mechJoystick, kButton8)
+                //         .whileTrue(new RunCommand(
+                //                 () -> s_shooterSubsystem.startEnd(() -> s_shooterSubsystem.StartShooter(1),
+                //                 () -> s_shooterSubsystem.stopShooter())
+                //                 ));
                 // new JoystickButton(driveJoystick, kButton7)
                 //         .whileTrue(new InstantCommand(
                 //                 () -> m_robotDrive.()
@@ -235,6 +244,10 @@ public class RobotContainer {
         }
     }
 
+    public void setForward() {
+        m_robotDrive.zeroHeading();
+    }
+
 //     public double getGyroAngle(){
 //         return m_robotDrive.fetchGyroData();
 //     }
@@ -243,6 +256,11 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
+
+        // public void putChoosertoDashboard() {
+        // auto.putChoosertoDashboard();
+        // }
+
     public Command getAutonomousCommand() {
         Autos auto = new Autos(m_robotDrive, s_shooterSubsystem, s_intakeSubsystem);
         return auto.getAutonomousCommand();

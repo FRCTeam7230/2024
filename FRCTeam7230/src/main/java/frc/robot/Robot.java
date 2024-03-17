@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-// import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PivotingSubsystem;
 
@@ -29,11 +29,13 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> color_chooser = new SendableChooser<>();
   private String colorSelected;
 
+  
   private Command m_autonomousCommand;
   private double angleX, angleY, tagDistance, tagID, gyroData;
   private double shooterAngle;
   private boolean intakeSensor, isTargetFound;
-
+  private VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  double[] visionData = m_visionSubsystem.captureTask();
   private RobotContainer m_robotContainer;
 
 
@@ -49,6 +51,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     // VisionSubsystem vision = new VisionSubsystem();
+  //  m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // SmartDashboard.putData("autoChooser", (m_robotContainer.auto.autoChooser));
     color_chooser.setDefaultOption("Red", "red");
     color_chooser.addOption("Blue", "blue");
     SmartDashboard.putData("Color choice", color_chooser);
@@ -56,12 +60,13 @@ public class Robot extends TimedRobot {
     angleY = Limelight.getTargetAngleY();
     tagID = Limelight.getTargetID();
     tagDistance = Limelight.apriltagDistance();
-    gyroData = 1;//m_robotContainer.getGyroAngle();
+    gyroData = 1; //m_robotContainer.getGyroAngle();
     intakeSensor = PivotingSubsystem.intakeSensor();
     shooterAngle = PivotingSubsystem.getPivotAngle();
     // vision = new VisionSubsystem();
     // double[] visionData = vision.captureTask(xoffset, yoffset);
     // fisrt is distance, second is angle
+    // m_robotContainer.putChoosertoDashboard();
   }
 
   /**
@@ -96,8 +101,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("IsNoteLoaded", intakeSensor); 
     SmartDashboard.putNumber("Gyro", gyroData);
     SmartDashboard.putNumber("Shooter Angle", shooterAngle);
-
-
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_robotContainer.putChoosertoDashboard();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -112,7 +117,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_robotContainer.setForward();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -147,8 +153,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-
+    // m_autonomousCommand.cancel();
+    m_robotContainer.setForward();
 
     // VisionSubsystem visSub = new VisionSubsystem();
   }

@@ -49,7 +49,7 @@ public class RunShooterCommand extends Command {
    public void initialize() {
     timer.stop();
     timer.reset();
-    
+    timer.start();
     // if (ShooterSubsystem.checkSensor()){
     //   s_shooterSubsystem.StartShooter(kRotationalSpeed);
       
@@ -68,13 +68,13 @@ public class RunShooterCommand extends Command {
     // if(ShooterSubsystem.checkShooter()){
     //   s_shooterSubsystem.StartShooterIntake(kRotationalSpeed);
     // }
-    if(ShooterSubsystem.checkSensor()){
+    // if(ShooterSubsystem.checkSensor()){
       s_shooterSubsystem.StartShooter(kRotationalSpeed);
-      timer.start();
-    }
-    else{
-      s_shooterSubsystem.StartShooterIntake(-kRotationalSpeed);
-    }
+      // timer.start();
+    // }
+    // else{
+    //   s_shooterSubsystem.StartShooterIntake(-kRotationalSpeed);
+    // }
     
     if(timer.get() > 1){
       s_shooterSubsystem.StartShooterIntake(kRotationalSpeed);

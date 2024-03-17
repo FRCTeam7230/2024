@@ -31,13 +31,13 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * Example command factory method.
+   * Runs the intake motors forward.
    *
-   * @return a command
+   * 
    */
 
   public void startIntakeSystem() {
-    intakeMotor.set(motorRotateSpeed); // Starts the intake system
+    // intakeMotor.set(motorRotateSpeed); // Starts the intake system
     
     shooterIntakeMotor.set(motorRotateSpeed);
 
@@ -46,7 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
   
 
   public void stopIntakeSystem() { // Stops the intake system
-    intakeMotor.stopMotor();
+    // intakeMotor.stopMotor();
     shooterIntakeMotor.stopMotor();
   }
 
